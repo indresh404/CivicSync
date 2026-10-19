@@ -1,0 +1,3 @@
+@echo off
+echo Starting CivicSync Backend and Frontend...
+npm run dev:all
