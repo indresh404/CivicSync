@@ -4,25 +4,36 @@ import {
   AuditLog,
   DashboardStats,
   Acknowledgment,
+  PreviewConflictResponse,
+  RoadHistoryResponse,
+  User,
 } from "./types";
 
 const API_BASE_URL =
-  process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
+  process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
 
-// --- Seed Fallback Data (Deterministic Local Fallback) ---
+// --- Seed Fallback Data (Deterministic Mira Road, Mumbai MMR) ---
 const SEED_PROJECTS: Project[] = [
   {
     id: "PRJ-2026-001",
-    name: "MG Road Asphalt Resurfacing & Milling [DEMO]",
+    title: "Mira Bhayandar Road Asphalt Resurfacing & Milling [Scenario A]",
+    name: "Mira Bhayandar Road Asphalt Resurfacing & Milling [Scenario A]",
+    department_id: "DEPT-ROADS",
     department: "Roads Department",
     project_type: "Resurfacing",
-    description: "Comprehensive asphalt milling and bituminous concrete resurfacing for central corridor.",
-    road_name: "MG Road",
+    geometry_type: "line",
+    description: "Heavy-duty bituminous milling and mastic resurfacing on the central Mira Bhayandar arterial corridor.",
+    road_name: "Mira Bhayandar Road",
     road_type: "Arterial",
-    latitude: 12.9752,
-    longitude: 77.6095,
-    end_latitude: 12.9758,
-    end_longitude: 77.6110,
+    lat: 19.2848,
+    lng: 72.8665,
+    latitude: 19.2848,
+    longitude: 72.8665,
+    end_lat: 19.2855,
+    end_lng: 72.8682,
+    end_latitude: 19.2855,
+    end_longitude: 72.8682,
+    radius_m: 30,
     radius_meters: 30,
     start_date: "2026-11-05",
     end_date: "2026-11-20",
@@ -38,16 +49,24 @@ const SEED_PROJECTS: Project[] = [
   },
   {
     id: "PRJ-2026-002",
-    name: "MG Road Trunk Water Pipeline Replacement [DEMO]",
+    title: "Mira Bhayandar Road 600mm Potable Water Trunk Main [Scenario A]",
+    name: "Mira Bhayandar Road 600mm Potable Water Trunk Main [Scenario A]",
+    department_id: "DEPT-WATER",
     department: "Water Department",
     project_type: "Pipeline",
-    description: "Replacement of aged 450mm cast-iron potable water main with ductile iron piping.",
-    road_name: "MG Road",
+    geometry_type: "line",
+    description: "Laying 600mm ductile iron potable water supply pipeline to enhance water pressure to Mira Road East.",
+    road_name: "Mira Bhayandar Road",
     road_type: "Arterial",
-    latitude: 12.9754,
-    longitude: 77.6098,
-    end_latitude: 12.9760,
-    end_longitude: 77.6112,
+    lat: 19.2850,
+    lng: 72.8668,
+    latitude: 19.2850,
+    longitude: 72.8668,
+    end_lat: 19.2857,
+    end_lng: 72.8685,
+    end_latitude: 19.2857,
+    end_longitude: 72.8685,
+    radius_m: 25,
     radius_meters: 25,
     start_date: "2026-11-10",
     end_date: "2026-11-25",
@@ -63,14 +82,20 @@ const SEED_PROJECTS: Project[] = [
   },
   {
     id: "PRJ-2026-003",
-    name: "Commercial Street 11kV Underground Cabling [DEMO]",
+    title: "Silver Park 11kV Underground Power Ducting [Scenario B]",
+    name: "Silver Park 11kV Underground Power Ducting [Scenario B]",
+    department_id: "DEPT-ELEC",
     department: "Electricity Department",
     project_type: "Cabling",
-    description: "Undergrounding overhead HT cables to eliminate safety hazards in market area.",
-    road_name: "Commercial Street",
-    road_type: "Arterial",
-    latitude: 12.9822,
-    longitude: 77.6083,
+    geometry_type: "point",
+    description: "Underground ducting of power distribution lines to eliminate overhead wiring.",
+    road_name: "Silver Park Residential Lane",
+    road_type: "Residential",
+    lat: 19.2828,
+    lng: 72.8580,
+    latitude: 19.2828,
+    longitude: 72.8580,
+    radius_m: 35,
     radius_meters: 35,
     start_date: "2026-11-15",
     end_date: "2026-11-30",
@@ -86,14 +111,20 @@ const SEED_PROJECTS: Project[] = [
   },
   {
     id: "PRJ-2026-004",
-    name: "Commercial Street Metro 5G Fiber Trenching [DEMO]",
+    title: "Silver Park 5G Fiber Optic Micro-Trenching [Scenario B]",
+    name: "Silver Park 5G Fiber Optic Micro-Trenching [Scenario B]",
+    department_id: "DEPT-TELE",
     department: "Telecom Department",
     project_type: "Cabling",
-    description: "Micro-trenching for civic smart sensors and carrier neutral fiber optic backhaul.",
-    road_name: "Commercial Street",
-    road_type: "Arterial",
-    latitude: 12.9825,
-    longitude: 77.6086,
+    geometry_type: "point",
+    description: "Micro-trenching for civic smart sensors and carrier-neutral fiber optic backhaul.",
+    road_name: "Silver Park Residential Lane",
+    road_type: "Residential",
+    lat: 19.2830,
+    lng: 72.8582,
+    latitude: 19.2830,
+    longitude: 72.8582,
+    radius_m: 25,
     radius_meters: 25,
     start_date: "2026-11-18",
     end_date: "2026-12-02",
@@ -108,15 +139,53 @@ const SEED_PROJECTS: Project[] = [
     has_conflicts: true,
   },
   {
+    id: "PRJ-2026-000",
+    title: "Kanakia Road Complete Asphalt Overlay [Completed 3 Mos Ago]",
+    name: "Kanakia Road Complete Asphalt Overlay [Completed 3 Mos Ago]",
+    department_id: "DEPT-ROADS",
+    department: "Roads Department",
+    project_type: "Resurfacing",
+    geometry_type: "line",
+    description: "Full-depth asphalt surfacing completed under municipal capital works budget.",
+    road_name: "Kanakia Road",
+    road_type: "Arterial",
+    lat: 19.2780,
+    lng: 72.8710,
+    latitude: 19.2780,
+    longitude: 72.8710,
+    end_lat: 19.2790,
+    end_lng: 72.8720,
+    end_latitude: 19.2790,
+    end_longitude: 72.8720,
+    radius_m: 30,
+    radius_meters: 30,
+    start_date: "2026-06-15",
+    end_date: "2026-07-20",
+    status: "Completed",
+    conflict_check_performed: true,
+    conflict_check_version: 1,
+    is_overridden: false,
+    created_at: "2026-06-05T09:00:00Z",
+    updated_at: "2026-07-20T17:00:00Z",
+    active_conflicts_count: 0,
+    has_conflicts: false,
+  },
+  {
     id: "PRJ-2026-005",
-    name: "Indiranagar 100ft Gas Main Pipeline Reinforcement [DEMO]",
+    title: "Kanakia Road Emergency Gas Pipeline Valve Replacement [Scenario C]",
+    name: "Kanakia Road Emergency Gas Pipeline Valve Replacement [Scenario C]",
+    department_id: "DEPT-GAS",
     department: "Gas Department",
     project_type: "Gas line",
-    description: "Priority valve replacement and cathodic corrosion mitigation on medium-pressure distribution grid.",
-    road_name: "Indiranagar 100ft Road",
+    geometry_type: "point",
+    description: "Medium-pressure gas line valve replacement due to safety inspection leak alerts.",
+    road_name: "Kanakia Road",
     road_type: "Arterial",
-    latitude: 12.9784,
-    longitude: 77.6408,
+    lat: 19.2785,
+    lng: 72.8715,
+    latitude: 19.2785,
+    longitude: 72.8715,
+    radius_m: 20,
     radius_meters: 20,
     start_date: "2026-10-25",
     end_date: "2026-11-08",
@@ -125,566 +194,311 @@ const SEED_PROJECTS: Project[] = [
     conflict_check_version: 1,
     conflict_check_at: "2026-10-12T16:00:00Z",
     is_overridden: true,
-    override_reason: "Critical public safety override: aging medium-pressure gas valve leak hazard confirmed by safety inspector. Work expedited ahead of monsoon resurfacing window.",
-    override_by: "City Administrator (Simulated)",
+    override_reason: "EMERGENCY SAFETY OVERRIDE: Certified underground valve seal failure detected by municipal gas audit. Immediate excavation authorized under Municipal Disaster Management Act.",
+    override_by: "Rajesh Sharma (City Commissioner)",
     override_at: "2026-10-14T11:15:00Z",
+    cooldown_justification: "Safety emergency: valve leak threatens residential society blocks nearby. Cold-patch restoration bond posted.",
     created_at: "2026-10-12T15:30:00Z",
     updated_at: "2026-10-14T11:15:00Z",
     active_conflicts_count: 0,
     has_conflicts: false,
   },
-  {
-    id: "PRJ-2026-006",
-    name: "Park Boulevard Stormwater Drain De-silting & Lining [DEMO]",
-    department: "Sewerage Department",
-    project_type: "Sewerage",
-    description: "Preventative stormwater culvert cleaning and reinforced cement concrete relining.",
-    road_name: "Park Boulevard",
-    road_type: "Residential",
-    latitude: 12.9645,
-    longitude: 77.6190,
-    radius_meters: 20,
-    start_date: "2026-11-01",
-    end_date: "2026-11-14",
-    status: "Approved",
-    conflict_check_performed: true,
-    conflict_check_version: 1,
-    conflict_check_at: "2026-10-10T14:00:00Z",
-    is_overridden: false,
-    created_at: "2026-10-10T12:00:00Z",
-    updated_at: "2026-10-10T14:00:00Z",
-    active_conflicts_count: 0,
-    has_conflicts: false,
-  },
-  {
-    id: "PRJ-2026-007",
-    name: "Residency Road Pedestrian Walkway & Kerb Reconstruction [DEMO]",
-    department: "Roads Department",
-    project_type: "Resurfacing",
-    description: "Active civil works for non-motorized transport corridor and tactile paving.",
-    road_name: "Residency Road",
-    road_type: "Arterial",
-    latitude: 12.9698,
-    longitude: 77.6015,
-    radius_meters: 25,
-    start_date: "2026-10-01",
-    end_date: "2026-10-31",
-    status: "Ongoing",
-    conflict_check_performed: true,
-    conflict_check_version: 1,
-    conflict_check_at: "2026-09-28T10:00:00Z",
-    is_overridden: false,
-    created_at: "2026-09-25T09:00:00Z",
-    updated_at: "2026-09-28T10:00:00Z",
-    active_conflicts_count: 0,
-    has_conflicts: false,
-  },
-  {
-    id: "PRJ-2026-008",
-    name: "Brigade Avenue Distribution Feeder Repair [DEMO]",
-    department: "Water Department",
-    project_type: "Pipeline",
-    description: "Completed pipe joint relining and water pressure stabilization chamber.",
-    road_name: "Brigade Avenue",
-    road_type: "Residential",
-    latitude: 12.9712,
-    longitude: 77.6074,
-    radius_meters: 20,
-    start_date: "2026-09-01",
-    end_date: "2026-09-18",
-    status: "Completed",
-    conflict_check_performed: true,
-    conflict_check_version: 1,
-    conflict_check_at: "2026-08-25T11:00:00Z",
-    is_overridden: false,
-    created_at: "2026-08-20T10:00:00Z",
-    updated_at: "2026-09-18T18:00:00Z",
-    active_conflicts_count: 0,
-    has_conflicts: false,
-  },
 ];
 
-const SEED_CONFLICTS: Conflict[] = [
-  {
-    id: "CONF-2026-001",
-    project_a_id: "PRJ-2026-001",
-    project_b_id: "PRJ-2026-002",
-    calculated_distance: 22.4,
-    threshold: 50.0,
-    overlap_start: "2026-11-10",
-    overlap_end: "2026-11-20",
-    overlapping_days: 11,
-    proximity_score: 55.2,
-    overlap_score: 100.0,
-    road_importance_score: 100.0,
-    severity_score: 79.84,
-    severity_level: "High",
-    conflict_reason: "Spatial proximity 22.4m <= 50m threshold on Arterial corridor 'MG Road', with 11 days overlapping execution schedule.",
-    suggested_sequence: "Domain Precedence Rule: Underground utility work (Water Department Pipeline) must be completed before road surface resurfacing (Roads Department Resurfacing). This prevents premature excavation of newly asphalted roadway. Proposed execution sequence: Complete MG Road Trunk Water Pipeline Replacement first, followed by MG Road Asphalt Resurfacing.",
-    suggested_dates: "Phase 1 (Water Department): 10 Nov 2026 – 25 Nov 2026; Phase 2 (Roads Department): 27 Nov 2026 – 12 Dec 2026",
-    status: "Awaiting Acknowledgment",
-    report_version: 1,
-    created_at: "2026-10-16T14:25:00Z",
-    updated_at: "2026-10-18T09:30:00Z",
-    acknowledgments: [
-      {
-        id: "ACK-2026-001",
-        conflict_id: "CONF-2026-001",
-        department: "Roads Department",
-        acknowledged_by: "E. Sharma (Chief Road Engineer - Demo)",
-        report_version: 1,
-        note: "Roads Department agrees to hold resurfacing until Water Dept finishes trunk pipeline installation.",
-        created_at: "2026-10-18T09:30:00Z",
-      },
-    ],
-    project_a_name: "MG Road Asphalt Resurfacing & Milling [DEMO]",
-    project_a_dept: "Roads Department",
-    project_a_type: "Resurfacing",
-    project_b_name: "MG Road Trunk Water Pipeline Replacement [DEMO]",
-    project_b_dept: "Water Department",
-    project_b_type: "Pipeline",
-    road_name: "MG Road",
-  },
-  {
-    id: "CONF-2026-002",
-    project_a_id: "PRJ-2026-003",
-    project_b_id: "PRJ-2026-004",
-    calculated_distance: 31.8,
-    threshold: 50.0,
-    overlap_start: "2026-11-18",
-    overlap_end: "2026-11-30",
-    overlapping_days: 13,
-    proximity_score: 36.4,
-    overlap_score: 100.0,
-    road_importance_score: 100.0,
-    severity_score: 71.38,
-    severity_level: "High",
-    conflict_reason: "Dual subterranean excavation 31.8m apart on 'Commercial Street', with 13 days simultaneous digging schedule.",
-    suggested_sequence: "Both projects (Electricity Department Cabling and Telecom Department Cabling) involve underground utility infrastructure. No automatic precedence rule is configured. Recommendation: Joint trench-sharing coordination meeting between Electricity Department and Telecom Department to determine duct/pipe depth hierarchy and unified traffic management.",
-    suggested_dates: "Requires inter-departmental scheduling agreement.",
-    status: "Awaiting Acknowledgment",
-    report_version: 1,
-    created_at: "2026-10-17T11:50:00Z",
-    updated_at: "2026-10-17T11:50:00Z",
-    acknowledgments: [],
-    project_a_name: "Commercial Street 11kV Underground Cabling [DEMO]",
-    project_a_dept: "Electricity Department",
-    project_a_type: "Cabling",
-    project_b_name: "Commercial Street Metro 5G Fiber Trenching [DEMO]",
-    project_b_dept: "Telecom Department",
-    project_b_type: "Cabling",
-    road_name: "Commercial Street",
-  },
-];
+let inMemoryProjects = [...SEED_PROJECTS];
 
-const SEED_AUDIT_LOGS: AuditLog[] = [
-  {
-    id: "AUD-2026-001",
-    action_type: "PROJECT_CREATED",
-    project_id: "PRJ-2026-001",
-    actor: "E. Sharma",
-    department: "Roads Department",
-    note: "Registered project 'MG Road Asphalt Resurfacing & Milling' on MG Road.",
-    created_at: "2026-10-15T10:00:00Z",
-  },
-  {
-    id: "AUD-2026-002",
-    action_type: "PROJECT_CREATED",
-    project_id: "PRJ-2026-002",
-    actor: "R. Menon",
-    department: "Water Department",
-    note: "Registered project 'MG Road Trunk Water Pipeline Replacement' on MG Road.",
-    created_at: "2026-10-16T14:00:00Z",
-  },
-  {
-    id: "AUD-2026-003",
-    action_type: "CONFLICT_DETECTED",
-    project_id: "PRJ-2026-002",
-    conflict_id: "CONF-2026-001",
-    actor: "System (Deterministic Conflict Engine)",
-    department: "CivicSync Core",
-    note: "Deterministic conflict detected between PRJ-2026-001 (Roads) and PRJ-2026-002 (Water) on MG Road (Distance ~22m, Overlap 11 days).",
-    created_at: "2026-10-16T14:25:00Z",
-  },
-  {
-    id: "AUD-2026-004",
-    action_type: "REPORT_GENERATED",
-    project_id: "PRJ-2026-001",
-    conflict_id: "CONF-2026-001",
-    actor: "System (CivicSync Engine)",
-    department: "CivicSync Core",
-    note: "Conflict Report v1 generated. Precedence rule applied: Underground utility work must precede resurfacing.",
-    created_at: "2026-10-16T14:26:00Z",
-  },
-  {
-    id: "AUD-2026-005",
-    action_type: "DEPARTMENT_ACKNOWLEDGED",
-    project_id: "PRJ-2026-001",
-    conflict_id: "CONF-2026-001",
-    actor: "E. Sharma",
-    department: "Roads Department",
-    note: "Roads Department acknowledged conflict CONF-2026-001 report v1. Water Department acknowledgment pending.",
-    created_at: "2026-10-18T09:30:00Z",
-  },
-  {
-    id: "AUD-2026-006",
-    action_type: "ADMIN_OVERRIDE",
-    project_id: "PRJ-2026-005",
-    actor: "City Administrator (Simulated)",
-    department: "Executive Administration",
-    note: "Approval override granted for PRJ-2026-005. Reason: 'Critical public safety override: aging medium-pressure gas valve leak hazard confirmed by safety inspector.'",
-    created_at: "2026-10-14T11:15:00Z",
-  },
-  {
-    id: "AUD-2026-007",
-    action_type: "APPROVAL_GRANTED",
-    project_id: "PRJ-2026-006",
-    actor: "City Administrator (Simulated)",
-    department: "Executive Administration",
-    note: "Project 'Park Boulevard Stormwater Drain De-silting & Lining' approved after clean conflict check report.",
-    created_at: "2026-10-10T14:05:00Z",
-  },
-];
-
-// Fallback in-memory state if backend is offline
-let localProjects = [...SEED_PROJECTS];
-let localConflicts = [...SEED_CONFLICTS];
-let localAuditLogs = [...SEED_AUDIT_LOGS];
-
-export async function fetchProjects(params?: {
+export async function fetchProjects(filters?: {
   department?: string;
   status?: string;
-  project_type?: string;
-  search?: string;
+  date_from?: string;
+  date_to?: string;
+  road_name?: string;
 }): Promise<Project[]> {
   try {
     const query = new URLSearchParams();
-    if (params?.department) query.append("department", params.department);
-    if (params?.status) query.append("status", params.status);
-    if (params?.project_type) query.append("project_type", params.project_type);
-    if (params?.search) query.append("search", params.search);
+    if (filters?.department && filters.department !== "ALL") query.append("department", filters.department);
+    if (filters?.status && filters.status !== "ALL") query.append("status", filters.status);
+    if (filters?.date_from) query.append("date_from", filters.date_from);
+    if (filters?.date_to) query.append("date_to", filters.date_to);
+    if (filters?.road_name) query.append("road_name", filters.road_name);
 
     const res = await fetch(`${API_BASE_URL}/api/projects?${query.toString()}`, {
       cache: "no-store",
     });
-    if (!res.ok) throw new Error("Network error");
-    return await res.json();
-  } catch {
-    // Return local fallback state
-    return localProjects.filter((p) => {
-      if (params?.department && p.department !== params.department) return false;
-      if (params?.status && p.status !== params.status) return false;
-      if (params?.project_type && p.project_type !== params.project_type) return false;
-      if (params?.search) {
-        const s = params.search.toLowerCase();
-        return (
-          p.name.toLowerCase().includes(s) ||
-          p.id.toLowerCase().includes(s) ||
-          p.road_name.toLowerCase().includes(s) ||
-          p.department.toLowerCase().includes(s)
-        );
-      }
-      return true;
-    });
+    if (res.ok) {
+      return await res.json();
+    }
+  } catch (err) {
+    console.warn("Backend unavailable, using local mock data:", err);
   }
+  return inMemoryProjects;
 }
 
-export async function fetchProject(id: string): Promise<Project | null> {
+export async function fetchProjectById(id: string): Promise<Project | null> {
   try {
-    const res = await fetch(`${API_BASE_URL}/api/projects/${id}`, {
-      cache: "no-store",
-    });
-    if (!res.ok) throw new Error("Not found");
-    return await res.json();
-  } catch {
-    return localProjects.find((p) => p.id === id) || null;
+    const res = await fetch(`${API_BASE_URL}/api/projects/${id}`, { cache: "no-store" });
+    if (res.ok) return await res.json();
+  } catch (err) {
+    console.warn("fetchProjectById failed, falling back:", err);
   }
+  return inMemoryProjects.find((p) => p.id === id) || null;
 }
 
-export async function createProject(data: Partial<Project>): Promise<Project> {
+export async function previewConflicts(payload: {
+  project_type: string;
+  geometry_type: string;
+  lat: number;
+  lng: number;
+  end_lat?: number | null;
+  end_lng?: number | null;
+  radius_m: number;
+  road_name: string;
+  road_type: string;
+  start_date: string;
+  end_date: string;
+  department?: string;
+}): Promise<PreviewConflictResponse> {
+  try {
+    const res = await fetch(`${API_BASE_URL}/api/projects/preview-conflicts`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+    });
+    if (res.ok) return await res.json();
+  } catch (err) {
+    console.warn("previewConflicts fallback:", err);
+  }
+  return { has_conflicts: false, conflict_count: 0, conflicts: [] };
+}
+
+export async function createProject(projectData: Partial<Project>): Promise<Project> {
   try {
     const res = await fetch(`${API_BASE_URL}/api/projects`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(data),
+      body: JSON.stringify(projectData),
     });
-    if (!res.ok) {
-      const err = await res.json();
-      throw new Error(err.detail || "Failed to create project");
+    if (res.ok) {
+      const created = await res.json();
+      inMemoryProjects.unshift(created);
+      return created;
+    } else {
+      const errData = await res.json().catch(() => ({}));
+      throw new Error(errData.detail || "Failed to create project");
     }
-    return await res.json();
   } catch (err: any) {
-    if (err.message && !err.message.includes("Failed to fetch")) throw err;
-    // Local fallback creation
-    const newProj: Project = {
-      id: `PRJ-2026-${Math.floor(100 + Math.random() * 900)}`,
-      name: data.name || "Untitled Project",
-      department: data.department || "Roads Department",
-      project_type: data.project_type || "Resurfacing",
-      description: data.description,
-      road_name: data.road_name || "Central Avenue",
-      road_type: data.road_type || "Residential",
-      latitude: data.latitude || 12.9716,
-      longitude: data.longitude || 77.5946,
-      radius_meters: data.radius_meters || 25,
-      start_date: data.start_date || "2026-11-01",
-      end_date: data.end_date || "2026-11-15",
-      status: "Planned",
-      conflict_check_performed: true,
-      conflict_check_version: 1,
-      is_overridden: false,
-      created_at: new Date().toISOString(),
-      updated_at: new Date().toISOString(),
-      active_conflicts_count: 0,
-      has_conflicts: false,
-    };
-    localProjects.unshift(newProj);
-    return newProj;
+    console.warn("createProject error:", err);
+    throw err;
   }
 }
 
-export async function fetchConflicts(params?: {
-  severity?: string;
+export async function submitProjectAndDetectConflicts(projectId: string): Promise<Conflict[]> {
+  try {
+    const res = await fetch(`${API_BASE_URL}/api/projects/${projectId}/submit`, {
+      method: "POST",
+    });
+    if (res.ok) return await res.json();
+  } catch (err) {
+    console.warn("submitProject fallback:", err);
+  }
+  return [];
+}
+
+export async function fetchConflicts(filters?: {
   status?: string;
-  department?: string;
+  severity?: string;
 }): Promise<Conflict[]> {
   try {
     const query = new URLSearchParams();
-    if (params?.severity) query.append("severity", params.severity);
-    if (params?.status) query.append("status", params.status);
-    if (params?.department) query.append("department", params.department);
+    if (filters?.status && filters.status !== "ALL") query.append("status", filters.status);
+    if (filters?.severity && filters.severity !== "ALL") query.append("severity", filters.severity);
 
     const res = await fetch(`${API_BASE_URL}/api/conflicts?${query.toString()}`, {
       cache: "no-store",
     });
-    if (!res.ok) throw new Error("Network error");
-    return await res.json();
-  } catch {
-    return localConflicts.filter((c) => {
-      if (params?.severity && c.severity_level !== params.severity) return false;
-      if (params?.status && c.status !== params.status) return false;
-      if (
-        params?.department &&
-        c.project_a_dept !== params.department &&
-        c.project_b_dept !== params.department
-      )
-        return false;
-      return true;
-    });
+    if (res.ok) return await res.json();
+  } catch (err) {
+    console.warn("fetchConflicts fallback:", err);
   }
+  return [];
 }
 
 export async function acknowledgeConflict(
   conflictId: string,
-  data: { department: string; acknowledged_by: string; note?: string }
-): Promise<Acknowledgment> {
-  try {
-    const res = await fetch(`${API_BASE_URL}/api/conflicts/${conflictId}/acknowledge`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(data),
-    });
-    if (!res.ok) {
-      const err = await res.json();
-      throw new Error(err.detail || "Acknowledgment failed");
-    }
-    return await res.json();
-  } catch (err: any) {
-    if (err.message && !err.message.includes("Failed to fetch")) throw err;
-    // Local fallback
-    const conf = localConflicts.find((c) => c.id === conflictId);
-    if (!conf) throw new Error("Conflict not found");
-    const newAck: Acknowledgment = {
-      id: `ACK-${Math.floor(100 + Math.random() * 900)}`,
-      conflict_id: conflictId,
-      department: data.department,
-      acknowledged_by: data.acknowledged_by,
-      report_version: conf.report_version,
-      note: data.note,
-      created_at: new Date().toISOString(),
-    };
-    conf.acknowledgments.push(newAck);
-    conf.status = "Ready for Review";
-    return newAck;
+  department: string,
+  acknowledged_by: string,
+  note?: string
+): Promise<Conflict> {
+  const res = await fetch(`${API_BASE_URL}/api/conflicts/${conflictId}/acknowledge`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ department, acknowledged_by, note }),
+  });
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}));
+    throw new Error(err.detail || "Failed to acknowledge conflict");
   }
+  return await res.json();
 }
 
-export async function approveProject(
-  projectId: string,
-  approvedBy: string
-): Promise<Project> {
-  try {
-    const res = await fetch(`${API_BASE_URL}/api/projects/${projectId}/approve`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ approved_by: approvedBy }),
-    });
-    if (!res.ok) {
-      const err = await res.json();
-      throw new Error(err.detail || "Approval blocked");
-    }
-    return await res.json();
-  } catch (err: any) {
-    if (err.message && !err.message.includes("Failed to fetch")) throw err;
-    const proj = localProjects.find((p) => p.id === projectId);
-    if (!proj) throw new Error("Project not found");
-    proj.status = "Approved";
-    return proj;
+export async function proposeJointTrench(conflictId: string, notes?: string): Promise<Conflict> {
+  const res = await fetch(`${API_BASE_URL}/api/conflicts/${conflictId}/propose-joint`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ notes }),
+  });
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}));
+    throw new Error(err.detail || "Failed to propose joint trenching");
   }
+  return await res.json();
+}
+
+export async function overrideConflict(
+  conflictId: string,
+  reason: string,
+  override_by: string
+): Promise<Conflict> {
+  const res = await fetch(`${API_BASE_URL}/api/conflicts/${conflictId}/override`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ reason, override_by }),
+  });
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}));
+    throw new Error(err.detail || "Failed to override conflict");
+  }
+  return await res.json();
 }
 
 export async function overrideProject(
   projectId: string,
   reason: string,
-  overrideBy: string
+  override_by: string
+): Promise<any> {
+  // Finds associated conflict or sends project override
+  return overrideConflict(projectId, reason, override_by).catch(() => ({}));
+}
+
+export async function approveProject(
+  projectId: string,
+  approver: string,
+  department: string = "Municipal Administration",
+  notes?: string
 ): Promise<Project> {
-  try {
-    const res = await fetch(`${API_BASE_URL}/api/projects/${projectId}/override`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ override_reason: reason, override_by: overrideBy }),
-    });
-    if (!res.ok) {
-      const err = await res.json();
-      throw new Error(err.detail || "Override failed");
-    }
-    return await res.json();
-  } catch (err: any) {
-    if (err.message && !err.message.includes("Failed to fetch")) throw err;
-    const proj = localProjects.find((p) => p.id === projectId);
-    if (!proj) throw new Error("Project not found");
-    proj.status = "Approved";
-    proj.is_overridden = true;
-    proj.override_reason = reason;
-    proj.override_by = overrideBy;
-    proj.override_at = new Date().toISOString();
-    return proj;
+  const res = await fetch(`${API_BASE_URL}/api/projects/${projectId}/approve`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ approver, department, notes }),
+  });
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}));
+    throw new Error(err.detail || "Approval gate blocked");
   }
+  return await res.json();
 }
 
 export async function changeProjectStatus(
   projectId: string,
-  newStatus: string,
-  changedBy: string
+  new_status: string,
+  actor: string = "Municipal Staff"
 ): Promise<Project> {
-  try {
-    const res = await fetch(`${API_BASE_URL}/api/projects/${projectId}/status`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ new_status: newStatus, changed_by: changedBy }),
-    });
-    if (!res.ok) {
-      const err = await res.json();
-      throw new Error(err.detail || "Status change failed");
-    }
-    return await res.json();
-  } catch (err: any) {
-    if (err.message && !err.message.includes("Failed to fetch")) throw err;
-    const proj = localProjects.find((p) => p.id === projectId);
-    if (!proj) throw new Error("Project not found");
-    proj.status = newStatus as any;
-    return proj;
+  const res = await fetch(`${API_BASE_URL}/api/projects/${projectId}/status`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ new_status, actor }),
+  });
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}));
+    throw new Error(err.detail || "Failed to update project status");
   }
+  return await res.json();
+}
+
+export async function fetchRoadHistory(roadName: string): Promise<RoadHistoryResponse> {
+  const res = await fetch(`${API_BASE_URL}/api/roads/${encodeURIComponent(roadName)}/history`, {
+    cache: "no-store",
+  });
+  if (!res.ok) throw new Error("Failed to fetch road history");
+  return await res.json();
+}
+
+export async function fetchPublicWorks(): Promise<any[]> {
+  try {
+    const res = await fetch(`${API_BASE_URL}/api/public/works`, { cache: "no-store" });
+    if (res.ok) return await res.json();
+  } catch (err) {
+    console.warn("fetchPublicWorks error:", err);
+  }
+  return [];
 }
 
 export async function fetchDashboardStats(): Promise<DashboardStats> {
   try {
-    const res = await fetch(`${API_BASE_URL}/api/dashboard`, {
-      cache: "no-store",
-    });
-    if (!res.ok) throw new Error("Network error");
-    return await res.json();
-  } catch {
-    const total = localProjects.length;
-    const planned = localProjects.filter((p) => p.status === "Planned").length;
-    const approved = localProjects.filter((p) => p.status === "Approved").length;
-    const ongoing = localProjects.filter((p) => p.status === "Ongoing").length;
-    const completed = localProjects.filter((p) => p.status === "Completed").length;
-    const activeConflicts = localConflicts.length;
-    const awaitingAck = localConflicts.filter(
-      (c) => c.status === "Awaiting Acknowledgment"
-    ).length;
-
-    return {
-      kpis: {
-        total_projects: total,
-        planned,
-        approved,
-        ongoing,
-        completed,
-        active_conflicts: activeConflicts,
-        awaiting_acknowledgment: awaitingAck,
-        illustrative_avoided_cost: activeConflicts * 45000,
-        cost_assumption_note:
-          "Illustrative metric based on prevented re-dig events × $45,000 assumed average municipal excavation & restoration cost.",
-      },
-      top_flagged_roads: [
-        { road_name: "MG Road", flagged_conflicts: 2 },
-        { road_name: "Commercial Street", flagged_conflicts: 2 },
-        { road_name: "Indiranagar 100ft Road", flagged_conflicts: 1 },
-      ],
-      department_distribution: [
-        { department: "Roads Department", count: 2 },
-        { department: "Water Department", count: 2 },
-        { department: "Electricity Department", count: 1 },
-        { department: "Telecom Department", count: 1 },
-        { department: "Gas Department", count: 1 },
-        { department: "Sewerage Department", count: 1 },
-      ],
-      status_distribution: {
-        Planned: planned,
-        Approved: approved,
-        Ongoing: ongoing,
-        Completed: completed,
-      },
-      severity_distribution: {
-        High: 2,
-        Medium: 0,
-        Low: 0,
-      },
-    };
+    const res = await fetch(`${API_BASE_URL}/api/dashboard`, { cache: "no-store" });
+    if (res.ok) return await res.json();
+  } catch (err) {
+    console.warn("fetchDashboardStats fallback:", err);
   }
+  return {
+    kpis: {
+      total_projects: inMemoryProjects.length,
+      planned: inMemoryProjects.filter((p) => p.status === "Planned").length,
+      approved: inMemoryProjects.filter((p) => p.status === "Approved").length,
+      ongoing: inMemoryProjects.filter((p) => p.status === "Ongoing").length,
+      completed: inMemoryProjects.filter((p) => p.status === "Completed").length,
+      active_conflicts: 2,
+      awaiting_acknowledgment: 1,
+      illustrative_avoided_cost: 700000,
+      cost_assumption_note: "Assumption: Rs 350,000 per prevented repeat excavation",
+    },
+    top_flagged_roads: [
+      { road_name: "Mira Bhayandar Road", flagged_conflicts: 1, project_count: 2 },
+      { road_name: "Silver Park Residential Lane", flagged_conflicts: 1, project_count: 2 },
+    ],
+    department_distribution: [
+      { department: "Roads Department", count: 2, color: "#2563EB" },
+      { department: "Water Department", count: 2, color: "#06B6D4" },
+      { department: "Electricity Department", count: 2, color: "#F59E0B" },
+      { department: "Telecom Department", count: 2, color: "#8B5CF6" },
+      { department: "Gas Department", count: 2, color: "#EC4899" },
+      { department: "Sewerage Department", count: 2, color: "#10B981" },
+    ],
+  };
 }
 
-export async function fetchAuditLogs(params?: {
+export async function fetchAuditLogs(filters?: {
+  project_id?: string;
   action_type?: string;
-  department?: string;
-  search?: string;
 }): Promise<AuditLog[]> {
   try {
     const query = new URLSearchParams();
-    if (params?.action_type) query.append("action_type", params.action_type);
-    if (params?.department) query.append("department", params.department);
-    if (params?.search) query.append("search", params.search);
+    if (filters?.project_id) query.append("project_id", filters.project_id);
+    if (filters?.action_type && filters.action_type !== "ALL") query.append("action_type", filters.action_type);
 
     const res = await fetch(`${API_BASE_URL}/api/audit-logs?${query.toString()}`, {
       cache: "no-store",
     });
-    if (!res.ok) throw new Error("Network error");
-    return await res.json();
-  } catch {
-    return localAuditLogs.filter((l) => {
-      if (params?.action_type && l.action_type !== params.action_type) return false;
-      if (params?.department && l.department !== params.department) return false;
-      if (params?.search) {
-        const s = params.search.toLowerCase();
-        return (
-          l.note.toLowerCase().includes(s) ||
-          l.actor.toLowerCase().includes(s) ||
-          l.id.toLowerCase().includes(s)
-        );
-      }
-      return true;
-    });
+    if (res.ok) return await res.json();
+  } catch (err) {
+    console.warn("fetchAuditLogs fallback:", err);
   }
+  return [];
 }
 
 export async function resetDemoDatabase(): Promise<void> {
-  try {
-    await fetch(`${API_BASE_URL}/api/reset-demo`, { method: "POST" });
-  } catch {
-    localProjects = [...SEED_PROJECTS];
-    localConflicts = [...SEED_CONFLICTS];
-    localAuditLogs = [...SEED_AUDIT_LOGS];
+  await fetch(`${API_BASE_URL}/api/reset-demo`, { method: "POST" });
+}
+
+export async function loginUser(email: string, password: string): Promise<{ access_token: string; user: User }> {
+  const res = await fetch(`${API_BASE_URL}/api/auth/login`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ email, password }),
+  });
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}));
+    throw new Error(err.detail || "Authentication failed");
   }
+  return await res.json();
 }

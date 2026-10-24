@@ -1,10 +1,11 @@
 import type { Metadata } from "next";
+import "maplibre-gl/dist/maplibre-gl.css";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "CivicSync — Smart City Infrastructure Coordination Platform",
+  title: "DigSync — Cross-Department Road-Work Coordination Platform",
   description:
-    "One City. One Plan. Zero Rework. A shared infrastructure coordination system that prevents repeated road excavation through deterministic conflict detection.",
+    "One City. One Plan. Zero Rework. A shared municipal infrastructure coordination system that prevents repeated road excavation through deterministic conflict detection.",
 };
 
 export default function RootLayout({

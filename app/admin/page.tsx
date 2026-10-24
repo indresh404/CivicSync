@@ -7,12 +7,14 @@ import MapComponent from "@/components/MapComponent";
 import RegisterProjectModal from "@/components/RegisterProjectModal";
 import ProjectDrawer from "@/components/ProjectDrawer";
 import ConflictDetailModal from "@/components/ConflictDetailModal";
+import GanttChartView from "@/components/GanttChartView";
 import {
   Project,
   Conflict,
   AuditLog,
   DashboardStats,
   SimulatedRole,
+  RoadHistoryResponse,
 } from "@/lib/types";
 import {
   fetchProjects,
@@ -22,6 +24,7 @@ import {
   resetDemoDatabase,
   approveProject,
   overrideProject,
+  fetchRoadHistory,
 } from "@/lib/api";
 import {
   formatDate,
@@ -48,6 +51,8 @@ import {
   Building,
   Check,
   Search,
+  CalendarRange,
+  Table,
 } from "lucide-react";
 import {
   BarChart,
@@ -85,6 +90,7 @@ export default function AdminDashboardPage() {
   const [projDeptFilter, setProjDeptFilter] = useState("ALL");
   const [projStatusFilter, setProjStatusFilter] = useState("ALL");
   const [projTypeFilter, setProjTypeFilter] = useState("ALL");
+  const [projectsViewMode, setProjectsViewMode] = useState<"table" | "gantt">("table");
 
   // Filter states for Conflicts tab
   const [confSeverityFilter, setConfSeverityFilter] = useState("ALL");
@@ -92,6 +98,11 @@ export default function AdminDashboardPage() {
 
   // Filter states for Audit tab
   const [auditActionFilter, setAuditActionFilter] = useState("ALL");
+
+  // Road History Tab state
+  const [selectedRoadForHistory, setSelectedRoadForHistory] = useState("Mira Bhayandar Road");
+  const [roadHistoryData, setRoadHistoryData] = useState<RoadHistoryResponse | null>(null);
+  const [loadingRoadHistory, setLoadingRoadHistory] = useState(false);
 
   // Toast feedback
   const [toastMessage, setToastMessage] = useState<string | null>(null);
@@ -124,6 +135,22 @@ export default function AdminDashboardPage() {
   useEffect(() => {
     loadAllData();
   }, []);
+
+  useEffect(() => {
+    async function loadRoadHistory() {
+      if (currentTab !== "road_history" && !drawerProject) return;
+      setLoadingRoadHistory(true);
+      try {
+        const data = await fetchRoadHistory(selectedRoadForHistory);
+        setRoadHistoryData(data);
+      } catch (err) {
+        console.warn("Could not load road history:", err);
+      } finally {
+        setLoadingRoadHistory(false);
+      }
+    }
+    loadRoadHistory();
+  }, [currentTab, selectedRoadForHistory]);
 
   const handleResetDemo = async () => {
     if (confirm("Reset demo database with official seed scenario?")) {
@@ -195,18 +222,23 @@ export default function AdminDashboardPage() {
   const plannedProjectsForApproval = projects.filter((p) => p.status === "Planned");
 
   // Chart data
-  const statusPieData = dashboardStats
+  const statusPieData = dashboardStats?.status_distribution
     ? Object.entries(dashboardStats.status_distribution).map(([name, value]) => ({
         name,
         value,
       }))
-    : [];
+    : [
+        { name: "Planned", value: projects.filter((p) => p.status === "Planned").length },
+        { name: "Approved", value: projects.filter((p) => p.status === "Approved").length },
+        { name: "Ongoing", value: projects.filter((p) => p.status === "Ongoing").length },
+        { name: "Completed", value: projects.filter((p) => p.status === "Completed").length },
+      ];
   const statusColors = ["#2563EB", "#4338CA", "#0891B2", "#64748B"];
 
-  const deptBarData = dashboardStats
+  const deptBarData = dashboardStats?.department_distribution
     ? dashboardStats.department_distribution.map((d) => ({
         name: d.department.replace(" Department", ""),
-        count: d.count,
+        count: d.count ?? d.project_count ?? 1,
       }))
     : [];
 
@@ -263,10 +295,14 @@ export default function AdminDashboardPage() {
               ? "Municipal Operations Overview"
               : currentTab === "projects"
               ? "Project Management"
+              : currentTab === "gantt"
+              ? "Municipal Master Gantt Schedule"
               : currentTab === "map"
               ? "Shared City Infrastructure Map"
               : currentTab === "conflicts"
               ? "Corridor Conflict Gate"
+              : currentTab === "road_history"
+              ? "Road Excavation History & Cooldown Timeline"
               : currentTab === "approvals"
               ? "Inter-Departmental Approval Queue"
               : "Append-Only Audit Trail"
@@ -400,18 +436,21 @@ export default function AdminDashboardPage() {
                 <div className="space-y-1">
                   <div className="flex items-center gap-2">
                     <span className="text-xs font-bold uppercase tracking-wider text-blue-200">
-                      Illustrative Estimated Avoided Cost
+                      Illustrative Estimated Avoided Cost (MBMC Area)
                     </span>
                     <span className="text-[10px] bg-blue-800/80 text-blue-200 px-2 py-0.5 rounded border border-blue-700 flex items-center gap-1">
-                      <Info className="w-3 h-3" /> Configurable Assumption
+                      <Info className="w-3 h-3" /> Standard Assumption
                     </span>
                   </div>
-                  <div className="text-2xl sm:text-3xl font-extrabold font-mono tracking-tight text-white">
-                    ${(dashboardStats?.kpis.illustrative_avoided_cost ?? 90000).toLocaleString()}
+                  <div className="text-2xl sm:text-3xl font-extrabold font-mono tracking-tight text-white flex items-center gap-1">
+                    <span>&#8377;</span>
+                    <span>
+                      {(dashboardStats?.kpis.illustrative_avoided_cost ?? 700000).toLocaleString("en-IN")}
+                    </span>
                   </div>
                   <p className="text-xs text-blue-200 max-w-xl">
                     {dashboardStats?.kpis.cost_assumption_note ||
-                      "Calculated transparently: prevented re-dig events × $45,000 assumed per-dig municipal excavation & restoration cost."}
+                      "Calculated transparently: prevented re-dig events * ₹3,50,000 assumed per-dig municipal excavation & restoration cost."}
                   </p>
                 </div>
                 <button
@@ -543,7 +582,7 @@ export default function AdminDashboardPage() {
                             <span className="font-semibold text-slate-900">{road.road_name}</span>
                           </div>
                           <span className="font-mono font-bold text-red-600 bg-red-50 px-2 py-0.5 rounded border border-red-200 text-[11px]">
-                            {road.flagged_conflicts} Conflict{road.flagged_conflicts > 1 ? "s" : ""}
+                            {road.flagged_conflicts ?? road.conflict_count ?? 0} Conflict{(road.flagged_conflicts ?? road.conflict_count ?? 0) !== 1 ? "s" : ""}
                           </span>
                         </div>
                       ))}
@@ -557,19 +596,19 @@ export default function AdminDashboardPage() {
                     <div className="grid grid-cols-3 gap-2 text-center text-xs">
                       <div className="p-2 rounded-lg bg-red-50 border border-red-200">
                         <div className="font-bold text-red-700 font-mono text-base">
-                          {dashboardStats?.severity_distribution.High ?? 2}
+                          {dashboardStats?.severity_distribution?.High ?? conflicts.filter((c) => c.severity_level === "High").length}
                         </div>
                         <span className="text-[10px] text-red-600 font-medium">High</span>
                       </div>
                       <div className="p-2 rounded-lg bg-amber-50 border border-amber-200">
                         <div className="font-bold text-amber-700 font-mono text-base">
-                          {dashboardStats?.severity_distribution.Medium ?? 0}
+                          {dashboardStats?.severity_distribution?.Medium ?? conflicts.filter((c) => c.severity_level === "Medium").length}
                         </div>
                         <span className="text-[10px] text-amber-600 font-medium">Medium</span>
                       </div>
                       <div className="p-2 rounded-lg bg-emerald-50 border border-emerald-200">
                         <div className="font-bold text-emerald-700 font-mono text-base">
-                          {dashboardStats?.severity_distribution.Low ?? 0}
+                          {dashboardStats?.severity_distribution?.Low ?? conflicts.filter((c) => c.severity_level === "Low").length}
                         </div>
                         <span className="text-[10px] text-emerald-600 font-medium">Low</span>
                       </div>
@@ -782,12 +821,49 @@ export default function AdminDashboardPage() {
                   )}
                 </div>
 
-                <div className="text-xs font-semibold text-slate-500">
-                  Showing {filteredProjects.length} of {projects.length} registered projects
+                <div className="flex items-center gap-3">
+                  <div className="flex items-center gap-1 bg-slate-100 p-0.5 rounded-lg border border-slate-200">
+                    <button
+                      type="button"
+                      onClick={() => setProjectsViewMode("table")}
+                      className={`px-2.5 py-1 text-xs font-semibold rounded-md transition flex items-center gap-1.5 ${
+                        projectsViewMode === "table"
+                          ? "bg-white text-slate-900 shadow-xs"
+                          : "text-slate-600 hover:text-slate-900"
+                      }`}
+                    >
+                      <Table className="w-3.5 h-3.5" />
+                      Table View
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setProjectsViewMode("gantt")}
+                      className={`px-2.5 py-1 text-xs font-semibold rounded-md transition flex items-center gap-1.5 ${
+                        projectsViewMode === "gantt"
+                          ? "bg-white text-blue-600 shadow-xs"
+                          : "text-slate-600 hover:text-slate-900"
+                      }`}
+                    >
+                      <CalendarRange className="w-3.5 h-3.5" />
+                      Gantt Schedule
+                    </button>
+                  </div>
+
+                  <div className="text-xs font-semibold text-slate-500">
+                    Showing {filteredProjects.length} of {projects.length} registered projects
+                  </div>
                 </div>
               </div>
 
-              {/* Projects Table */}
+              {/* Projects Table or Gantt View */}
+              {projectsViewMode === "gantt" ? (
+                <GanttChartView
+                  projects={filteredProjects}
+                  conflicts={conflicts}
+                  onSelectProject={(p) => setDrawerProject(p)}
+                  onSelectConflict={(c) => setActiveConflictModal(c)}
+                />
+              ) : (
               <div className="bg-white rounded-xl border border-slate-200 overflow-hidden shadow-xs">
                 <div className="overflow-x-auto">
                   <table className="w-full text-left text-xs">
@@ -887,6 +963,21 @@ export default function AdminDashboardPage() {
                   </table>
                 </div>
               </div>
+              )}
+            </div>
+          )}
+
+          {/* ============================================================ */}
+          {/* GANTT SCHEDULE TAB */}
+          {/* ============================================================ */}
+          {currentTab === "gantt" && (
+            <div className="max-w-7xl mx-auto space-y-4">
+              <GanttChartView
+                projects={projects}
+                conflicts={conflicts}
+                onSelectProject={(p) => setDrawerProject(p)}
+                onSelectConflict={(c) => setActiveConflictModal(c)}
+              />
             </div>
           )}
 
@@ -1036,6 +1127,123 @@ export default function AdminDashboardPage() {
                       </div>
                     );
                   })
+                )}
+              </div>
+            </div>
+          )}
+
+          {/* ============================================================ */}
+          {/* 4.5. ROAD HISTORY TAB */}
+          {/* ============================================================ */}
+          {currentTab === "road_history" && (
+            <div className="space-y-6 max-w-7xl mx-auto">
+              {/* Road Selector & Headline Stat */}
+              <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-xs flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+                <div className="space-y-1">
+                  <div className="text-xs font-bold text-slate-500 uppercase tracking-wider">
+                    Select Municipal Corridor
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <select
+                      value={selectedRoadForHistory}
+                      onChange={(e) => setSelectedRoadForHistory(e.target.value)}
+                      className="text-base font-bold text-slate-900 py-1.5 px-3 rounded-xl border border-slate-300 bg-white focus:outline-none focus:ring-2 focus:ring-blue-600"
+                    >
+                      {Array.from(new Set(projects.map((p) => p.road_name))).map((r) => (
+                        <option key={r} value={r}>
+                          {r}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                </div>
+
+                {/* Headline Stat */}
+                <div className="p-4 rounded-xl bg-blue-50 border border-blue-200 text-blue-900 flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-lg bg-blue-600 text-white flex items-center justify-center font-bold text-lg">
+                    {roadHistoryData?.excavations_last_12_months ?? 0}
+                  </div>
+                  <div>
+                    <div className="text-sm font-extrabold text-blue-950">
+                      {roadHistoryData?.headline_stat || "Zero excavations in the last 12 months"}
+                    </div>
+                    <div className="text-[11px] text-blue-700">
+                      Municipal 24-Month Cooldown Window Active &bull; {roadHistoryData?.total_projects ?? 0} Total Work Orders Recorded
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Vertical Timeline */}
+              <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-xs space-y-6">
+                <h4 className="text-sm font-bold text-slate-900 uppercase tracking-wider flex items-center gap-2">
+                  <Clock className="w-4 h-4 text-blue-600" />
+                  Chronological Excavation & Resurfacing Timeline
+                </h4>
+
+                {loadingRoadHistory ? (
+                  <div className="p-12 text-center text-xs text-slate-500">
+                    Loading corridor history...
+                  </div>
+                ) : !roadHistoryData || roadHistoryData.projects.length === 0 ? (
+                  <div className="p-8 text-center text-xs text-slate-500 border border-dashed rounded-xl">
+                    No work history recorded on this corridor yet.
+                  </div>
+                ) : (
+                  <div className="relative pl-6 space-y-6 before:absolute before:left-2 before:top-2 before:bottom-2 before:w-0.5 before:bg-slate-200">
+                    {roadHistoryData.projects.map((item) => (
+                      <div key={item.id} className="relative group">
+                        {/* Bullet */}
+                        <div
+                          className={`absolute -left-6 top-1.5 w-4 h-4 rounded-full border-2 border-white shadow-sm flex items-center justify-center ${
+                            item.status === "Completed"
+                              ? "bg-slate-500"
+                              : item.status === "Ongoing"
+                              ? "bg-cyan-600"
+                              : item.status === "Approved"
+                              ? "bg-indigo-600"
+                              : "bg-blue-600"
+                          }`}
+                        />
+
+                        <div className="p-4 rounded-xl border border-slate-200 bg-slate-50/60 hover:bg-white hover:border-blue-300 transition shadow-xs">
+                          <div className="flex flex-wrap items-center justify-between gap-2 mb-1">
+                            <span className="font-bold text-sm text-slate-900">{item.name}</span>
+                            <span className={`text-[10px] font-bold px-2 py-0.5 rounded border ${getStatusBadgeClass(item.status)}`}>
+                              {item.status}
+                            </span>
+                          </div>
+
+                          <div className="flex flex-wrap items-center gap-2 text-xs text-slate-600 mb-2">
+                            <span className="font-semibold text-slate-800">{item.department}</span>
+                            <span>&bull;</span>
+                            <span className="bg-slate-200 text-slate-700 px-2 py-0.5 rounded text-[11px]">{item.project_type}</span>
+                            <span>&bull;</span>
+                            <span className="flex items-center gap-1 text-slate-500 font-mono text-[11px]">
+                              <Calendar className="w-3 h-3" />
+                              {formatDate(item.start_date)} to {formatDate(item.end_date)}
+                            </span>
+                          </div>
+
+                          {item.description && (
+                            <p className="text-xs text-slate-600 mt-1">{item.description}</p>
+                          )}
+
+                          {item.cooldown_justification && (
+                            <div className="mt-2 p-2.5 rounded-lg bg-amber-50 border border-amber-200 text-xs text-amber-800">
+                              <strong>Cooldown Justification:</strong> {item.cooldown_justification}
+                            </div>
+                          )}
+
+                          {item.is_overridden && (
+                            <div className="mt-2 p-2.5 rounded-lg bg-red-50 border border-red-200 text-xs text-red-800">
+                              <strong>Executive Override:</strong> {item.override_reason}
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
                 )}
               </div>
             </div>
@@ -1274,6 +1482,11 @@ export default function AdminDashboardPage() {
         onSelectConflict={(c) => {
           setDrawerProject(null);
           setActiveConflictModal(c);
+        }}
+        onViewRoadHistory={(roadName) => {
+          setDrawerProject(null);
+          setSelectedRoadForHistory(roadName);
+          setCurrentTab("road_history");
         }}
         currentRole={currentRole}
       />

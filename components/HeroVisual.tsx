@@ -24,8 +24,8 @@ export default function HeroVisual() {
             <span className="w-2.5 h-2.5 rounded-full bg-slate-300" />
             <span className="w-2.5 h-2.5 rounded-full bg-slate-300" />
           </div>
-          <span className="text-xs font-semibold text-slate-600 pl-2">
-            CivicSync Active Corridor Conflict Engine — MG Road Corridor
+          <span className="text-xs font-semibold text-slate-700 pl-2">
+            CivicSync Active Conflict Engine — Mira Bhayandar Road (MBMC Jurisdiction)
           </span>
         </div>
         <div className="flex items-center gap-1.5 bg-white border border-slate-200 rounded-lg p-0.5 text-xs font-medium">
@@ -37,7 +37,7 @@ export default function HeroVisual() {
                 : "text-slate-600 hover:text-slate-900"
             }`}
           >
-            Detected Conflict (22m)
+            Detected Conflict (22.4m)
           </button>
           <button
             onClick={() => setActiveTab("sequence")}
@@ -67,14 +67,14 @@ export default function HeroVisual() {
 
         {/* Schematic Roadways */}
         <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-          {/* Arterial Corridor: MG Road */}
+          {/* Arterial Corridor: Mira Bhayandar Road */}
           <div className="w-[120%] h-14 bg-slate-800/90 border-y-2 border-slate-700/80 -rotate-6 relative flex items-center justify-around">
             <div className="absolute inset-x-0 h-0.5 border-t border-dashed border-slate-500/60" />
-            <span className="text-[11px] font-mono tracking-widest text-slate-400 uppercase select-none">
-              MG ROAD [ARTERIAL CORRIDOR]
+            <span className="text-[11px] font-mono tracking-widest text-slate-300 uppercase select-none font-bold">
+              MIRA BHAYANDAR ROAD [ARTERIAL CORRIDOR]
             </span>
           </div>
-          {/* Cross Street: Brigade Avenue */}
+          {/* Cross Street: Shanti Nagar Link */}
           <div className="h-[120%] w-10 bg-slate-800/80 border-x border-slate-700/60 rotate-45 absolute" />
         </div>
 
@@ -86,16 +86,16 @@ export default function HeroVisual() {
               <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-red-500" />
             </span>
             <span className="text-xs font-semibold text-red-300 bg-red-950/80 px-2 py-0.5 rounded border border-red-800">
-              Active Dual-Excavation Risk Prevented
+              Dual-Digging Conflict Prevented (Mira Road)
             </span>
           </div>
 
           <div className="flex items-center gap-3 text-xs text-slate-300 bg-slate-900/90 px-3 py-1 rounded-md border border-slate-800">
             <span className="flex items-center gap-1.5">
-              <span className="w-2.5 h-2.5 rounded-full bg-blue-500" /> Roads Dept (Resurfacing)
+              <span className="w-2.5 h-2.5 rounded-full bg-blue-500" /> MBMC Roads (Resurfacing)
             </span>
             <span className="flex items-center gap-1.5">
-              <span className="w-2.5 h-2.5 rounded-full bg-sky-400" /> Water Dept (Pipeline)
+              <span className="w-2.5 h-2.5 rounded-full bg-sky-400" /> Water Supply (Trunk Pipe)
             </span>
           </div>
         </div>
@@ -113,7 +113,7 @@ export default function HeroVisual() {
                   <span>PRJ-2026-001</span>
                   <span className="text-slate-400">Planned</span>
                 </div>
-                <div className="text-xs font-bold text-white mt-0.5">Roads Resurfacing</div>
+                <div className="text-xs font-bold text-white mt-0.5">Mira Bhayandar Resurfacing</div>
                 <div className="text-[11px] text-slate-400 mt-1 flex items-center gap-1">
                   <Calendar className="w-3 h-3 text-slate-400" /> 05 Nov – 20 Nov
                 </div>
@@ -125,7 +125,7 @@ export default function HeroVisual() {
               <div className="w-full flex items-center">
                 <div className="h-0.5 w-full bg-gradient-to-r from-blue-500 via-red-500 to-sky-400 relative">
                   <span className="absolute -top-3 left-1/2 -translate-x-1/2 bg-red-600 text-white font-mono text-[10px] font-bold px-2 py-0.5 rounded-full shadow">
-                    Δ 22.4 METERS (Overlap: 11 Days)
+                    &Delta; 22.4 METERS (Overlap: 11 Days)
                   </span>
                 </div>
               </div>
@@ -141,7 +141,7 @@ export default function HeroVisual() {
                   <span>PRJ-2026-002</span>
                   <span className="text-slate-400">Planned</span>
                 </div>
-                <div className="text-xs font-bold text-white mt-0.5">Water Trunk Line</div>
+                <div className="text-xs font-bold text-white mt-0.5">600mm Potable Water Main</div>
                 <div className="text-[11px] text-slate-400 mt-1 flex items-center gap-1">
                   <Calendar className="w-3 h-3 text-slate-400" /> 10 Nov – 25 Nov
                 </div>
@@ -161,14 +161,14 @@ export default function HeroVisual() {
                 <div>
                   <div className="flex items-center gap-2">
                     <span className="font-semibold text-sm text-red-200">
-                      High Severity Conflict Detected (Score: 79.8 / 100)
+                      High Severity Conflict Flagged (Score: 79.8 / 100)
                     </span>
                     <span className="text-[10px] uppercase font-mono px-1.5 py-0.5 rounded bg-red-950 text-red-300 border border-red-800">
-                      MG Road Arterial
+                      Mira Bhayandar Road Arterial
                     </span>
                   </div>
                   <p className="text-xs text-slate-300 mt-0.5">
-                    Water Dept trunk line excavation is scheduled during Roads Dept resurfacing. Without coordination, newly paved road would be excavated within days.
+                    Water Dept 600mm pipeline excavation is scheduled during MBMC Roads resurfacing. Without CivicSync coordination, freshly paved asphalt would be dug up within 5 days.
                   </p>
                 </div>
               </div>
@@ -189,19 +189,19 @@ export default function HeroVisual() {
                 <div>
                   <div className="flex items-center gap-2">
                     <span className="font-semibold text-sm text-blue-200">
-                      Deterministic Precedence Rule: Underground First
+                      Precedence Rule: Lay Pipeline First, Then Asphalt
                     </span>
                     <span className="text-[10px] uppercase font-mono px-1.5 py-0.5 rounded bg-blue-950 text-blue-300 border border-blue-800">
-                      Zero Rework Sequence
+                      Zero Re-Dig Execution
                     </span>
                   </div>
                   <p className="text-xs text-slate-300 mt-0.5">
-                    Phase 1 (10–25 Nov): Water Dept completes trunk pipe & backfilling. Phase 2 (27 Nov–12 Dec): Roads Dept completes asphalt resurfacing once.
+                    Phase 1 (10–25 Nov): Water Dept completes trunk pipe trenching & subgrade compaction. Phase 2 (27 Nov–12 Dec): MBMC Roads completes bitumen mastic resurfacing once.
                   </p>
                 </div>
               </div>
               <span className="shrink-0 self-end sm:self-center text-xs font-semibold px-3 py-1.5 rounded-lg bg-emerald-900/80 border border-emerald-600 text-emerald-300 flex items-center gap-1.5">
-                <CheckCircle2 className="w-3.5 h-3.5" /> Est. Avoided Rework: $45,000
+                <CheckCircle2 className="w-3.5 h-3.5" /> Est. Avoided Rework: &#8377;3,50,000
               </span>
             </div>
           )}

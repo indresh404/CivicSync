@@ -42,28 +42,22 @@ export default function Navbar() {
           </div>
           <div className="flex flex-col">
             <span className="font-bold text-lg text-slate-900 tracking-tight flex items-center gap-1.5">
-              CivicSync
+              DigSync
               <span className="text-[10px] font-semibold uppercase tracking-wider px-1.5 py-0.5 rounded bg-blue-50 text-blue-700 border border-blue-200">
-                GovTech
+                Civic
               </span>
             </span>
           </div>
         </Link>
 
         {/* Desktop Navigation Links */}
-        <nav className="hidden md:flex items-center gap-7">
-          <a
-            href="#platform"
+        <nav className="hidden md:flex items-center gap-6">
+          <Link
+            href="/works"
             className="text-sm font-medium text-slate-600 hover:text-blue-600 transition"
           >
-            Platform
-          </a>
-          <a
-            href="#problem"
-            className="text-sm font-medium text-slate-600 hover:text-blue-600 transition"
-          >
-            The Problem
-          </a>
+            Citizen Works Map
+          </Link>
           <a
             href="#how-it-works"
             className="text-sm font-medium text-slate-600 hover:text-blue-600 transition"
@@ -76,21 +70,21 @@ export default function Navbar() {
           >
             Capabilities
           </a>
-          <a
-            href="#benefits"
-            className="text-sm font-medium text-slate-600 hover:text-blue-600 transition"
-          >
-            Benefits
-          </a>
         </nav>
 
-        {/* Primary Action Button */}
+        {/* Primary Action Buttons */}
         <div className="hidden md:flex items-center gap-3">
+          <Link
+            href="/login"
+            className="text-sm font-semibold px-3.5 py-2 text-slate-700 hover:text-blue-600 transition"
+          >
+            Staff Sign In
+          </Link>
           <Link
             href="/admin"
             className="inline-flex items-center gap-2 text-sm font-semibold px-4 py-2 rounded-lg bg-blue-600 text-white hover:bg-blue-700 active:scale-[0.98] transition shadow-sm shadow-blue-600/20"
           >
-            Open Dashboard
+            Operations Hub
             <ArrowRight className="w-4 h-4" />
           </Link>
         </div>

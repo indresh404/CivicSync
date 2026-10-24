@@ -25,6 +25,7 @@ interface ProjectDrawerProps {
   onClose: () => void;
   onUpdate: () => void;
   onSelectConflict: (conflict: Conflict) => void;
+  onViewRoadHistory?: (roadName: string) => void;
   currentRole: SimulatedRole;
 }
 
@@ -35,6 +36,7 @@ export default function ProjectDrawer({
   onClose,
   onUpdate,
   onSelectConflict,
+  onViewRoadHistory,
   currentRole,
 }: ProjectDrawerProps) {
   if (!isOpen || !project) return null;
@@ -124,6 +126,15 @@ export default function ProjectDrawer({
               <span className="text-slate-500">Corridor / Road:</span>
               <div className="font-semibold text-slate-900 mt-0.5">{project.road_name}</div>
               <span className="text-[10px] text-blue-600 font-medium">({project.road_type})</span>
+              {onViewRoadHistory && (
+                <button
+                  type="button"
+                  onClick={() => onViewRoadHistory(project.road_name)}
+                  className="mt-2 text-[11px] font-semibold text-blue-600 hover:text-blue-800 flex items-center gap-1 underline underline-offset-2"
+                >
+                  <Clock className="w-3 h-3" /> View Road History Timeline
+                </button>
+              )}
             </div>
 
             <div>

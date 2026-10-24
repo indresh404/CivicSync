@@ -13,14 +13,19 @@ import {
   UserCheck,
   ExternalLink,
   ChevronRight,
+  Clock,
+  Eye,
+  CalendarRange,
 } from "lucide-react";
 import { SimulatedRole } from "@/lib/types";
 
 export type AdminTab =
   | "overview"
   | "projects"
+  | "gantt"
   | "map"
   | "conflicts"
+  | "road_history"
   | "approvals"
   | "audit";
 
@@ -44,8 +49,13 @@ export default function AdminSidebar({
   const navItems: { id: AdminTab; label: string; icon: React.ReactNode; badge?: number }[] = [
     {
       id: "overview",
-      label: "Overview",
+      label: "Dashboard",
       icon: <LayoutDashboard className="w-4 h-4" />,
+    },
+    {
+      id: "map",
+      label: "Live Map",
+      icon: <Map className="w-4 h-4" />,
     },
     {
       id: "projects",
@@ -53,9 +63,9 @@ export default function AdminSidebar({
       icon: <FolderGit2 className="w-4 h-4" />,
     },
     {
-      id: "map",
-      label: "City Map",
-      icon: <Map className="w-4 h-4" />,
+      id: "gantt",
+      label: "Gantt Schedule",
+      icon: <CalendarRange className="w-4 h-4" />,
     },
     {
       id: "conflicts",
@@ -64,8 +74,13 @@ export default function AdminSidebar({
       badge: activeConflictCount,
     },
     {
+      id: "road_history",
+      label: "Road History",
+      icon: <Clock className="w-4 h-4" />,
+    },
+    {
       id: "approvals",
-      label: "Approvals",
+      label: "Approvals Gate",
       icon: <ShieldCheck className="w-4 h-4" />,
     },
     {
@@ -81,32 +96,26 @@ export default function AdminSidebar({
       <div>
         <div className="p-5 border-b border-slate-800 flex items-center justify-between">
           <Link href="/" className="flex items-center gap-2.5 group">
-            <div className="w-8 h-8 rounded-lg bg-blue-600 flex items-center justify-center text-white shadow-sm shadow-blue-500/40">
-              <svg
-                className="w-4 h-4 fill-none stroke-current stroke-2"
-                viewBox="0 0 24 24"
-              >
-                <polygon points="12 2 2 7 12 12 22 7 12 2" />
-                <polyline points="2 17 12 22 22 17" />
-                <polyline points="2 12 12 17 22 12" />
-              </svg>
+            <div className="w-8 h-8 rounded-xl bg-blue-600 flex items-center justify-center font-bold text-white shadow-sm shadow-blue-500/40">
+              D
             </div>
             <div>
               <span className="font-bold text-base text-white tracking-tight flex items-center gap-1.5">
-                CivicSync
+                DigSync
               </span>
               <span className="text-[10px] text-slate-400 font-medium block">
-                GovTech Infrastructure Hub
+                Cross-Agency Coordination
               </span>
             </div>
           </Link>
 
           <Link
-            href="/"
-            title="View Public Landing Page"
+            href="/works"
+            target="_blank"
+            title="Open Citizen Public Works Portal"
             className="text-slate-400 hover:text-white p-1.5 rounded-md hover:bg-slate-800 transition"
           >
-            <ExternalLink className="w-4 h-4" />
+            <Eye className="w-4 h-4" />
           </Link>
         </div>
 
@@ -148,11 +157,10 @@ export default function AdminSidebar({
 
       {/* Role Simulation & Demo Controls */}
       <div className="p-4 border-t border-slate-800 space-y-3 bg-slate-950/60">
-        {/* Environment Badge */}
         <div className="flex items-center justify-between text-[11px] text-slate-400 px-1">
           <span className="flex items-center gap-1.5 font-medium">
             <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-            Metropolis Demo Area
+            Mira Road (MBMC)
           </span>
           <button
             type="button"
@@ -160,7 +168,7 @@ export default function AdminSidebar({
             title="Reset to fresh demo scenario"
             className="text-slate-500 hover:text-blue-400 flex items-center gap-1 text-[10px] transition"
           >
-            <RotateCcw className="w-3 h-3" /> Reset
+            <RotateCcw className="w-3 h-3" /> Reset Demo
           </button>
         </div>
 
@@ -168,7 +176,7 @@ export default function AdminSidebar({
         <div className="bg-slate-900 border border-slate-800 rounded-xl p-2.5">
           <div className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1 flex items-center gap-1.5">
             <UserCheck className="w-3.5 h-3.5 text-blue-400" />
-            Simulated Department Role
+            Active Agency Role
           </div>
           <select
             value={currentRole}
@@ -185,9 +193,6 @@ export default function AdminSidebar({
             <option value="Gas Department">Gas Department</option>
             <option value="Sewerage Department">Sewerage Department</option>
           </select>
-          <span className="text-[9px] text-slate-500 block mt-1 leading-tight">
-            * Demonstration switcher. Not a security boundary.
-          </span>
         </div>
       </div>
     </aside>

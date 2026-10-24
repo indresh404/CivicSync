@@ -1,6 +1,6 @@
 import React from "react";
 import Link from "next/link";
-import { ShieldCheck, Info } from "lucide-react";
+import { ShieldCheck, Info, AlertTriangle } from "lucide-react";
 
 export default function Footer() {
   const currentYear = new Date().getFullYear();
@@ -12,28 +12,28 @@ export default function Footer() {
           {/* Brand Info */}
           <div className="md:col-span-2 space-y-3">
             <div className="flex items-center gap-2.5">
-              <div className="w-8 h-8 rounded-lg bg-blue-600 flex items-center justify-center text-white">
-                <svg
-                  className="w-4 h-4 fill-none stroke-current stroke-2"
-                  viewBox="0 0 24 24"
-                >
-                  <polygon points="12 2 2 7 12 12 22 7 12 2" />
-                  <polyline points="2 17 12 22 22 17" />
-                  <polyline points="2 12 12 17 22 12" />
-                </svg>
+              <div className="w-8 h-8 rounded-xl bg-blue-600 flex items-center justify-center text-white font-bold">
+                D
               </div>
               <span className="font-bold text-lg text-slate-900 tracking-tight">
-                CivicSync
+                DigSync
               </span>
             </div>
             <p className="text-sm text-slate-600 max-w-md">
-              A shared municipal infrastructure coordination platform helping city departments synchronize roadworks, pipelines, cabling, and utilities on one shared map to prevent repeated road excavation.
+              A cross-department road-work coordination platform giving city departments a shared map, pre-approval conflict detection, underground-first sequencing suggestions, and an immutable audit trail.
             </p>
-            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-slate-50 border border-slate-200 text-xs text-slate-600">
-              <Info className="w-3.5 h-3.5 text-blue-600 shrink-0" />
-              <span>
-                Demonstration platform. Uses deterministic spatial & schedule rules.
-              </span>
+
+            {/* Known Limitations Callout */}
+            <div className="p-3.5 rounded-xl bg-amber-50/80 border border-amber-200 text-xs text-amber-900 space-y-1">
+              <div className="font-bold flex items-center gap-1.5 text-amber-950">
+                <AlertTriangle className="w-3.5 h-3.5 text-amber-600" />
+                System Principles & Known Limitations
+              </div>
+              <ul className="list-disc pl-4 space-y-0.5 text-[11px] text-amber-800">
+                <li>Cost-avoided and severity scores use assumed municipal constants (₹350,000 / dig avoided).</li>
+                <li>The system depends on timely inter-departmental registration of planned works.</li>
+                <li>The sequencing rule is a deterministic fixed domain rule (underground before surface), not an automated solver or optimizer.</li>
+              </ul>
             </div>
           </div>
 
@@ -44,23 +44,23 @@ export default function Footer() {
             </h4>
             <ul className="space-y-2 text-sm text-slate-600">
               <li>
-                <a href="#platform" className="hover:text-blue-600 transition">
-                  Overview
-                </a>
+                <Link href="/admin" className="hover:text-blue-600 transition">
+                  Map View
+                </Link>
+              </li>
+              <li>
+                <Link href="/works" className="hover:text-blue-600 transition">
+                  Public Citizen Works Map
+                </Link>
+              </li>
+              <li>
+                <Link href="/login" className="hover:text-blue-600 transition">
+                  Staff Sign In
+                </Link>
               </li>
               <li>
                 <a href="#how-it-works" className="hover:text-blue-600 transition">
-                  Workflow
-                </a>
-              </li>
-              <li>
-                <a href="#capabilities" className="hover:text-blue-600 transition">
-                  Capabilities
-                </a>
-              </li>
-              <li>
-                <a href="#benefits" className="hover:text-blue-600 transition">
-                  Benefits
+                  How Conflict Detection Works
                 </a>
               </li>
             </ul>
@@ -69,7 +69,7 @@ export default function Footer() {
           {/* Quick Access */}
           <div>
             <h4 className="text-xs font-semibold text-slate-900 uppercase tracking-wider mb-3">
-              Operations
+              Operations Hub
             </h4>
             <ul className="space-y-2 text-sm text-slate-600">
               <li>
@@ -85,12 +85,7 @@ export default function Footer() {
               </li>
               <li>
                 <Link href="/admin" className="hover:text-blue-600 transition">
-                  Shared City Map
-                </Link>
-              </li>
-              <li>
-                <Link href="/admin" className="hover:text-blue-600 transition">
-                  Conflict Resolution Gate
+                  Approval Gates
                 </Link>
               </li>
               <li>
@@ -105,10 +100,10 @@ export default function Footer() {
         {/* Bottom Bar */}
         <div className="pt-8 mt-8 border-t border-slate-100 flex flex-col sm:flex-row items-center justify-between text-xs text-slate-500 gap-4">
           <p>
-            &copy; {currentYear} CivicSync. Smart City Infrastructure Coordination Platform.
+            &copy; {currentYear} DigSync. Cross-Department Road-Work Coordination Platform.
           </p>
           <p className="text-slate-400 text-center sm:text-right">
-            Designed for municipal corporations, public works departments, and utility authorities.
+            Deterministic spatial collision detection &bull; Pure Python haversine math &bull; No ML/No solver.
           </p>
         </div>
       </div>
