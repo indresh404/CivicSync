@@ -4,18 +4,18 @@ services:
   # Optional PostgreSQL service for production relational persistence
   postgres:
     image: postgres:16-alpine
-    container_name: digsync-postgres
+    container_name: civicsync-postgres
     restart: unless-stopped
     environment:
-      POSTGRES_DB: digsync
-      POSTGRES_USER: digsync_user
-      POSTGRES_PASSWORD: digsync_password
+      POSTGRES_DB: civicsync
+      POSTGRES_USER: civicsync_user
+      POSTGRES_PASSWORD: civicsync_password
     ports:
       - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U digsync_user -d digsync"]
+      test: ["CMD-SHELL", "pg_isready -U civicsync_user -d civicsync"]
       interval: 5s
       timeout: 5s
       retries: 5
@@ -25,15 +25,16 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.backend
-    container_name: digsync-api
+    container_name: civicsync-api
     restart: unless-stopped
     ports:
       - "5000:5000"
     environment:
       - PORT=5000
-      - MONGO_URI=mongodb+srv://tenpointeradmin:indresh200630@cluster0.up2l13c.mongodb.net/?appName=Cluster0
-      - JWT_SECRET=mySuperSecretKey
-      - DATABASE_URL=postgresql://digsync_user:digsync_password@postgres:5432/digsync
+      - MONGO_URI=${MONGO_URI}
+      - MONGO_DB_NAME=civicsync
+      - JWT_SECRET=${JWT_SECRET:-mySuperSecretKey}
+      - DATABASE_URL=postgresql://civicsync_user:civicsync_password@postgres:5432/civicsync
       - CONFLICT_THRESHOLD_METERS=50.0
       - ASSUMED_COST_PER_REDIG=350000.0
       - COOLDOWN_MONTHS=24

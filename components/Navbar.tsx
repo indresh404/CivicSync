@@ -42,9 +42,9 @@ export default function Navbar() {
           </div>
           <div className="flex flex-col">
             <span className="font-bold text-lg text-slate-900 tracking-tight flex items-center gap-1.5">
-              DigSync
+              CivicSync
               <span className="text-[10px] font-semibold uppercase tracking-wider px-1.5 py-0.5 rounded bg-blue-50 text-blue-700 border border-blue-200">
-                Civic
+                GovTech
               </span>
             </span>
           </div>

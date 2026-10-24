@@ -12,7 +12,7 @@ from backend.mongo_db import mongo_manager
 
 def seed_database(db: Session, force: bool = False):
     """
-    Seed DigSync deterministic demonstration dataset:
+    Seed CivicSync deterministic demonstration dataset:
     - 6 Departments
     - 1 Admin user + 1 user per department (7 total)
     - Scenario A: Roads resurfacing vs Water pipeline, arterial road, overlapping dates -> High severity, sequencing suggestion.
@@ -544,7 +544,7 @@ def seed_database(db: Session, force: bool = False):
         severity_breakdown=sev_a["severity_breakdown"],
         conflict_reason=(
             f"High-severity arterial conflict: {dist_a}m apart on '{proj_a1.road_name}', "
-            f"with {days_a} days overlapping schedule. DigSync sequencing rule required."
+            f"with {days_a} days overlapping schedule. CivicSync sequencing rule required."
         ),
         suggested_sequence=seq_a["suggested_sequence"],
         suggested_dates=seq_a["suggested_dates"],
@@ -635,8 +635,8 @@ def seed_database(db: Session, force: bool = False):
             action_type="CONFLICT_DETECTED",
             project_id=proj_a2.id,
             conflict_id=conf_a.id,
-            actor="System (DigSync Conflict Engine)",
-            department="DigSync Engine",
+            actor="System (CivicSync Conflict Engine)",
+            department="CivicSync Engine",
             note=f"High-severity conflict detected on Mira Bhayandar Road between PRJ-2026-001 and PRJ-2026-002 ({dist_a}m separation, {days_a} days overlap).",
             created_at=datetime.datetime(2026, 10, 16, 14, 25),
         ),
@@ -645,8 +645,8 @@ def seed_database(db: Session, force: bool = False):
             action_type="REPORT_GENERATED",
             project_id=proj_a1.id,
             conflict_id=conf_a.id,
-            actor="System (DigSync Engine)",
-            department="DigSync Engine",
+            actor="System (CivicSync Engine)",
+            department="CivicSync Engine",
             note="Conflict Report v1 generated. Precedence rule applied: Underground pipeline work must precede asphalt resurfacing.",
             created_at=datetime.datetime(2026, 10, 16, 14, 26),
         ),

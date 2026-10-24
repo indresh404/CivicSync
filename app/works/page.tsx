@@ -77,11 +77,11 @@ export default function PublicWorksPage() {
           <div className="flex items-center gap-3">
             <Link href="/" className="flex items-center gap-2.5">
               <div className="w-9 h-9 rounded-xl bg-blue-600 flex items-center justify-center font-bold text-white shadow-sm">
-                D
+                C
               </div>
               <div>
                 <span className="font-bold text-slate-900 tracking-tight text-base sm:text-lg">
-                  DigSync
+                  CivicSync
                 </span>
                 <span className="text-[11px] font-medium text-slate-500 block leading-tight">
                   Public Citizen Works Portal
@@ -246,7 +246,7 @@ export default function PublicWorksPage() {
       {/* Public Footer */}
       <footer className="bg-white border-t border-slate-200 py-6 text-center text-xs text-slate-500 mt-12">
         <p className="max-w-2xl mx-auto px-4">
-          DigSync Public Portal is maintained in accordance with Municipal Infrastructure Coordination Guidelines. Notice: Dates are subject to weather conditions and emergency utility repairs.
+          CivicSync Public Portal is maintained in accordance with Municipal Infrastructure Coordination Guidelines. Notice: Dates are subject to weather conditions and emergency utility repairs.
         </p>
       </footer>
     </div>

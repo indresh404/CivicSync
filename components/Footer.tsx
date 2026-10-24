@@ -13,10 +13,10 @@ export default function Footer() {
           <div className="md:col-span-2 space-y-3">
             <div className="flex items-center gap-2.5">
               <div className="w-8 h-8 rounded-xl bg-blue-600 flex items-center justify-center text-white font-bold">
-                D
+                C
               </div>
               <span className="font-bold text-lg text-slate-900 tracking-tight">
-                DigSync
+                CivicSync
               </span>
             </div>
             <p className="text-sm text-slate-600 max-w-md">
@@ -100,7 +100,7 @@ export default function Footer() {
         {/* Bottom Bar */}
         <div className="pt-8 mt-8 border-t border-slate-100 flex flex-col sm:flex-row items-center justify-between text-xs text-slate-500 gap-4">
           <p>
-            &copy; {currentYear} DigSync. Cross-Department Road-Work Coordination Platform.
+            &copy; {currentYear} CivicSync. Cross-Department Road-Work Coordination Platform.
           </p>
           <p className="text-slate-400 text-center sm:text-right">
             Deterministic spatial collision detection &bull; Pure Python haversine math &bull; No ML/No solver.

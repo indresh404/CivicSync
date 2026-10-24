@@ -3,7 +3,7 @@ import "maplibre-gl/dist/maplibre-gl.css";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "DigSync — Cross-Department Road-Work Coordination Platform",
+  title: "CivicSync — Cross-Department Road-Work Coordination Platform",
   description:
     "One City. One Plan. Zero Rework. A shared municipal infrastructure coordination system that prevents repeated road excavation through deterministic conflict detection.",
 };

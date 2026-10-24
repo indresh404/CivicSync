@@ -5,7 +5,7 @@ from pymongo.collection import Collection
 from pymongo.database import Database
 from backend.config import MONGO_URI, MONGO_DB_NAME
 
-logger = logging.getLogger("digsync.mongo")
+logger = logging.getLogger("civicsync.mongo")
 
 class MongoManager:
     client: Optional[pymongo.MongoClient] = None
@@ -42,7 +42,7 @@ class MongoManager:
             self.db = None
             logger.warning(
                 f"MongoDB connection notice: Could not connect to remote MongoDB ({e}). "
-                "DigSync will operate seamlessly with local persistence."
+                "CivicSync will operate seamlessly with local persistence."
             )
             return False
 

@@ -110,7 +110,7 @@ export async function searchPlace(query: string): Promise<PlaceSearchResult[]> {
         signal: controller.signal,
         headers: {
           Accept: "application/json",
-          "User-Agent": "CivicSync-DigSync-Municipal-Coordinator/1.0",
+          "User-Agent": "CivicSync-Municipal-Coordinator/1.0",
         },
       }
     );

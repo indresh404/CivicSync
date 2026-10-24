@@ -97,11 +97,11 @@ export default function AdminSidebar({
         <div className="p-5 border-b border-slate-800 flex items-center justify-between">
           <Link href="/" className="flex items-center gap-2.5 group">
             <div className="w-8 h-8 rounded-xl bg-blue-600 flex items-center justify-center font-bold text-white shadow-sm shadow-blue-500/40">
-              D
+              C
             </div>
             <div>
               <span className="font-bold text-base text-white tracking-tight flex items-center gap-1.5">
-                DigSync
+                CivicSync
               </span>
               <span className="text-[10px] text-slate-400 font-medium block">
                 Cross-Agency Coordination

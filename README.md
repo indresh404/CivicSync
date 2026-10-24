@@ -1,4 +1,4 @@
-# DigSync: Cross-Department Road-Work Coordination Platform
+# CivicSync: Cross-Department Road-Work Coordination Platform
 
 > **"One City. One Plan. Zero Rework."**
 > Deterministic, explainable municipal infrastructure synchronization platform built for city authorities (Roads, Water, Electricity, Sewerage, Telecom, Gas).
@@ -99,7 +99,7 @@ Create or inspect `.env.local` / `.env`:
 ```env
 PORT=5000
 NEXT_PUBLIC_API_URL=http://localhost:5000
-MONGO_URI=mongodb+srv://tenpointeradmin:indresh200630@cluster0.up2l13c.mongodb.net/?appName=Cluster0
+MONGO_URI=mongodb+srv://<username>:<password>@cluster0.up2l13c.mongodb.net/?appName=Cluster0
 JWT_SECRET=mySuperSecretKey
 CONFLICT_THRESHOLD_METERS=50.0
 ASSUMED_COST_PER_REDIG=350000.0

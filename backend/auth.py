@@ -11,7 +11,7 @@ security = HTTPBearer(auto_error=False)
 
 def hash_password(password: str) -> str:
     """Generate deterministic salted SHA-256 hash."""
-    salt = "digsync_salt_2026"
+    salt = "civicsync_salt_2026"
     return hashlib.sha256((password + salt).encode("utf-8")).hexdigest()
 
 def verify_password(plain_password: str, hashed_password: str) -> bool:
@@ -45,13 +45,13 @@ DEPARTMENTS = [
     {"id": "DEPT-GAS", "name": "Gas Department", "color": "#EC4899"},
 ]
 
-# Pre-defined system users (All passwords: DigSync2026!)
-DEFAULT_PASSWORD_HASH = hash_password("DigSync2026!")
+# Pre-defined system users (All passwords: CivicSync2026!)
+DEFAULT_PASSWORD_HASH = hash_password("CivicSync2026!")
 
 PRESET_USERS = [
     {
         "id": "USR-ADMIN",
-        "email": "admin@digsync.gov",
+        "email": "admin@civicsync.gov",
         "name": "Rajesh Sharma (City Commissioner)",
         "department_id": "DEPT-ROADS",
         "department_name": "Municipal Administration",
@@ -60,7 +60,7 @@ PRESET_USERS = [
     },
     {
         "id": "USR-ROADS",
-        "email": "roads@digsync.gov",
+        "email": "roads@civicsync.gov",
         "name": "Amit Patil (Chief Roads Engineer)",
         "department_id": "DEPT-ROADS",
         "department_name": "Roads Department",
@@ -69,7 +69,7 @@ PRESET_USERS = [
     },
     {
         "id": "USR-WATER",
-        "email": "water@digsync.gov",
+        "email": "water@civicsync.gov",
         "name": "Priya Deshmukh (Water Works Officer)",
         "department_id": "DEPT-WATER",
         "department_name": "Water Department",
@@ -78,7 +78,7 @@ PRESET_USERS = [
     },
     {
         "id": "USR-ELEC",
-        "email": "electricity@digsync.gov",
+        "email": "electricity@civicsync.gov",
         "name": "Sunil Nair (Superintending Engineer)",
         "department_id": "DEPT-ELEC",
         "department_name": "Electricity Department",
@@ -87,7 +87,7 @@ PRESET_USERS = [
     },
     {
         "id": "USR-SEWER",
-        "email": "sewerage@digsync.gov",
+        "email": "sewerage@civicsync.gov",
         "name": "Kavita Rao (Sanitation Director)",
         "department_id": "DEPT-SEWER",
         "department_name": "Sewerage Department",
@@ -96,7 +96,7 @@ PRESET_USERS = [
     },
     {
         "id": "USR-TELE",
-        "email": "telecom@digsync.gov",
+        "email": "telecom@civicsync.gov",
         "name": "Vikram Mehta (Digital Infrastructure Lead)",
         "department_id": "DEPT-TELE",
         "department_name": "Telecom Department",
@@ -105,7 +105,7 @@ PRESET_USERS = [
     },
     {
         "id": "USR-GAS",
-        "email": "gas@digsync.gov",
+        "email": "gas@civicsync.gov",
         "name": "Farhan Khan (Gas Utility Inspector)",
         "department_id": "DEPT-GAS",
         "department_name": "Gas Department",

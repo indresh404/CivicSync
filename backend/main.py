@@ -79,7 +79,7 @@ async def lifespan(app: FastAPI):
     yield
 
 app = FastAPI(
-    title="DigSync API",
+    title="CivicSync API",
     description="Deterministic GovTech Infrastructure & Road-Work Coordination Platform",
     version="1.0.0",
     lifespan=lifespan,
@@ -304,7 +304,7 @@ def run_conflict_detection(db: Session, project: Project, actor: str = "System")
 def health_check():
     return {
         "status": "healthy",
-        "service": "DigSync Municipal Coordination Platform",
+        "service": "CivicSync Municipal Coordination Platform",
         "version": "1.0.0",
         "mongo_connected": mongo_manager.is_connected,
         "cooldown_months": COOLDOWN_MONTHS,
@@ -1118,5 +1118,5 @@ def seed_demo(db: Session = Depends(get_db)):
     seed_database(db, force=True)
     return {
         "status": "success",
-        "message": "DigSync demo scenarios seeded successfully (Scenario A, Scenario B, Scenario C, and background city grid).",
+        "message": "CivicSync demo scenarios seeded successfully (Scenario A, Scenario B, Scenario C, and background city grid).",
     }

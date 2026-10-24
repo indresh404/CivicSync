@@ -23,7 +23,7 @@ const DEMO_PRESETS = [
   {
     role: "ADMIN",
     title: "City Commissioner (Admin)",
-    email: "admin@digsync.gov",
+    email: "admin@civicsync.gov",
     dept: "Municipal Administration",
     icon: Building2,
     color: "bg-slate-900 text-white",
@@ -31,7 +31,7 @@ const DEMO_PRESETS = [
   {
     role: "DEPARTMENT_USER",
     title: "Chief Roads Engineer",
-    email: "roads@digsync.gov",
+    email: "roads@civicsync.gov",
     dept: "Roads Department",
     icon: HardHat,
     color: "bg-blue-600 text-white",
@@ -39,7 +39,7 @@ const DEMO_PRESETS = [
   {
     role: "DEPARTMENT_USER",
     title: "Water Works Officer",
-    email: "water@digsync.gov",
+    email: "water@civicsync.gov",
     dept: "Water Department",
     icon: Droplets,
     color: "bg-cyan-600 text-white",
@@ -47,7 +47,7 @@ const DEMO_PRESETS = [
   {
     role: "DEPARTMENT_USER",
     title: "Power Grid Manager",
-    email: "electricity@digsync.gov",
+    email: "electricity@civicsync.gov",
     dept: "Electricity Department",
     icon: Zap,
     color: "bg-amber-600 text-white",
@@ -55,7 +55,7 @@ const DEMO_PRESETS = [
   {
     role: "DEPARTMENT_USER",
     title: "Fiber Infrastructure Lead",
-    email: "telecom@digsync.gov",
+    email: "telecom@civicsync.gov",
     dept: "Telecom Department",
     icon: Radio,
     color: "bg-purple-600 text-white",
@@ -63,7 +63,7 @@ const DEMO_PRESETS = [
   {
     role: "DEPARTMENT_USER",
     title: "City Gas Utility Inspector",
-    email: "gas@digsync.gov",
+    email: "gas@civicsync.gov",
     dept: "Gas Department",
     icon: Flame,
     color: "bg-pink-600 text-white",
@@ -72,8 +72,8 @@ const DEMO_PRESETS = [
 
 export default function LoginPage() {
   const router = useRouter();
-  const [email, setEmail] = useState("admin@digsync.gov");
-  const [password, setPassword] = useState("DigSync2026!");
+  const [email, setEmail] = useState("admin@civicsync.gov");
+  const [password, setPassword] = useState("CivicSync2026!");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -84,8 +84,8 @@ export default function LoginPage() {
     try {
       const res = await loginUser(email, password);
       if (typeof window !== "undefined") {
-        localStorage.setItem("digsync_token", res.access_token);
-        localStorage.setItem("digsync_user", JSON.stringify(res.user));
+        localStorage.setItem("civicsync_token", res.access_token);
+        localStorage.setItem("civicsync_user", JSON.stringify(res.user));
       }
       router.push("/admin");
     } catch (err: any) {
@@ -97,7 +97,7 @@ export default function LoginPage() {
 
   const selectPreset = (presetEmail: string) => {
     setEmail(presetEmail);
-    setPassword("DigSync2026!");
+    setPassword("CivicSync2026!");
   };
 
   return (
@@ -107,10 +107,10 @@ export default function LoginPage() {
         <div className="relative z-10 space-y-6">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-xl bg-blue-600 flex items-center justify-center font-bold text-xl shadow-lg shadow-blue-500/30">
-              D
+              C
             </div>
             <div>
-              <span className="text-xl font-bold tracking-tight">DigSync</span>
+              <span className="text-xl font-bold tracking-tight">CivicSync</span>
               <span className="block text-[11px] font-medium text-slate-400 uppercase tracking-widest">
                 Municipal Road-Work Coordination
               </span>
@@ -126,7 +126,7 @@ export default function LoginPage() {
               Preventing Repeated Road Digging Across City Agencies.
             </h1>
             <p className="text-sm text-slate-300 leading-relaxed">
-              DigSync provides a unified geospatial map and deterministic conflict detection for Roads, Water, Electricity, Gas, Sewerage, and Telecom departments before excavation permits are approved.
+              CivicSync provides a unified geospatial map and deterministic conflict detection for Roads, Water, Electricity, Gas, Sewerage, and Telecom departments before excavation permits are approved.
             </p>
           </div>
         </div>
@@ -177,7 +177,7 @@ export default function LoginPage() {
               Quick Demo Account Switcher
             </span>
             <span className="text-[11px] font-medium text-blue-700 bg-blue-100 px-2 py-0.5 rounded-full">
-              Password: DigSync2026!
+              Password: CivicSync2026!
             </span>
           </div>
 
@@ -230,7 +230,7 @@ export default function LoginPage() {
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="name@digsync.gov"
+                placeholder="name@civicsync.gov"
                 className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-300 text-sm focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent bg-white shadow-sm"
               />
             </div>
@@ -263,7 +263,7 @@ export default function LoginPage() {
                 <span>Verifying Authentication...</span>
               ) : (
                 <>
-                  <span>Sign In to DigSync</span>
+                  <span>Sign In to CivicSync</span>
                   <ArrowRight className="w-4 h-4" />
                 </>
               )}
