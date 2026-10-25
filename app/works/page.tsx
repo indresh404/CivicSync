@@ -189,7 +189,17 @@ export default function PublicWorksPage() {
             </div>
 
             <div className="flex-1 overflow-y-auto space-y-3 max-h-[600px] pr-1">
-              {filteredWorks.length === 0 ? (
+              {loading ? (
+                <div className="space-y-3 animate-pulse">
+                  {Array.from({ length: 4 }).map((_, i) => (
+                    <div key={i} className="p-4 rounded-xl bg-white border border-slate-200 space-y-2.5">
+                      <div className="h-3.5 w-48 bg-slate-200 rounded" />
+                      <div className="h-2.5 w-28 bg-slate-100 rounded" />
+                      <div className="h-2 w-36 bg-slate-100 rounded" />
+                    </div>
+                  ))}
+                </div>
+              ) : filteredWorks.length === 0 ? (
                 <div className="p-8 text-center text-xs text-slate-500 bg-white rounded-xl border border-slate-200">
                   No municipal works match your filter query.
                 </div>

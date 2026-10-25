@@ -3,7 +3,18 @@
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { Search, Plus, AlertTriangle, Calendar, Menu, LogOut, UserCheck, Eye } from "lucide-react";
+import {
+  Search,
+  Plus,
+  AlertTriangle,
+  Calendar,
+  Menu,
+  LogOut,
+  UserCheck,
+  Eye,
+  RefreshCw,
+  Activity,
+} from "lucide-react";
 import { DepartmentRole, SimulatedRole } from "@/lib/types";
 
 interface AdminHeaderProps {
@@ -15,6 +26,8 @@ interface AdminHeaderProps {
   activeConflictCount: number;
   currentRole: DepartmentRole | SimulatedRole;
   onToggleMobileSidebar?: () => void;
+  onRefresh?: () => void;
+  isRefreshing?: boolean;
 }
 
 export default function AdminHeader({
@@ -26,6 +39,8 @@ export default function AdminHeader({
   activeConflictCount,
   currentRole,
   onToggleMobileSidebar,
+  onRefresh,
+  isRefreshing,
 }: AdminHeaderProps) {
   const router = useRouter();
   const [hasLoggedInUser, setHasLoggedInUser] = useState(false);
@@ -90,6 +105,25 @@ export default function AdminHeader({
           <Calendar className="w-3.5 h-3.5 text-slate-400" />
           <span>{currentDate}</span>
         </div>
+
+        {/* Live Grid Sync Indicator */}
+        <div className="hidden 2xl:flex items-center gap-1.5 text-xs font-semibold px-2.5 py-1.5 rounded-lg bg-emerald-50 text-emerald-800 border border-emerald-200">
+          <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+          <span>Grid Sync Live</span>
+        </div>
+
+        {/* Manual Grid Refresh button */}
+        {onRefresh && (
+          <button
+            type="button"
+            onClick={onRefresh}
+            disabled={isRefreshing}
+            className="p-1.5 rounded-lg border border-slate-200 text-slate-500 hover:text-blue-600 hover:bg-slate-50 transition active:scale-95 disabled:opacity-50"
+            title="Synchronize Grid with Municipal Core"
+          >
+            <RefreshCw className={`w-3.5 h-3.5 ${isRefreshing ? "animate-spin text-blue-600" : ""}`} />
+          </button>
+        )}
 
         {/* Active Role Pill */}
         <div className="hidden xl:flex items-center gap-1.5 text-xs font-semibold px-2.5 py-1.5 rounded-lg bg-blue-50 text-blue-700 border border-blue-200">

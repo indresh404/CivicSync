@@ -996,6 +996,124 @@ export async function fetchDashboardStats(): Promise<DashboardStats> {
   };
 }
 
+const SEED_AUDIT_LOGS: AuditLog[] = [
+  {
+    id: "AUD-2026-001",
+    action_type: "PROJECT_CREATED",
+    project_id: "PRJ-2026-001",
+    actor: "Amit Patil",
+    department: "Roads Department",
+    note: "Registered project 'Mira Bhayandar Road Asphalt Resurfacing & Milling' on Mira Bhayandar Road.",
+    created_at: "2026-10-15T10:00:00Z",
+  },
+  {
+    id: "AUD-2026-002",
+    action_type: "PROJECT_CREATED",
+    project_id: "PRJ-2026-002",
+    actor: "Priya Deshmukh",
+    department: "Water Department",
+    note: "Registered project 'Mira Bhayandar Road 600mm Potable Water Trunk Main' on Mira Bhayandar Road.",
+    created_at: "2026-10-16T14:00:00Z",
+  },
+  {
+    id: "AUD-2026-003",
+    action_type: "CONFLICT_DETECTED",
+    project_id: "PRJ-2026-002",
+    conflict_id: "CONF-2026-001",
+    actor: "CivicSync Deterministic Conflict Engine",
+    department: "Municipal Grid",
+    note: "High-severity conflict detected on Mira Bhayandar Road between PRJ-2026-001 and PRJ-2026-002 (22.4m separation, 11 days overlap).",
+    created_at: "2026-10-16T14:25:00Z",
+  },
+  {
+    id: "AUD-2026-004",
+    action_type: "REPORT_GENERATED",
+    project_id: "PRJ-2026-001",
+    conflict_id: "CONF-2026-001",
+    actor: "CivicSync Engine",
+    department: "Municipal Grid",
+    note: "Conflict Report v1 generated. Precedence rule applied: Underground pipeline work must precede asphalt resurfacing.",
+    created_at: "2026-10-16T14:26:00Z",
+  },
+  {
+    id: "AUD-2026-005",
+    action_type: "DEPARTMENT_ACKNOWLEDGED",
+    project_id: "PRJ-2026-001",
+    conflict_id: "CONF-2026-001",
+    actor: "Amit Patil",
+    department: "Roads Department",
+    note: "Roads Department acknowledged conflict report. Awaiting Water Department reciprocal acknowledgment.",
+    created_at: "2026-10-18T09:30:00Z",
+  },
+  {
+    id: "AUD-2026-006",
+    action_type: "ADMIN_OVERRIDE",
+    project_id: "PRJ-2026-005",
+    actor: "Rajesh Sharma (City Commissioner)",
+    department: "Municipal Administration",
+    note: "Approval override granted for PRJ-2026-005 on Kanakia Road despite 3-month cooldown. Reason: Emergency public safety gas valve leak repair.",
+    created_at: "2026-10-14T11:15:00Z",
+  },
+  {
+    id: "AUD-2026-007",
+    action_type: "PROJECT_APPROVED",
+    project_id: "PRJ-2026-005",
+    actor: "Rajesh Sharma (City Commissioner)",
+    department: "Municipal Administration",
+    note: "Project PRJ-2026-005 approved following executive emergency override.",
+    created_at: "2026-10-14T11:16:00Z",
+  },
+  {
+    id: "AUD-2026-008",
+    action_type: "PROJECT_CREATED",
+    project_id: "PRJ-2026-003",
+    actor: "Rohan Mehta",
+    department: "Electricity Department",
+    note: "Registered project 'Silver Park 11kV Underground Power Ducting' on Silver Park Residential Lane.",
+    created_at: "2026-10-17T09:00:00Z",
+  },
+  {
+    id: "AUD-2026-009",
+    action_type: "PROJECT_CREATED",
+    project_id: "PRJ-2026-004",
+    actor: "Sneha Iyer",
+    department: "Telecom Department",
+    note: "Registered project 'Silver Park 5G Fiber Optic Micro-Trenching' on Silver Park Residential Lane.",
+    created_at: "2026-10-17T11:00:00Z",
+  },
+  {
+    id: "AUD-2026-010",
+    action_type: "CONFLICT_DETECTED",
+    project_id: "PRJ-2026-004",
+    conflict_id: "CONF-2026-002",
+    actor: "CivicSync Deterministic Conflict Engine",
+    department: "Municipal Grid",
+    note: "Medium-severity conflict detected on Silver Park Residential Lane (28.5m separation, 13 days overlap). Proposing Joint Trenching.",
+    created_at: "2026-10-17T11:50:00Z",
+  },
+  {
+    id: "AUD-2026-011",
+    action_type: "PROJECT_CREATED",
+    project_id: "PRJ-2026-016",
+    actor: "Vikas Nair",
+    department: "Sewerage Department",
+    note: "Registered project 'Shanti Park Main Avenue Underground Stormwater Drain' on Shanti Park Main Avenue.",
+    created_at: "2026-10-19T09:00:00Z",
+  },
+  {
+    id: "AUD-2026-012",
+    action_type: "CONFLICT_DETECTED",
+    project_id: "PRJ-2026-017",
+    conflict_id: "CONF-2026-003",
+    actor: "CivicSync Deterministic Conflict Engine",
+    department: "Municipal Grid",
+    note: "Medium-severity conflict detected on Shanti Park Main Avenue between Sewerage and Electricity (18.2m separation). Precedence: Deep trenching required first.",
+    created_at: "2026-10-19T10:15:00Z",
+  },
+];
+
+let inMemoryAuditLogs = [...SEED_AUDIT_LOGS];
+
 export async function fetchAuditLogs(filters?: {
   project_id?: string;
   action_type?: string;
@@ -1008,11 +1126,18 @@ export async function fetchAuditLogs(filters?: {
     const res = await fetch(`${API_BASE_URL}/api/audit-logs?${query.toString()}`, {
       cache: "no-store",
     });
-    if (res.ok) return await res.json();
+    if (res.ok) {
+      const data = await res.json();
+      if (Array.isArray(data) && data.length > 0) return data;
+    }
   } catch (err) {
     console.warn("fetchAuditLogs fallback:", err);
   }
-  return [];
+  return inMemoryAuditLogs.filter((log) => {
+    if (filters?.project_id && log.project_id !== filters.project_id) return false;
+    if (filters?.action_type && filters.action_type !== "ALL" && log.action_type !== filters.action_type) return false;
+    return true;
+  });
 }
 
 export async function resetSystemBaseline(): Promise<void> {

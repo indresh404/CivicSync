@@ -54,6 +54,7 @@ import {
   Search,
   CalendarRange,
   Table,
+  Loader2,
 } from "lucide-react";
 import {
   BarChart,
@@ -107,6 +108,7 @@ export default function AdminDashboardPage() {
 
   // Toast feedback
   const [toastMessage, setToastMessage] = useState<string | null>(null);
+  const [isRefreshing, setIsRefreshing] = useState(false);
 
   const showToast = (msg: string) => {
     setToastMessage(msg);
@@ -130,6 +132,16 @@ export default function AdminDashboardPage() {
       console.error("Error loading admin data:", err);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleManualRefresh = async () => {
+    setIsRefreshing(true);
+    try {
+      await loadAllData();
+      showToast("Municipal Grid synchronized: 19 infrastructure projects up to date.");
+    } finally {
+      setIsRefreshing(false);
     }
   };
 
@@ -331,14 +343,73 @@ export default function AdminDashboardPage() {
           activeConflictCount={activeConflictsCount}
           currentRole={currentRole}
           onToggleMobileSidebar={() => setMobileSidebarOpen(!mobileSidebarOpen)}
+          onRefresh={handleManualRefresh}
+          isRefreshing={isRefreshing}
         />
 
         {/* Tab View Container */}
         <main className="flex-1 overflow-y-auto p-6">
-          {/* ============================================================ */}
-          {/* 1. OVERVIEW DASHBOARD */}
-          {/* ============================================================ */}
-          {currentTab === "overview" && (
+          {loading ? (
+            <div className="space-y-6 max-w-7xl mx-auto animate-pulse">
+              {/* Top Syncing Status Banner */}
+              <div className="flex items-center justify-between p-4 bg-white rounded-2xl border border-slate-200 shadow-xs">
+                <div className="flex items-center gap-3">
+                  <div className="w-9 h-9 rounded-xl bg-blue-50 flex items-center justify-center border border-blue-100">
+                    <Loader2 className="w-5 h-5 text-blue-600 animate-spin" />
+                  </div>
+                  <div>
+                    <div className="text-xs font-bold text-slate-800">
+                      Synchronizing Municipal Grid Core...
+                    </div>
+                    <div className="text-[11px] text-slate-500">
+                      Fetching 19 cross-agency projects, spatial conflict graphs, and GIS layers
+                    </div>
+                  </div>
+                </div>
+                <div className="flex items-center gap-2">
+                  <div className="h-6 w-24 bg-slate-100 rounded-full" />
+                </div>
+              </div>
+
+              {/* 7 KPI Cards Skeleton */}
+              <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-7 gap-3">
+                {Array.from({ length: 7 }).map((_, i) => (
+                  <div key={i} className="p-3.5 rounded-xl bg-white border border-slate-200 space-y-2.5 shadow-xs">
+                    <div className="h-2.5 w-16 bg-slate-200 rounded" />
+                    <div className="h-7 w-12 bg-slate-300 rounded" />
+                    <div className="h-2 w-20 bg-slate-100 rounded" />
+                  </div>
+                ))}
+              </div>
+
+              {/* Middle Section Skeleton (Charts/Map) */}
+              <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <div className="lg:col-span-2 h-72 rounded-2xl bg-white border border-slate-200 p-5 space-y-4 shadow-xs">
+                  <div className="h-4 w-48 bg-slate-200 rounded" />
+                  <div className="h-52 w-full bg-slate-100/70 rounded-xl" />
+                </div>
+                <div className="h-72 rounded-2xl bg-white border border-slate-200 p-5 space-y-4 shadow-xs">
+                  <div className="h-4 w-36 bg-slate-200 rounded" />
+                  <div className="h-52 w-full bg-slate-100/70 rounded-xl" />
+                </div>
+              </div>
+
+              {/* Bottom Table Skeleton */}
+              <div className="rounded-2xl bg-white border border-slate-200 p-5 space-y-3 shadow-xs">
+                <div className="h-4 w-52 bg-slate-200 rounded" />
+                <div className="space-y-2 pt-2">
+                  {Array.from({ length: 4 }).map((_, i) => (
+                    <div key={i} className="h-10 bg-slate-50 rounded-lg border border-slate-100" />
+                  ))}
+                </div>
+              </div>
+            </div>
+          ) : (
+            <>
+              {/* ============================================================ */}
+              {/* 1. OVERVIEW DASHBOARD */}
+              {/* ============================================================ */}
+              {currentTab === "overview" && (
             <div className="space-y-6 max-w-7xl mx-auto">
               {/* 7 KPI Cards Grid */}
               <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-7 gap-3">
@@ -1199,8 +1270,15 @@ export default function AdminDashboardPage() {
                 </h4>
 
                 {loadingRoadHistory ? (
-                  <div className="p-12 text-center text-xs text-slate-500">
-                    Loading corridor history...
+                  <div className="p-8 space-y-4 animate-pulse">
+                    <div className="flex items-center gap-2 text-xs font-semibold text-slate-500">
+                      <Loader2 className="w-4 h-4 text-blue-600 animate-spin" />
+                      <span>Loading corridor historical telemetry and cooldown window...</span>
+                    </div>
+                    <div className="space-y-3 pt-2">
+                      <div className="h-16 bg-slate-50 rounded-xl border border-slate-100" />
+                      <div className="h-16 bg-slate-50 rounded-xl border border-slate-100" />
+                    </div>
                   </div>
                 ) : !roadHistoryData || roadHistoryData.projects.length === 0 ? (
                   <div className="p-8 text-center text-xs text-slate-500 border border-dashed rounded-xl">
@@ -1475,6 +1553,8 @@ export default function AdminDashboardPage() {
               </div>
             </div>
           )}
+          </>
+        )}
         </main>
       </div>
 

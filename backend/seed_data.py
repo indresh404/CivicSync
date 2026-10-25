@@ -823,7 +823,7 @@ def seed_database(db: Session, force: bool = False):
                 "is_overridden": p.is_overridden,
                 "override_reason": p.override_reason,
             })
-        for c in [conf_a, conf_b]:
+        for c in [conf_a, conf_b, conf_c]:
             mongo_manager.save_conflict({
                 "id": c.id,
                 "project_a_id": c.project_a_id,
