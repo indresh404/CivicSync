@@ -4,7 +4,8 @@ from dotenv import load_dotenv
 
 BASE_DIR = Path(__file__).resolve().parent
 
-# Load local environment variables (.env.local or .env)
+# Load local environment variables (.env in backend, .env.local or .env in root)
+load_dotenv(BASE_DIR / ".env")
 load_dotenv(BASE_DIR.parent / ".env.local")
 load_dotenv(BASE_DIR.parent / ".env")
 load_dotenv()
@@ -14,7 +15,9 @@ PORT = int(os.getenv("PORT", "5000"))
 
 # Database Configuration
 DATABASE_URL = os.getenv("DATABASE_URL")
-if not DATABASE_URL:
+if DATABASE_URL and DATABASE_URL.startswith("postgres://"):
+    DATABASE_URL = DATABASE_URL.replace("postgres://", "postgresql://", 1)
+elif not DATABASE_URL:
     sqlite_path = BASE_DIR / "civicsync.db"
     DATABASE_URL = f"sqlite:///{sqlite_path}"
 

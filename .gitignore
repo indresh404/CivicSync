@@ -21,10 +21,13 @@ htmlcov/
 *.sqlite3
 
 # Environment
+.env
+.env*.local
 .env.local
 .env.development.local
 .env.test.local
 .env.production.local
+backend/.env
 
 # IDE
 .vscode/

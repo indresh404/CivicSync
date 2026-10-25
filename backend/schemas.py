@@ -1,6 +1,6 @@
 import datetime
 from typing import List, Optional, Dict, Any
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, ConfigDict
 
 # --- Auth Schemas ---
 class LoginRequest(BaseModel):
@@ -126,8 +126,7 @@ class ProjectResponse(BaseModel):
     updated_at: datetime.datetime
     active_conflicts_count: Optional[int] = 0
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
 # --- Conflict Schemas ---
 class ConflictResponse(BaseModel):
@@ -168,8 +167,7 @@ class ConflictResponse(BaseModel):
     road_name: Optional[str] = None
     acknowledgments: Optional[List[Any]] = []
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
 class ProjectDetailResponse(ProjectResponse):
     conflicts: List[ConflictResponse] = []
@@ -188,8 +186,7 @@ class AcknowledgmentResponse(BaseModel):
     note: Optional[str] = None
     created_at: datetime.datetime
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
 # --- Resolution & Gate Action Schemas ---
 class ApproveRequest(BaseModel):
@@ -228,8 +225,7 @@ class AuditLogResponse(BaseModel):
     previous_state: Optional[str] = None
     new_state: Optional[str] = None
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
 class RoadHistoryResponse(BaseModel):
     road_name: str

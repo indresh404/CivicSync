@@ -22,6 +22,7 @@ import {
   X,
   Compass,
   Sparkles,
+  ArrowRight,
 } from "lucide-react";
 import { formatDate } from "@/lib/utils";
 
@@ -69,6 +70,7 @@ export default function MapComponent({
   const mapContainerRef = useRef<HTMLDivElement>(null);
   const mapInstanceRef = useRef<any>(null);
   const hoverPopupRef = useRef<any>(null);
+  const selectionMarkerRef = useRef<any>(null);
 
   const [mapLoaded, setMapLoaded] = useState(false);
   const [conflictOnly, setConflictOnly] = useState(false);
@@ -368,6 +370,73 @@ export default function MapComponent({
     });
   }, [filteredProjects, mapLoaded, conflictingProjectIds]);
 
+  // Reactive Effect: Pan and focus map on selected project
+  useEffect(() => {
+    if (!mapInstanceRef.current || !mapLoaded) return;
+    const map = mapInstanceRef.current;
+
+    if (selectionMarkerRef.current) {
+      selectionMarkerRef.current.remove();
+      selectionMarkerRef.current = null;
+    }
+
+    if (!selectedProjectId) return;
+
+    const proj = projects.find((p) => p.id === selectedProjectId);
+    if (!proj) return;
+
+    const pLat = proj.lat ?? proj.latitude;
+    const pLng = proj.lng ?? proj.longitude;
+    if (!pLat || !pLng || isNaN(pLat) || isNaN(pLng)) return;
+
+    import("maplibre-gl").then(({ default: maplibregl }) => {
+      const el = document.createElement("div");
+      el.className = "civic-selection-ping";
+      el.innerHTML = `
+        <div style="position: relative; width: 48px; height: 48px; display: flex; align-items: center; justify-content: center; pointer-events: none;">
+          <div style="position: absolute; inset: 0; border-radius: 50%; background: #2563EB; opacity: 0.35; animation: ping 1.5s cubic-bezier(0, 0, 0.2, 1) infinite;"></div>
+          <div style="position: relative; width: 24px; height: 24px; border-radius: 50%; border: 3px solid #FFFFFF; background: #2563EB; box-shadow: 0 4px 16px rgba(37,99,235,0.7); display: flex; align-items: center; justify-content: center;">
+            <div style="width: 6px; height: 6px; border-radius: 50%; background: #FFFFFF;"></div>
+          </div>
+        </div>
+      `;
+
+      selectionMarkerRef.current = new maplibregl.Marker({ element: el })
+        .setLngLat([pLng, pLat])
+        .addTo(map);
+
+      map.flyTo({
+        center: [pLng, pLat],
+        zoom: 16.2,
+        essential: true,
+        pitch: 20,
+      });
+    });
+  }, [selectedProjectId, mapLoaded, projects]);
+
+  // Reactive Effect: Zoom to conflict bounds when selected
+  useEffect(() => {
+    if (!mapInstanceRef.current || !mapLoaded || !selectedConflict) return;
+    const map = mapInstanceRef.current;
+
+    const projA = projects.find((p) => p.id === selectedConflict.project_a_id);
+    const projB = projects.find((p) => p.id === selectedConflict.project_b_id);
+
+    const latA = projA?.lat ?? projA?.latitude;
+    const lngA = projA?.lng ?? projA?.longitude;
+    const latB = projB?.lat ?? projB?.latitude;
+    const lngB = projB?.lng ?? projB?.longitude;
+
+    if (latA && lngA && latB && lngB) {
+      import("maplibre-gl").then(({ default: maplibregl }) => {
+        const bounds = new maplibregl.LngLatBounds();
+        bounds.extend([lngA, latA]);
+        bounds.extend([lngB, latB]);
+        map.fitBounds(bounds, { padding: 120, maxZoom: 17 });
+      });
+    }
+  }, [selectedConflict, mapLoaded, projects]);
+
   // Fit bounds to all filtered projects
   const handleFitBounds = () => {
     if (!mapInstanceRef.current || filteredProjects.length === 0) return;
@@ -598,6 +667,62 @@ export default function MapComponent({
             </div>
           </div>
         </div>
+
+        {/* Selected Project Floating Inspection Card */}
+        {selectedProjectId && (() => {
+          const activeProj = projects.find((p) => p.id === selectedProjectId);
+          if (!activeProj) return null;
+          const isClashing = conflictingProjectIds.has(activeProj.id);
+          return (
+            <div className="absolute top-3 right-3 z-20 max-w-xs sm:max-w-sm bg-white/95 backdrop-blur-md p-4 rounded-2xl border border-blue-200/90 shadow-xl text-xs space-y-2.5 animate-in fade-in slide-in-from-top-2 pointer-events-auto">
+              <div className="flex items-start justify-between gap-2">
+                <span className="font-mono font-bold text-blue-700 bg-blue-50 border border-blue-200 px-2 py-0.5 rounded text-[11px]">
+                  {activeProj.id}
+                </span>
+                <span
+                  className={`text-[10px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider ${
+                    isClashing
+                      ? "bg-red-100 text-red-800 border border-red-200"
+                      : "bg-emerald-100 text-emerald-800 border border-emerald-200"
+                  }`}
+                >
+                  {isClashing ? "Conflict Flagged" : activeProj.status}
+                </span>
+              </div>
+
+              <div>
+                <h4 className="font-bold text-slate-900 text-xs sm:text-sm leading-snug">
+                  {activeProj.title || activeProj.name}
+                </h4>
+                <div className="flex items-center gap-1.5 text-slate-600 mt-1">
+                  <MapPin className="w-3.5 h-3.5 text-blue-600 shrink-0" />
+                  <span className="font-semibold text-slate-800">{activeProj.road_name}</span>
+                  <span>•</span>
+                  <span>{activeProj.department}</span>
+                </div>
+              </div>
+
+              <div className="flex items-center justify-between text-[11px] text-slate-500 pt-1.5 border-t border-slate-100">
+                <span className="flex items-center gap-1">
+                  <Calendar className="w-3 h-3 text-slate-400" />
+                  {formatDate(activeProj.start_date)} – {formatDate(activeProj.end_date)}
+                </span>
+                <span className="font-semibold text-blue-600">{activeProj.project_type}</span>
+              </div>
+
+              {onSelectProject && (
+                <button
+                  type="button"
+                  onClick={() => onSelectProject(activeProj)}
+                  className="w-full mt-1 py-1.5 px-3 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-xl transition flex items-center justify-center gap-1.5 text-xs shadow-xs"
+                >
+                  <span>Open Full Specifications</span>
+                  <ArrowRight className="w-3.5 h-3.5" />
+                </button>
+              )}
+            </div>
+          );
+        })()}
 
         {/* Docked Time Scrubber Bar at Bottom */}
         <div className="absolute bottom-4 left-4 right-4 z-10 bg-white/95 backdrop-blur-md p-3.5 rounded-2xl border border-slate-200 shadow-lg max-w-2xl mx-auto flex flex-col gap-2">

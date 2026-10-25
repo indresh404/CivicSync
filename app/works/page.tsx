@@ -163,16 +163,17 @@ export default function PublicWorksPage() {
             <div className="p-3 bg-slate-50 border-b border-slate-200 text-xs font-semibold text-slate-700 flex items-center justify-between">
               <span className="flex items-center gap-1.5">
                 <MapPin className="w-3.5 h-3.5 text-blue-600" />
-                Live Spatial Overview (OpenStreetMap standard raster tiles)
+                Live Spatial Overview (OpenFreeMap Vector Tiles)
               </span>
               <span className="text-[11px] text-slate-500 font-normal">
-                Click pin to inspect scope
+                Click pin or card to inspect scope
               </span>
             </div>
             <div className="flex-1 relative">
               <MapComponent
                 projects={adaptedProjects}
                 conflicts={[]}
+                selectedProjectId={selectedWork?.id}
                 onSelectProject={(p) => {
                   const found = works.find((w) => w.id === p.id);
                   if (found) setSelectedWork(found);
@@ -234,6 +235,25 @@ export default function PublicWorksPage() {
                         </span>
                         <span className="font-medium text-blue-600">{w.project_type}</span>
                       </div>
+
+                      {isSelected && (
+                        <div className="mt-2.5 pt-2 border-t border-blue-200/60 text-[11px] text-slate-600 space-y-1.5 animate-in fade-in duration-150">
+                          <div className="flex items-center justify-between text-blue-900 font-medium">
+                            <span className="flex items-center gap-1 text-emerald-700 font-semibold">
+                              <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
+                              Municipal Clearance: Approved
+                            </span>
+                            <span className="font-mono text-[10px] bg-white px-2 py-0.5 rounded border border-blue-200">
+                              ID: {w.id}
+                            </span>
+                          </div>
+                          {w.description && (
+                            <p className="text-slate-600 italic bg-white/80 p-2 rounded-lg border border-blue-100">
+                              "{w.description}"
+                            </p>
+                          )}
+                        </div>
+                      )}
                     </div>
                   );
                 })

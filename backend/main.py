@@ -1,3 +1,14 @@
+import sys
+import os
+
+# Ensure project root is always in Python module search path
+_current_dir = os.path.dirname(os.path.abspath(__file__))
+_parent_dir = os.path.dirname(_current_dir)
+if _parent_dir not in sys.path:
+    sys.path.insert(0, _parent_dir)
+if _current_dir not in sys.path:
+    sys.path.insert(0, _current_dir)
+
 import datetime
 import uuid
 from typing import List, Optional, Dict, Any
@@ -616,12 +627,27 @@ def create_project(
         mongo_manager.save_project({
             "id": project.id,
             "title": project.title,
+            "name": project.name,
             "department": project.department,
+            "department_id": project.department_id,
             "project_type": project.project_type,
+            "geometry_type": project.geometry_type,
             "road_name": project.road_name,
+            "road_type": project.road_type,
             "status": project.status,
             "lat": project.lat,
             "lng": project.lng,
+            "latitude": project.latitude,
+            "longitude": project.longitude,
+            "end_lat": project.end_lat,
+            "end_lng": project.end_lng,
+            "radius_m": project.radius_m,
+            "start_date": project.start_date,
+            "end_date": project.end_date,
+            "description": project.description,
+            "has_conflict": project.has_conflict,
+            "created_at": project.created_at,
+            "updated_at": project.updated_at,
         })
 
     return project
@@ -757,6 +783,24 @@ def acknowledge_conflict(
         project_id=conf.project_a_id,
     )
 
+    if mongo_manager.is_connected:
+        mongo_manager.save_acknowledgment({
+            "id": ack_obj.id,
+            "conflict_id": ack_obj.conflict_id,
+            "department": ack_obj.department,
+            "acknowledged_by": ack_obj.acknowledged_by,
+            "report_version": ack_obj.report_version,
+            "note": ack_obj.note,
+            "created_at": ack_obj.created_at,
+        })
+        mongo_manager.save_conflict({
+            "id": conf.id,
+            "status": conf.status,
+            "resolution": conf.resolution,
+            "ack_a": conf.ack_a,
+            "ack_b": conf.ack_b,
+        })
+
     return hydrate_conflict_data(conf, db)
 
 @app.post("/conflicts/{conflict_id}/propose-joint", response_model=ConflictResponse)
@@ -793,6 +837,15 @@ def propose_joint_trenching(
         conflict_id=conf.id,
         project_id=conf.project_a_id,
     )
+
+    if mongo_manager.is_connected:
+        mongo_manager.save_conflict({
+            "id": conf.id,
+            "status": conf.status,
+            "resolution": conf.resolution,
+            "ack_a": conf.ack_a,
+            "ack_b": conf.ack_b,
+        })
 
     return hydrate_conflict_data(conf, db)
 
@@ -832,6 +885,24 @@ def override_conflict(
         conflict_id=conf.id,
         project_id=conf.project_a_id,
     )
+
+    if mongo_manager.is_connected:
+        mongo_manager.save_acknowledgment({
+            "id": ack_obj.id,
+            "conflict_id": ack_obj.conflict_id,
+            "department": ack_obj.department,
+            "acknowledged_by": ack_obj.acknowledged_by,
+            "report_version": ack_obj.report_version,
+            "note": ack_obj.note,
+            "created_at": ack_obj.created_at,
+        })
+        mongo_manager.save_conflict({
+            "id": conf.id,
+            "status": conf.status,
+            "resolution": conf.resolution,
+            "ack_a": conf.ack_a,
+            "ack_b": conf.ack_b,
+        })
 
     return hydrate_conflict_data(conf, db)
 
@@ -901,6 +972,13 @@ def approve_project(
         new_state="Approved",
     )
 
+    if mongo_manager.is_connected:
+        mongo_manager.save_project({
+            "id": project.id,
+            "status": "Approved",
+            "updated_at": project.updated_at,
+        })
+
     return project
 
 @app.post("/projects/{project_id}/status", response_model=ProjectResponse)
@@ -933,6 +1011,14 @@ def update_project_status(
         previous_state=old_status,
         new_state=payload.new_status,
     )
+
+    if mongo_manager.is_connected:
+        mongo_manager.save_project({
+            "id": project.id,
+            "status": project.status,
+            "updated_at": project.updated_at,
+        })
+
     return project
 
 # --- ROAD HISTORY (Screen 6) ---

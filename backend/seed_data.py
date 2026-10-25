@@ -679,22 +679,62 @@ def seed_database(db: Session, force: bool = False):
             mongo_manager.save_project({
                 "id": p.id,
                 "title": p.title,
+                "name": p.name,
+                "department": p.department,
                 "department_id": p.department_id,
                 "project_type": p.project_type,
                 "geometry_type": p.geometry_type,
                 "lat": p.lat,
                 "lng": p.lng,
+                "latitude": p.latitude,
+                "longitude": p.longitude,
+                "end_lat": p.end_lat,
+                "end_lng": p.end_lng,
+                "radius_m": p.radius_m,
                 "road_name": p.road_name,
+                "road_type": p.road_type,
+                "start_date": p.start_date,
+                "end_date": p.end_date,
                 "status": p.status,
                 "has_conflict": p.has_conflict,
+                "description": p.description,
+                "is_overridden": p.is_overridden,
+                "override_reason": p.override_reason,
             })
         for c in [conf_a, conf_b]:
             mongo_manager.save_conflict({
                 "id": c.id,
                 "project_a_id": c.project_a_id,
                 "project_b_id": c.project_b_id,
+                "calculated_distance": c.calculated_distance,
+                "threshold": c.threshold,
+                "overlap_start": c.overlap_start,
+                "overlap_end": c.overlap_end,
+                "overlapping_days": c.overlapping_days,
                 "severity_score": c.severity_score,
+                "suggested_sequence": c.suggested_sequence,
                 "resolution": c.resolution,
+                "status": c.status,
                 "ack_a": c.ack_a,
                 "ack_b": c.ack_b,
+                "report_version": c.report_version,
+            })
+        for a in audit_events:
+            mongo_manager.save_audit({
+                "id": a.id,
+                "action_type": a.action_type,
+                "actor": a.actor,
+                "department": a.department,
+                "note": a.note,
+                "project_id": a.project_id,
+                "conflict_id": a.conflict_id,
+                "created_at": a.created_at,
+            })
+        for u in user_objs:
+            mongo_manager.save_user({
+                "id": u.id,
+                "email": u.email,
+                "name": u.name,
+                "department_id": u.department_id,
+                "role": u.role,
             })

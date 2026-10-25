@@ -133,6 +133,22 @@ export default function AdminDashboardPage() {
   };
 
   useEffect(() => {
+    // Restore session if user signed in via login page
+    if (typeof window !== "undefined") {
+      const stored = localStorage.getItem("civicsync_user");
+      if (stored) {
+        try {
+          const u = JSON.parse(stored);
+          if (u.role === "ADMIN") {
+            setCurrentRole("City Administrator (Approver)");
+          } else if (u.department_name) {
+            setCurrentRole(u.department_name as SimulatedRole);
+          }
+        } catch (e) {
+          console.warn("Could not parse stored session:", e);
+        }
+      }
+    }
     loadAllData();
   }, []);
 

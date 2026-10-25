@@ -205,7 +205,77 @@ const SEED_PROJECTS: Project[] = [
   },
 ];
 
+const SEED_CONFLICTS: Conflict[] = [
+  {
+    id: "CONF-2026-001",
+    project_a_id: "PRJ-2026-001",
+    project_b_id: "PRJ-2026-002",
+    project_a_name: "Mira Bhayandar Road Asphalt Resurfacing & Milling [Scenario A]",
+    project_a_dept: "Roads Department",
+    project_a_type: "Resurfacing",
+    project_b_name: "Mira Bhayandar Road 600mm Potable Water Trunk Main [Scenario A]",
+    project_b_dept: "Water Department",
+    project_b_type: "Pipeline",
+    calculated_distance: 22.4,
+    threshold: 50.0,
+    overlap_start: "2026-11-10",
+    overlap_end: "2026-11-20",
+    overlapping_days: 11,
+    proximity_score: 0.552,
+    overlap_score: 0.733,
+    road_importance_score: 1.0,
+    severity_score: 79.8,
+    severity_level: "High",
+    conflict_reason: "High severity overlap on Mira Bhayandar Road arterial corridor between Water pipeline and Roads resurfacing.",
+    suggested_sequence: "Sequence Underground First: Water Department must finish pipe installation before Roads Department paves asphalt.",
+    suggested_dates: "Pipeline: 10–25 Nov | Resurfacing: 27 Nov–12 Dec",
+    status: "Awaiting Acknowledgment",
+    resolution: "Pending",
+    ack_a: false,
+    ack_b: false,
+    report_version: 1,
+    created_at: "2026-10-16T14:25:00Z",
+    updated_at: "2026-10-16T14:25:00Z",
+    acknowledgments: [],
+    road_name: "Mira Bhayandar Road",
+  },
+  {
+    id: "CONF-2026-002",
+    project_a_id: "PRJ-2026-003",
+    project_b_id: "PRJ-2026-004",
+    project_a_name: "Silver Park 11kV Underground Power Ducting [Scenario B]",
+    project_a_dept: "Electricity Department",
+    project_a_type: "Cabling",
+    project_b_name: "Silver Park 5G Fiber Optic Micro-Trenching [Scenario B]",
+    project_b_dept: "Telecom Department",
+    project_b_type: "Cabling",
+    calculated_distance: 28.5,
+    threshold: 50.0,
+    overlap_start: "2026-11-18",
+    overlap_end: "2026-11-30",
+    overlapping_days: 13,
+    proximity_score: 0.43,
+    overlap_score: 0.86,
+    road_importance_score: 0.5,
+    severity_score: 59.4,
+    severity_level: "Medium",
+    conflict_reason: "Medium severity concurrent excavation on Silver Park Residential Lane between Electricity and Telecom.",
+    suggested_sequence: "Joint Trenching Opportunity: Propose unified trenching excavation with shared utility conduits.",
+    suggested_dates: "Joint Trenching: 15 Nov–02 Dec",
+    status: "Awaiting Acknowledgment",
+    resolution: "Pending",
+    ack_a: false,
+    ack_b: false,
+    report_version: 1,
+    created_at: "2026-10-17T11:50:00Z",
+    updated_at: "2026-10-17T11:50:00Z",
+    acknowledgments: [],
+    road_name: "Silver Park Residential Lane",
+  },
+];
+
 let inMemoryProjects = [...SEED_PROJECTS];
+let inMemoryConflicts = [...SEED_CONFLICTS];
 
 export async function fetchProjects(filters?: {
   department?: string;
@@ -320,7 +390,11 @@ export async function fetchConflicts(filters?: {
   } catch (err) {
     console.warn("fetchConflicts fallback:", err);
   }
-  return [];
+  return inMemoryConflicts.filter((c) => {
+    if (filters?.status && filters.status !== "ALL" && c.status !== filters.status) return false;
+    if (filters?.severity && filters.severity !== "ALL" && c.severity_level !== filters.severity) return false;
+    return true;
+  });
 }
 
 export async function acknowledgeConflict(
@@ -416,21 +490,60 @@ export async function changeProjectStatus(
 }
 
 export async function fetchRoadHistory(roadName: string): Promise<RoadHistoryResponse> {
-  const res = await fetch(`${API_BASE_URL}/api/roads/${encodeURIComponent(roadName)}/history`, {
-    cache: "no-store",
-  });
-  if (!res.ok) throw new Error("Failed to fetch road history");
-  return await res.json();
+  try {
+    const res = await fetch(`${API_BASE_URL}/api/roads/${encodeURIComponent(roadName)}/history`, {
+      cache: "no-store",
+    });
+    if (res.ok) return await res.json();
+  } catch (err) {
+    console.warn("fetchRoadHistory fallback:", err);
+  }
+
+  const matchingProjects = inMemoryProjects.filter(
+    (p) => p.road_name.toLowerCase() === roadName.toLowerCase()
+  );
+  const matchingConflicts: Conflict[] = inMemoryConflicts.filter((c) =>
+    (c.road_name || "").toLowerCase().includes(roadName.toLowerCase()) ||
+    roadName.toLowerCase().includes((c.road_name || "").toLowerCase())
+  );
+
+  return {
+    road_name: roadName,
+    headline_stat: `${matchingProjects.length} Infrastructure Projects on Corridor`,
+    excavations_last_12_months: matchingProjects.filter((p) => p.status === "Completed" || p.status === "Ongoing").length,
+    total_projects: matchingProjects.length,
+    projects: matchingProjects,
+    conflicts: matchingConflicts,
+  };
 }
 
 export async function fetchPublicWorks(): Promise<any[]> {
   try {
     const res = await fetch(`${API_BASE_URL}/api/public/works`, { cache: "no-store" });
-    if (res.ok) return await res.json();
+    if (res.ok) {
+      const data = await res.json();
+      if (Array.isArray(data) && data.length > 0) return data;
+    }
   } catch (err) {
     console.warn("fetchPublicWorks error:", err);
   }
-  return [];
+  return inMemoryProjects
+    .filter((p) => p.status === "Approved" || p.status === "Ongoing" || p.status === "Planned")
+    .map((w) => ({
+      id: w.id,
+      title: w.title || w.name,
+      department: w.department,
+      road_name: w.road_name,
+      project_type: w.project_type,
+      start_date: w.start_date,
+      end_date: w.end_date,
+      status: w.status,
+      lat: w.latitude ?? w.lat,
+      lng: w.longitude ?? w.lng,
+      end_lat: w.end_latitude ?? w.end_lat,
+      end_lng: w.end_longitude ?? w.end_lng,
+      description: w.description,
+    }));
 }
 
 export async function fetchDashboardStats(): Promise<DashboardStats> {
