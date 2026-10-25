@@ -310,8 +310,21 @@ def run_conflict_detection(db: Session, project: Project, actor: str = "System")
 # REST API ENDPOINTS
 # ==============================================================================
 
+@app.get("/")
+@app.head("/")
+def root():
+    return {
+        "status": "online",
+        "service": "CivicSync Municipal Road-Work Coordination Platform",
+        "version": "1.0.0",
+        "docs": "/docs",
+        "health": "/health",
+    }
+
 @app.get("/health")
+@app.head("/health")
 @app.get("/api/health")
+@app.head("/api/health")
 def health_check():
     return {
         "status": "healthy",
@@ -1211,6 +1224,7 @@ def seed_demo(db: Session = Depends(get_db)):
 
 if __name__ == "__main__":
     import uvicorn
-    port = int(os.environ.get("PORT", 10000))
-    uvicorn.run(app, host="0.0.0.0", port=port)
+    # Defaults to PORT env var if set by Render/hosting provider, otherwise 5000/10000
+    port = int(os.environ.get("PORT", 5000))
+    uvicorn.run("main:app", host="0.0.0.0", port=port)
 
