@@ -575,6 +575,18 @@ export default function GanttChartView({
             <span>Silver Park Zone: Power & Telecom (Joint Trench)</span>
             <ArrowRight className="w-3 h-3" />
           </button>
+
+          <button
+            type="button"
+            onClick={() => {
+              const p = projects.find((x) => x.id === "PRJ-2026-016");
+              if (p) onSelectProject(p);
+            }}
+            className="px-3 py-1 rounded-lg bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-200 font-semibold text-[11px] transition flex items-center gap-1"
+          >
+            <span>Shanti Park Zone: Sewerage & Power (Deep-Trench)</span>
+            <ArrowRight className="w-3 h-3" />
+          </button>
         </div>
       </div>
     </div>

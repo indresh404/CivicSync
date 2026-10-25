@@ -512,6 +512,89 @@ def seed_database(db: Session, force: bool = False):
             conflict_check_performed=True,
             created_at=datetime.datetime(2026, 10, 8, 15, 0),
         ),
+        Project(
+            id="PRJ-2026-016",
+            title="Shanti Park Main Avenue Underground Stormwater Drain",
+            name="Shanti Park Main Avenue Underground Stormwater Drain",
+            department_id="DEPT-SEWER",
+            department="Sewerage Department",
+            project_type="Sewerage",
+            geometry_type="line",
+            lat=19.2815,
+            lng=72.8610,
+            latitude=19.2815,
+            longitude=72.8610,
+            end_lat=19.2830,
+            end_lng=72.8635,
+            end_latitude=19.2830,
+            end_longitude=72.8635,
+            radius_m=25.0,
+            radius_meters=25.0,
+            road_name="Shanti Park Main Avenue",
+            road_type="Arterial",
+            description="Deep-level storm drain pipe-jacking along central Shanti Park arterial thoroughfare.",
+            start_date=datetime.date(2026, 11, 10),
+            end_date=datetime.date(2026, 11, 28),
+            status="Planned",
+            has_conflict=True,
+            conflict_check_performed=True,
+            conflict_check_version=1,
+            created_at=datetime.datetime(2026, 10, 19, 9, 0),
+        ),
+        Project(
+            id="PRJ-2026-017",
+            title="Shanti Park Distribution Substation Power Cabling",
+            name="Shanti Park Distribution Substation Power Cabling",
+            department_id="DEPT-ELEC",
+            department="Electricity Department",
+            project_type="Cabling",
+            geometry_type="line",
+            lat=19.2818,
+            lng=72.8615,
+            latitude=19.2818,
+            longitude=72.8615,
+            end_lat=19.2832,
+            end_lng=72.8640,
+            end_latitude=19.2832,
+            end_longitude=72.8640,
+            radius_m=25.0,
+            radius_meters=25.0,
+            road_name="Shanti Park Main Avenue",
+            road_type="Arterial",
+            description="Trench excavation for high-capacity 22kV feeder bus interconnecting adjacent wards.",
+            start_date=datetime.date(2026, 11, 16),
+            end_date=datetime.date(2026, 11, 30),
+            status="Planned",
+            has_conflict=True,
+            conflict_check_performed=True,
+            conflict_check_version=1,
+            created_at=datetime.datetime(2026, 10, 19, 10, 0),
+        ),
+        Project(
+            id="PRJ-2026-018",
+            title="Mira Road Station Skywalk Lighting & Surveillance",
+            name="Mira Road Station Skywalk Lighting & Surveillance",
+            department_id="DEPT-TELE",
+            department="Telecom Department",
+            project_type="Other",
+            geometry_type="point",
+            lat=19.2805,
+            lng=72.8535,
+            latitude=19.2805,
+            longitude=72.8535,
+            radius_m=20.0,
+            radius_meters=20.0,
+            road_name="Station Road (Mira Road East)",
+            road_type="Arterial",
+            description="Pedestrian commuter corridor LED lighting control conduits and optical security nodes.",
+            start_date=datetime.date(2026, 11, 25),
+            end_date=datetime.date(2026, 12, 12),
+            status="Approved",
+            has_conflict=False,
+            conflict_check_performed=True,
+            conflict_check_version=1,
+            created_at=datetime.datetime(2026, 10, 20, 14, 0),
+        ),
     ]
 
     all_projects = [proj_a1, proj_a2, proj_b1, proj_b2, proj_c_past, proj_c_new] + background_projects
@@ -595,7 +678,46 @@ def seed_database(db: Session, force: bool = False):
         created_at=datetime.datetime(2026, 10, 17, 11, 50),
     )
 
-    db.add_all([conf_a, conf_b])
+    # Conflict 3: Shanti Park (Sewerage vs Electricity)
+    proj_d1 = next(p for p in all_projects if p.id == "PRJ-2026-016")
+    proj_d2 = next(p for p in all_projects if p.id == "PRJ-2026-017")
+    dist_c = calculate_project_distance(proj_d1, proj_d2)
+    _, start_c, end_c, days_c = check_date_overlap(
+        proj_d1.start_date, proj_d1.end_date, proj_d2.start_date, proj_d2.end_date
+    )
+    sev_c = calculate_severity(dist_c, 50.0, days_c, proj_d1.road_type, proj_d2.road_type)
+    seq_c = generate_sequencing_recommendation(proj_d1, proj_d2, start_c, end_c, days_c)
+
+    conf_c = Conflict(
+        id="CONF-2026-003",
+        project_a_id=proj_d1.id,
+        project_b_id=proj_d2.id,
+        calculated_distance=dist_c,
+        threshold=50.0,
+        overlap_start=start_c,
+        overlap_end=end_c,
+        overlapping_days=days_c,
+        proximity_score=sev_c["proximity_score"],
+        overlap_score=sev_c["overlap_score"],
+        road_importance_score=sev_c["road_importance_score"],
+        severity_score=sev_c["severity_score"],
+        severity_level="Medium",
+        severity_breakdown=sev_c["severity_breakdown"],
+        conflict_reason=(
+            f"High-density arterial utility clash: {dist_c}m separation on '{proj_d1.road_name}' "
+            f"with {days_c} days overlapping digging window between deep stormwater drainage and power cabling."
+        ),
+        suggested_sequence=seq_c["suggested_sequence"],
+        suggested_dates=seq_c["suggested_dates"],
+        resolution="Pending",
+        status="Awaiting Acknowledgment",
+        ack_a=False,
+        ack_b=False,
+        report_version=1,
+        created_at=datetime.datetime(2026, 10, 19, 10, 15),
+    )
+
+    db.add_all([conf_a, conf_b, conf_c])
     db.commit()
 
     # 5. Acknowledgment for Conflict 1
