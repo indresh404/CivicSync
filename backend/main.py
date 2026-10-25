@@ -1206,3 +1206,9 @@ def seed_demo(db: Session = Depends(get_db)):
         "status": "success",
         "message": "CivicSync demo scenarios seeded successfully (Scenario A, Scenario B, Scenario C, and background city grid).",
     }
+
+if __name__ == "__main__":
+    import uvicorn
+    port = int(os.environ.get("PORT", 10000))
+    uvicorn.run(app, host="0.0.0.0", port=port)
+
