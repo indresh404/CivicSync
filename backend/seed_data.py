@@ -77,8 +77,8 @@ def seed_database(db: Session, force: bool = False):
     # SCENARIO A: Roads resurfacing vs Water pipeline on arterial road (High Severity)
     proj_a1 = Project(
         id="PRJ-2026-001",
-        title="Mira Bhayandar Road Asphalt Resurfacing & Milling [Scenario A]",
-        name="Mira Bhayandar Road Asphalt Resurfacing & Milling [Scenario A]",
+        title="Mira Bhayandar Road Asphalt Resurfacing & Milling",
+        name="Mira Bhayandar Road Asphalt Resurfacing & Milling",
         department_id="DEPT-ROADS",
         department="Roads Department",
         project_type="Resurfacing",
@@ -109,8 +109,8 @@ def seed_database(db: Session, force: bool = False):
 
     proj_a2 = Project(
         id="PRJ-2026-002",
-        title="Mira Bhayandar Road 600mm Potable Water Trunk Main [Scenario A]",
-        name="Mira Bhayandar Road 600mm Potable Water Trunk Main [Scenario A]",
+        title="Mira Bhayandar Road 600mm Potable Water Trunk Main",
+        name="Mira Bhayandar Road 600mm Potable Water Trunk Main",
         department_id="DEPT-WATER",
         department="Water Department",
         project_type="Pipeline",
@@ -142,8 +142,8 @@ def seed_database(db: Session, force: bool = False):
     # SCENARIO B: Electricity cabling vs Telecom on residential road (Medium Severity, Joint Trench candidate)
     proj_b1 = Project(
         id="PRJ-2026-003",
-        title="Silver Park 11kV Underground Power Ducting [Scenario B]",
-        name="Silver Park 11kV Underground Power Ducting [Scenario B]",
+        title="Silver Park 11kV Underground Power Ducting",
+        name="Silver Park 11kV Underground Power Ducting",
         department_id="DEPT-ELEC",
         department="Electricity Department",
         project_type="Cabling",
@@ -170,8 +170,8 @@ def seed_database(db: Session, force: bool = False):
 
     proj_b2 = Project(
         id="PRJ-2026-004",
-        title="Silver Park 5G Fiber Optic Micro-Trenching [Scenario B]",
-        name="Silver Park 5G Fiber Optic Micro-Trenching [Scenario B]",
+        title="Silver Park 5G Fiber Optic Micro-Trenching",
+        name="Silver Park 5G Fiber Optic Micro-Trenching",
         department_id="DEPT-TELE",
         department="Telecom Department",
         project_type="Cabling",
@@ -200,8 +200,8 @@ def seed_database(db: Session, force: bool = False):
     # Reference: road completed resurfacing 3 months ago (July 2026)
     proj_c_past = Project(
         id="PRJ-2026-000",
-        title="Kanakia Road Complete Asphalt Overlay [Completed 3 Mos Ago]",
-        name="Kanakia Road Complete Asphalt Overlay [Completed 3 Mos Ago]",
+        title="Kanakia Road Complete Asphalt Overlay",
+        name="Kanakia Road Complete Asphalt Overlay",
         department_id="DEPT-ROADS",
         department="Roads Department",
         project_type="Resurfacing",
@@ -232,8 +232,8 @@ def seed_database(db: Session, force: bool = False):
 
     proj_c_new = Project(
         id="PRJ-2026-005",
-        title="Kanakia Road Emergency Gas Pipeline Valve Replacement [Scenario C]",
-        name="Kanakia Road Emergency Gas Pipeline Valve Replacement [Scenario C]",
+        title="Kanakia Road Emergency Gas Pipeline Valve Replacement",
+        name="Kanakia Road Emergency Gas Pipeline Valve Replacement",
         department_id="DEPT-GAS",
         department="Gas Department",
         project_type="Gas line",

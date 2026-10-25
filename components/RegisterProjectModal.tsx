@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { Project, SimulatedRole, PreviewConflictResponse } from "@/lib/types";
+import { Project, DepartmentRole, SimulatedRole, PreviewConflictResponse } from "@/lib/types";
 import { createProject, previewConflicts } from "@/lib/api";
 import LocationPickerMap from "./LocationPickerMap";
 import {
@@ -24,7 +24,7 @@ interface RegisterProjectModalProps {
   isOpen: boolean;
   onClose: () => void;
   onSuccess: (newProject: Project) => void;
-  currentRole: SimulatedRole;
+  currentRole: DepartmentRole | SimulatedRole;
 }
 
 export default function RegisterProjectModal({

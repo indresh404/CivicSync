@@ -181,7 +181,7 @@ export interface RoadHistoryResponse {
   conflicts: Conflict[];
 }
 
-export type SimulatedRole =
+export type DepartmentRole =
   | "City Administrator (Approver)"
   | "Roads Department"
   | "Water Department"
@@ -189,3 +189,5 @@ export type SimulatedRole =
   | "Sewerage Department"
   | "Telecom Department"
   | "Gas Department";
+
+export type SimulatedRole = DepartmentRole;

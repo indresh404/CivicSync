@@ -4,7 +4,7 @@ import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Search, Plus, AlertTriangle, Calendar, Menu, LogOut, UserCheck, Eye } from "lucide-react";
-import { SimulatedRole } from "@/lib/types";
+import { DepartmentRole, SimulatedRole } from "@/lib/types";
 
 interface AdminHeaderProps {
   title: string;
@@ -13,7 +13,7 @@ interface AdminHeaderProps {
   onSearchChange: (q: string) => void;
   onOpenRegisterModal: () => void;
   activeConflictCount: number;
-  currentRole: SimulatedRole;
+  currentRole: DepartmentRole | SimulatedRole;
   onToggleMobileSidebar?: () => void;
 }
 

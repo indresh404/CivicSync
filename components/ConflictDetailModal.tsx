@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { Conflict, SimulatedRole } from "@/lib/types";
+import { Conflict, DepartmentRole, SimulatedRole } from "@/lib/types";
 import { acknowledgeConflict, proposeJointTrench, overrideConflict } from "@/lib/api";
 import {
   X,
@@ -26,7 +26,7 @@ interface ConflictDetailModalProps {
   isOpen: boolean;
   onClose: () => void;
   onAcknowledged: (conflictId: string) => void;
-  currentRole: SimulatedRole;
+  currentRole: DepartmentRole | SimulatedRole;
 }
 
 export default function ConflictDetailModal({

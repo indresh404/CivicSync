@@ -19,7 +19,7 @@ import {
 } from "lucide-react";
 import { loginUser } from "@/lib/api";
 
-const DEMO_PRESETS = [
+const DEPARTMENT_PROFILES = [
   {
     role: "ADMIN",
     title: "City Commissioner (Admin)",
@@ -166,23 +166,23 @@ export default function LoginPage() {
             Municipal Staff Sign In
           </h2>
           <p className="text-sm text-slate-600">
-            Enter your departmental credentials or select a simulated profile to test live workflows.
+            Enter your departmental credentials or select an authorized agency account to access the coordination portal.
           </p>
         </div>
 
-        {/* Demo Account Picker */}
+        {/* Agency Account Quick Access */}
         <div className="mb-6 p-4 rounded-xl bg-blue-50/70 border border-blue-200/80 space-y-3">
           <div className="flex items-center justify-between">
             <span className="text-xs font-bold text-blue-900 uppercase tracking-wider">
-              Quick Demo Account Switcher
+              Departmental Quick Sign-In
             </span>
             <span className="text-[11px] font-medium text-blue-700 bg-blue-100 px-2 py-0.5 rounded-full">
-              Password: CivicSync2026!
+              Standard: CivicSync2026!
             </span>
           </div>
 
           <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
-            {DEMO_PRESETS.map((p) => {
+            {DEPARTMENT_PROFILES.map((p) => {
               const Icon = p.icon;
               const isSelected = email === p.email;
               return (

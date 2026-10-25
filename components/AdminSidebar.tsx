@@ -17,7 +17,7 @@ import {
   Eye,
   CalendarRange,
 } from "lucide-react";
-import { SimulatedRole } from "@/lib/types";
+import { DepartmentRole, SimulatedRole } from "@/lib/types";
 
 export type AdminTab =
   | "overview"
@@ -32,10 +32,11 @@ export type AdminTab =
 interface AdminSidebarProps {
   currentTab: AdminTab;
   onSelectTab: (tab: AdminTab) => void;
-  currentRole: SimulatedRole;
-  onChangeRole: (role: SimulatedRole) => void;
+  currentRole: DepartmentRole | SimulatedRole;
+  onChangeRole: (role: DepartmentRole) => void;
   activeConflictCount: number;
-  onResetDemo: () => void;
+  onResetBaseline?: () => void;
+  onResetDemo?: () => void;
 }
 
 export default function AdminSidebar({
@@ -44,8 +45,10 @@ export default function AdminSidebar({
   currentRole,
   onChangeRole,
   activeConflictCount,
+  onResetBaseline,
   onResetDemo,
 }: AdminSidebarProps) {
+  const handleReset = onResetBaseline || onResetDemo || (() => {});
   const navItems: { id: AdminTab; label: string; icon: React.ReactNode; badge?: number }[] = [
     {
       id: "overview",
@@ -155,7 +158,7 @@ export default function AdminSidebar({
         </nav>
       </div>
 
-      {/* Role Simulation & Demo Controls */}
+      {/* Department Context & Sync Controls */}
       <div className="p-4 border-t border-slate-800 space-y-3 bg-slate-950/60">
         <div className="flex items-center justify-between text-[11px] text-slate-400 px-1">
           <span className="flex items-center gap-1.5 font-medium">
@@ -164,23 +167,23 @@ export default function AdminSidebar({
           </span>
           <button
             type="button"
-            onClick={onResetDemo}
-            title="Reset to fresh demo scenario"
+            onClick={handleReset}
+            title="Synchronize coordination grid with municipal baseline"
             className="text-slate-500 hover:text-blue-400 flex items-center gap-1 text-[10px] transition"
           >
-            <RotateCcw className="w-3 h-3" /> Reset Demo
+            <RotateCcw className="w-3 h-3" /> Sync Baseline
           </button>
         </div>
 
-        {/* Simulated Demo Role Selector */}
+        {/* Department Authority Selector */}
         <div className="bg-slate-900 border border-slate-800 rounded-xl p-2.5">
           <div className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1 flex items-center gap-1.5">
             <UserCheck className="w-3.5 h-3.5 text-blue-400" />
-            Active Agency Role
+            Department Authority Profile
           </div>
           <select
             value={currentRole}
-            onChange={(e) => onChangeRole(e.target.value as SimulatedRole)}
+            onChange={(e) => onChangeRole(e.target.value as DepartmentRole)}
             className="w-full mt-1 px-2.5 py-1.5 rounded-lg bg-slate-800 border border-slate-700 text-xs text-white font-medium focus:outline-none focus:border-blue-500"
           >
             <option value="City Administrator (Approver)">

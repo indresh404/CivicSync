@@ -13,6 +13,7 @@ import {
   Conflict,
   AuditLog,
   DashboardStats,
+  DepartmentRole,
   SimulatedRole,
   RoadHistoryResponse,
 } from "@/lib/types";
@@ -21,7 +22,7 @@ import {
   fetchConflicts,
   fetchAuditLogs,
   fetchDashboardStats,
-  resetDemoDatabase,
+  resetSystemBaseline,
   approveProject,
   overrideProject,
   fetchRoadHistory,
@@ -68,7 +69,7 @@ import {
 
 export default function AdminDashboardPage() {
   const [currentTab, setCurrentTab] = useState<AdminTab>("overview");
-  const [currentRole, setCurrentRole] = useState<SimulatedRole>(
+  const [currentRole, setCurrentRole] = useState<DepartmentRole>(
     "City Administrator (Approver)"
   );
   const [searchQuery, setSearchQuery] = useState("");
@@ -142,7 +143,7 @@ export default function AdminDashboardPage() {
           if (u.role === "ADMIN") {
             setCurrentRole("City Administrator (Approver)");
           } else if (u.department_name) {
-            setCurrentRole(u.department_name as SimulatedRole);
+            setCurrentRole(u.department_name as DepartmentRole);
           }
         } catch (e) {
           console.warn("Could not parse stored session:", e);
@@ -168,11 +169,11 @@ export default function AdminDashboardPage() {
     loadRoadHistory();
   }, [currentTab, selectedRoadForHistory]);
 
-  const handleResetDemo = async () => {
-    if (confirm("Reset demo database with official seed scenario?")) {
-      await resetDemoDatabase();
+  const handleResetBaseline = async () => {
+    if (confirm("Synchronize municipal coordination grid to standard baseline?")) {
+      await resetSystemBaseline();
       await loadAllData();
-      showToast("Demo environment reset to standard demonstration state.");
+      showToast("Municipal coordination grid synchronized to baseline.");
     }
   };
 
@@ -276,7 +277,7 @@ export default function AdminDashboardPage() {
           currentRole={currentRole}
           onChangeRole={setCurrentRole}
           activeConflictCount={activeConflictsCount}
-          onResetDemo={handleResetDemo}
+          onResetBaseline={handleResetBaseline}
         />
       </div>
 
@@ -297,7 +298,7 @@ export default function AdminDashboardPage() {
               currentRole={currentRole}
               onChangeRole={setCurrentRole}
               activeConflictCount={activeConflictsCount}
-              onResetDemo={handleResetDemo}
+              onResetBaseline={handleResetBaseline}
             />
           </div>
         </div>
@@ -323,7 +324,7 @@ export default function AdminDashboardPage() {
               ? "Inter-Departmental Approval Queue"
               : "Append-Only Audit Trail"
           }
-          subtitle={`Simulated Department Context: ${currentRole}`}
+          subtitle={`Active Department Session: ${currentRole}`}
           searchQuery={searchQuery}
           onSearchChange={setSearchQuery}
           onOpenRegisterModal={() => setRegisterModalOpen(true)}

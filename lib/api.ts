@@ -16,8 +16,8 @@ const API_BASE_URL =
 const SEED_PROJECTS: Project[] = [
   {
     id: "PRJ-2026-001",
-    title: "Mira Bhayandar Road Asphalt Resurfacing & Milling [Scenario A]",
-    name: "Mira Bhayandar Road Asphalt Resurfacing & Milling [Scenario A]",
+    title: "Mira Bhayandar Road Asphalt Resurfacing & Milling",
+    name: "Mira Bhayandar Road Asphalt Resurfacing & Milling",
     department_id: "DEPT-ROADS",
     department: "Roads Department",
     project_type: "Resurfacing",
@@ -49,8 +49,8 @@ const SEED_PROJECTS: Project[] = [
   },
   {
     id: "PRJ-2026-002",
-    title: "Mira Bhayandar Road 600mm Potable Water Trunk Main [Scenario A]",
-    name: "Mira Bhayandar Road 600mm Potable Water Trunk Main [Scenario A]",
+    title: "Mira Bhayandar Road 600mm Potable Water Trunk Main",
+    name: "Mira Bhayandar Road 600mm Potable Water Trunk Main",
     department_id: "DEPT-WATER",
     department: "Water Department",
     project_type: "Pipeline",
@@ -82,8 +82,8 @@ const SEED_PROJECTS: Project[] = [
   },
   {
     id: "PRJ-2026-003",
-    title: "Silver Park 11kV Underground Power Ducting [Scenario B]",
-    name: "Silver Park 11kV Underground Power Ducting [Scenario B]",
+    title: "Silver Park 11kV Underground Power Ducting",
+    name: "Silver Park 11kV Underground Power Ducting",
     department_id: "DEPT-ELEC",
     department: "Electricity Department",
     project_type: "Cabling",
@@ -111,8 +111,8 @@ const SEED_PROJECTS: Project[] = [
   },
   {
     id: "PRJ-2026-004",
-    title: "Silver Park 5G Fiber Optic Micro-Trenching [Scenario B]",
-    name: "Silver Park 5G Fiber Optic Micro-Trenching [Scenario B]",
+    title: "Silver Park 5G Fiber Optic Micro-Trenching",
+    name: "Silver Park 5G Fiber Optic Micro-Trenching",
     department_id: "DEPT-TELE",
     department: "Telecom Department",
     project_type: "Cabling",
@@ -140,8 +140,8 @@ const SEED_PROJECTS: Project[] = [
   },
   {
     id: "PRJ-2026-000",
-    title: "Kanakia Road Complete Asphalt Overlay [Completed 3 Mos Ago]",
-    name: "Kanakia Road Complete Asphalt Overlay [Completed 3 Mos Ago]",
+    title: "Kanakia Road Complete Asphalt Overlay",
+    name: "Kanakia Road Complete Asphalt Overlay",
     department_id: "DEPT-ROADS",
     department: "Roads Department",
     project_type: "Resurfacing",
@@ -172,8 +172,8 @@ const SEED_PROJECTS: Project[] = [
   },
   {
     id: "PRJ-2026-005",
-    title: "Kanakia Road Emergency Gas Pipeline Valve Replacement [Scenario C]",
-    name: "Kanakia Road Emergency Gas Pipeline Valve Replacement [Scenario C]",
+    title: "Kanakia Road Emergency Gas Pipeline Valve Replacement",
+    name: "Kanakia Road Emergency Gas Pipeline Valve Replacement",
     department_id: "DEPT-GAS",
     department: "Gas Department",
     project_type: "Gas line",
@@ -210,10 +210,10 @@ const SEED_CONFLICTS: Conflict[] = [
     id: "CONF-2026-001",
     project_a_id: "PRJ-2026-001",
     project_b_id: "PRJ-2026-002",
-    project_a_name: "Mira Bhayandar Road Asphalt Resurfacing & Milling [Scenario A]",
+    project_a_name: "Mira Bhayandar Road Asphalt Resurfacing & Milling",
     project_a_dept: "Roads Department",
     project_a_type: "Resurfacing",
-    project_b_name: "Mira Bhayandar Road 600mm Potable Water Trunk Main [Scenario A]",
+    project_b_name: "Mira Bhayandar Road 600mm Potable Water Trunk Main",
     project_b_dept: "Water Department",
     project_b_type: "Pipeline",
     calculated_distance: 22.4,
@@ -243,10 +243,10 @@ const SEED_CONFLICTS: Conflict[] = [
     id: "CONF-2026-002",
     project_a_id: "PRJ-2026-003",
     project_b_id: "PRJ-2026-004",
-    project_a_name: "Silver Park 11kV Underground Power Ducting [Scenario B]",
+    project_a_name: "Silver Park 11kV Underground Power Ducting",
     project_a_dept: "Electricity Department",
     project_a_type: "Cabling",
-    project_b_name: "Silver Park 5G Fiber Optic Micro-Trenching [Scenario B]",
+    project_b_name: "Silver Park 5G Fiber Optic Micro-Trenching",
     project_b_dept: "Telecom Department",
     project_b_type: "Cabling",
     calculated_distance: 28.5,
@@ -599,9 +599,20 @@ export async function fetchAuditLogs(filters?: {
   return [];
 }
 
-export async function resetDemoDatabase(): Promise<void> {
-  await fetch(`${API_BASE_URL}/api/reset-demo`, { method: "POST" });
+export async function resetSystemBaseline(): Promise<void> {
+  try {
+    const res = await fetch(`${API_BASE_URL}/api/reset-baseline`, { method: "POST" });
+    if (!res.ok) {
+      await fetch(`${API_BASE_URL}/api/reset-demo`, { method: "POST" });
+    }
+  } catch (err) {
+    try {
+      await fetch(`${API_BASE_URL}/api/reset-demo`, { method: "POST" });
+    } catch (_) {}
+  }
 }
+
+export const resetDemoDatabase = resetSystemBaseline;
 
 export async function loginUser(email: string, password: string): Promise<{ access_token: string; user: User }> {
   const res = await fetch(`${API_BASE_URL}/api/auth/login`, {

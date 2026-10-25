@@ -97,7 +97,7 @@ export default function MapComponent({
     }
   });
 
-  // Calculate simulated timeline date (Base: 1 Nov 2026)
+  // Calculate active timeline date (Base: 1 Nov 2026)
   const baseSimDate = new Date(2026, 10, 1);
   const activeSimDate = new Date(baseSimDate.getTime() + currentDayOffset * 24 * 60 * 60 * 1000);
   const activeDateStr = activeSimDate.toISOString().split("T")[0];
@@ -751,7 +751,7 @@ export default function MapComponent({
             <div className="flex items-center gap-2">
               <span className="text-xs font-bold text-slate-700 flex items-center gap-1">
                 <Calendar className="w-3.5 h-3.5 text-blue-600" />
-                Active Simulated Date:
+                Active Timeline Date:
               </span>
               <span className="font-mono font-extrabold text-blue-600 bg-blue-50 border border-blue-200 px-2.5 py-0.5 rounded-lg text-xs">
                 {formatDate(activeDateStr)}

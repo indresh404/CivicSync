@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { Project, Conflict, SimulatedRole } from "@/lib/types";
+import { Project, Conflict, DepartmentRole, SimulatedRole } from "@/lib/types";
 import { approveProject, changeProjectStatus } from "@/lib/api";
 import {
   X,
@@ -26,7 +26,7 @@ interface ProjectDrawerProps {
   onUpdate: () => void;
   onSelectConflict: (conflict: Conflict) => void;
   onViewRoadHistory?: (roadName: string) => void;
-  currentRole: SimulatedRole;
+  currentRole: DepartmentRole | SimulatedRole;
 }
 
 export default function ProjectDrawer({
@@ -56,7 +56,7 @@ export default function ProjectDrawer({
     setApproving(true);
     setApprovalError(null);
     try {
-      await approveProject(project.id, `${currentRole} Official (Simulated)`);
+      await approveProject(project.id, `${currentRole} Official`);
       onUpdate();
     } catch (err: any) {
       setApprovalError(err.message || "Approval rejected by workflow gate.");
@@ -70,7 +70,7 @@ export default function ProjectDrawer({
       await changeProjectStatus(
         project.id,
         newStatus,
-        `${currentRole} Official (Simulated)`
+        `${currentRole} Official`
       );
       onUpdate();
     } catch (err: any) {

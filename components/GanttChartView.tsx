@@ -62,12 +62,12 @@ export default function GanttChartView({
     return Math.round((timelineEnd.getTime() - timelineStart.getTime()) / (1000 * 60 * 60 * 24)) + 1;
   }, [timelineStart, timelineEnd]);
 
-  // Today marker (simulated municipal date: 15 Nov 2026)
-  const simulatedToday = useMemo(() => new Date(2026, 10, 15), []);
-  const simulatedTodayOffset = useMemo(() => {
-    const diff = Math.round((simulatedToday.getTime() - timelineStart.getTime()) / (1000 * 60 * 60 * 24));
+  // Timeline baseline marker (15 Nov 2026)
+  const timelineMarker = useMemo(() => new Date(2026, 10, 15), []);
+  const timelineMarkerOffset = useMemo(() => {
+    const diff = Math.round((timelineMarker.getTime() - timelineStart.getTime()) / (1000 * 60 * 60 * 24));
     return (diff / totalDays) * 100;
-  }, [simulatedToday, timelineStart, totalDays]);
+  }, [timelineMarker, timelineStart, totalDays]);
 
   // Generate day columns
   const dayColumns = useMemo(() => {
@@ -419,9 +419,9 @@ export default function GanttChartView({
               <div className="h-8 flex text-[10px] text-slate-400 font-mono select-none">
                 {dayColumns.map((d, idx) => {
                   const isSimToday =
-                    d.getFullYear() === simulatedToday.getFullYear() &&
-                    d.getMonth() === simulatedToday.getMonth() &&
-                    d.getDate() === simulatedToday.getDate();
+                    d.getFullYear() === timelineMarker.getFullYear() &&
+                    d.getMonth() === timelineMarker.getMonth() &&
+                    d.getDate() === timelineMarker.getDate();
                   const isWeekend = d.getDay() === 0 || d.getDay() === 6;
 
                   return (
@@ -443,13 +443,13 @@ export default function GanttChartView({
               </div>
             </div>
 
-            {/* Vertical Simulated Today Line */}
+            {/* Vertical Baseline Today Line */}
             <div
-              style={{ left: `${simulatedTodayOffset}%` }}
+              style={{ left: `${timelineMarkerOffset}%` }}
               className="absolute top-0 bottom-0 w-0.5 bg-red-500 z-10 pointer-events-none"
             >
               <div className="sticky top-16 bg-red-600 text-white text-[9px] font-bold px-1.5 py-0.5 rounded shadow -translate-x-1/2 whitespace-nowrap">
-                Today: 15 Nov
+                Current Date: 15 Nov
               </div>
             </div>
 
@@ -544,11 +544,11 @@ export default function GanttChartView({
         </div>
       </div>
 
-      {/* Scripted Scenarios Quick Action Callouts */}
+      {/* Priority Coordination Quick Action Callouts */}
       <div className="bg-slate-50 border-t border-slate-200 p-4 flex flex-col md:flex-row items-center justify-between gap-3 text-xs">
         <div className="flex items-center gap-2 text-slate-700">
           <Sparkles className="w-4 h-4 text-blue-600 shrink-0" />
-          <span className="font-semibold">Demonstration Scheduling Scenarios:</span>
+          <span className="font-semibold">Priority Coordination Works:</span>
         </div>
 
         <div className="flex flex-wrap items-center gap-2">
@@ -560,7 +560,7 @@ export default function GanttChartView({
             }}
             className="px-3 py-1 rounded-lg bg-blue-50 hover:bg-blue-100 text-blue-800 border border-blue-200 font-semibold text-[11px] transition flex items-center gap-1"
           >
-            <span>Scenario A: Roads vs Water (Sequenced)</span>
+            <span>Mira Bhayandar Corridor: Roads & Water (Sequenced)</span>
             <ArrowRight className="w-3 h-3" />
           </button>
 
@@ -572,7 +572,7 @@ export default function GanttChartView({
             }}
             className="px-3 py-1 rounded-lg bg-purple-50 hover:bg-purple-100 text-purple-800 border border-purple-200 font-semibold text-[11px] transition flex items-center gap-1"
           >
-            <span>Scenario B: Electricity vs Telecom (Joint Trench)</span>
+            <span>Silver Park Zone: Power & Telecom (Joint Trench)</span>
             <ArrowRight className="w-3 h-3" />
           </button>
         </div>

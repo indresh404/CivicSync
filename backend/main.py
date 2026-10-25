@@ -1194,17 +1194,19 @@ def get_audit_logs(
 
     return q.order_by(desc(AuditLog.created_at)).limit(limit).all()
 
-# --- DEMO SEED ---
+# --- BASELINE SEED & RESET ---
 
 @app.post("/admin/seed-demo")
 @app.post("/api/admin/seed-demo")
+@app.post("/api/admin/seed-baseline")
 @app.post("/api/reset-demo")
+@app.post("/api/reset-baseline")
 def seed_demo(db: Session = Depends(get_db)):
-    """Loads the 3 scripted scenarios and full background municipal dataset."""
+    """Synchronizes the baseline coordination dataset across all city departments."""
     seed_database(db, force=True)
     return {
         "status": "success",
-        "message": "CivicSync demo scenarios seeded successfully (Scenario A, Scenario B, Scenario C, and background city grid).",
+        "message": "CivicSync municipal baseline synchronized successfully across all departments.",
     }
 
 if __name__ == "__main__":
