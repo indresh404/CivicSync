@@ -357,6 +357,47 @@ INSERT INTO projects (
     'Silver Park - Hatkesh Connector', 'Arterial',
     'Installation of central reservation solar-hybrid LED lighting poles.',
     '2026-12-01', '2026-12-25', 'Ongoing', FALSE, TRUE
+),
+-- ADDITIONAL CONFLICTING PROJECTS
+(
+    'PROJ-010', 'DEPT-WATER', 'Water Department', 'USR-WATER',
+    'Kanakia Road 450mm High-Pressure Potable Feeder Main (simulated)',
+    'Kanakia Road 450mm High-Pressure Potable Feeder Main (simulated)',
+    'Pipeline', 'underground', 'line',
+    19.2788, 72.8718, 19.2788, 72.8718, 19.2798, 72.8728, 19.2798, 72.8728, 25.0, 25.0,
+    'Kanakia Road', 'Arterial',
+    'Pressurized water main installation clashing with gas pipeline emergency maintenance.',
+    '2026-10-28', '2026-11-15', 'Planned', TRUE, TRUE
+),
+(
+    'PROJ-011', 'DEPT-ROADS', 'Roads Department', 'USR-ROADS',
+    'Beverly Park Avenue Road Reconstruction & Bituminous Seal (simulated)',
+    'Beverly Park Avenue Road Reconstruction & Bituminous Seal (simulated)',
+    'Resurfacing', 'surface', 'line',
+    19.2748, 72.8638, 19.2748, 72.8638, 19.2760, 72.8652, 19.2760, 72.8652, 25.0, 25.0,
+    'Beverly Park Avenue', 'Arterial',
+    'Bituminous road surfacing clashing with planned 22kV transformer power cabling.',
+    '2026-11-20', '2026-12-10', 'Planned', TRUE, TRUE
+),
+(
+    'PROJ-012', 'DEPT-GAS', 'Gas Department', 'USR-GAS',
+    '150 Feet Road HDPE Gas Transmission Ducting (simulated)',
+    '150 Feet Road HDPE Gas Transmission Ducting (simulated)',
+    'Gas line', 'underground', 'point',
+    19.2938, 72.8518, 19.2938, 72.8518, NULL, NULL, NULL, NULL, 20.0, 20.0,
+    '150 Feet Road', 'Arterial',
+    'Trenching and laying 125mm high-density polyethylene piped gas supply lines.',
+    '2026-10-25', '2026-11-12', 'Planned', TRUE, TRUE
+),
+(
+    'PROJ-013', 'DEPT-ROADS', 'Roads Department', 'USR-ROADS',
+    'Station Road Feeder Bus Lane Concrete Pavement (simulated)',
+    'Station Road Feeder Bus Lane Concrete Pavement (simulated)',
+    'Resurfacing', 'surface', 'line',
+    19.2808, 72.8538, 19.2808, 72.8538, 19.2818, 72.8548, 19.2818, 72.8548, 20.0, 20.0,
+    'Station Road (Mira Road East)', 'Arterial',
+    'Rigid white-topped concrete paving for high-density municipal feeder bus transit corridor.',
+    '2026-11-22', '2026-12-08', 'Planned', TRUE, TRUE
 )
 ON CONFLICT (id) DO NOTHING;
 
@@ -393,6 +434,42 @@ INSERT INTO conflicts (
     'Pending', 'Awaiting Acknowledgment',
     0.16, 0.50, 0.5,
     'Subsurface proximity near edge of 50m collision threshold.'
+),
+(
+    'CONF-004', 'PROJ-005', 'PROJ-010', 14.8, 50.0,
+    '2026-10-28', '2026-11-08', 12, 82.5, 'High',
+    '{"closeness_score": 0.70, "overlap_score": 0.80, "road_importance_score": 1.0, "distance_m": 14.8, "overlap_days": 12}'::jsonb,
+    'Gas Isolation Precedence: Gas Department must secure and depressurize valve zone before water line trenching commences; 1.5m radial safety separation mandatory.',
+    'Pending', 'Awaiting Acknowledgment',
+    0.70, 0.80, 1.0,
+    'Critical safety hazard: High-pressure gas valve emergency works within 14.8m of active water main excavation corridor.'
+),
+(
+    'CONF-005', 'PROJ-011', 'PROJ-008', 16.5, 50.0,
+    '2026-11-22', '2026-12-05', 14, 76.2, 'High',
+    '{"closeness_score": 0.67, "overlap_score": 0.78, "road_importance_score": 1.0, "distance_m": 16.5, "overlap_days": 14}'::jsonb,
+    'Underground-First Protocol: Hold road resurfacing until 22kV transformer feeder installation is backfilled, compacted, and tested to save ₹3.5L rework cost.',
+    'Pending', 'Awaiting Acknowledgment',
+    0.67, 0.78, 1.0,
+    'Direct road destruction conflict: Roads Department scheduled to lay fresh bituminous asphalt while Electricity plans 22kV trenching underneath.'
+),
+(
+    'CONF-006', 'PROJ-012', 'PROJ-004', 24.0, 50.0,
+    '2026-10-25', '2026-11-10', 17, 58.0, 'Medium',
+    '{"closeness_score": 0.52, "overlap_score": 0.85, "road_importance_score": 0.8, "distance_m": 24.0, "overlap_days": 17}'::jsonb,
+    'Coordinated Horizontal Directional Drilling: Route telecom fiber along north utility verge to protect HDPE gas main; coordinate traffic diversion plans.',
+    'Pending', 'Awaiting Acknowledgment',
+    0.52, 0.85, 0.8,
+    'Conduit interference: Gas transmission line trenching overlaps with traffic smart signal optical loop sensors near Maxus Mall junction.'
+),
+(
+    'CONF-007', 'PROJ-013', 'PROJ-007', 21.0, 50.0,
+    '2026-11-25', '2026-12-08', 14, 62.0, 'Medium',
+    '{"closeness_score": 0.58, "overlap_score": 0.82, "road_importance_score": 1.0, "distance_m": 21.0, "overlap_days": 14}'::jsonb,
+    'Duct-in-Advance: Embed telecom skywalk fiber ducting inside concrete sub-base prior to surface paving to prevent post-completion pavement cutting.',
+    'Pending', 'Awaiting Acknowledgment',
+    0.58, 0.82, 1.0,
+    'Congestion hotspot: Bus lane concrete pouring directly clashes with skywalk electrical conduit trenching outside Mira Road Railway Station.'
 )
 ON CONFLICT (id) DO NOTHING;
 

@@ -36,11 +36,17 @@ import {
   CheckCircle2,
   ShieldCheck,
   RotateCw,
+  Network,
+  Share2,
+  GitBranch,
+  Activity,
 } from "lucide-react";
 import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 import { formatDate } from "@/lib/utils";
+import { buildConstructionMesh, MeshGraph, MeshNode, MeshLink } from "@/lib/meshNetwork";
+import MeshGraphModal from "./MeshGraphModal";
 
 interface MapComponentProps {
   projects: Project[];
@@ -517,6 +523,18 @@ export default function MapComponent({
   const [isLegendCollapsed, setIsLegendCollapsed] = useState(false);
   const [subsurfaceXRay, setSubsurfaceXRay] = useState(false);
   const [inspected3DProject, setInspected3DProject] = useState<Project | null>(null);
+
+  // 3D Construction Coordination Mesh Network States
+  const [meshNetworkActive, setMeshNetworkActive] = useState(true);
+  const [meshFilter, setMeshFilter] = useState<"ALL" | "CONFLICTS" | "CORRIDORS" | "JOINT_TRENCH">("ALL");
+  const [selectedMeshNodeId, setSelectedMeshNodeId] = useState<string | null>(null);
+  const [selectedMeshLink, setSelectedMeshLink] = useState<MeshLink | null>(null);
+  const [meshGraphModalOpen, setMeshGraphModalOpen] = useState(false);
+
+  const meshGraph = React.useMemo(
+    () => buildConstructionMesh(projects, conflicts, MIRA_ROAD_3D_ASSETS),
+    [projects, conflicts]
+  );
 
   // Search autocomplete state
   const [searchQuery, setSearchQuery] = useState("");
@@ -1187,6 +1205,208 @@ export default function MapComponent({
     }
   }, [subsurfaceXRay, mapLoaded]);
 
+  // 3D Construction Mesh Network Layer Management
+  useEffect(() => {
+    if (!mapInstanceRef.current || !mapLoaded) return;
+    const map = mapInstanceRef.current;
+    if (!map.isStyleLoaded()) return;
+
+    if (!meshNetworkActive) {
+      if (map.getSource("mesh-network-links")) {
+        (map.getSource("mesh-network-links") as any).setData({ type: "FeatureCollection", features: [] });
+      }
+      if (map.getSource("mesh-network-nodes")) {
+        (map.getSource("mesh-network-nodes") as any).setData({ type: "FeatureCollection", features: [] });
+      }
+      return;
+    }
+
+    const filteredLinks = meshGraph.links.filter((l) => {
+      if (meshFilter === "CONFLICTS") return l.type === "CONFLICT";
+      if (meshFilter === "CORRIDORS") return l.type === "CORRIDOR";
+      if (meshFilter === "JOINT_TRENCH") return l.type === "JOINT_TRENCH";
+      return true;
+    });
+
+    const linkFeatures = filteredLinks.map((link) => {
+      const isIncident =
+        selectedMeshNodeId &&
+        (link.source_id === selectedMeshNodeId || link.target_id === selectedMeshNodeId);
+      const opacity = selectedMeshNodeId
+        ? isIncident
+          ? 0.95
+          : 0.12
+        : link.type === "CONFLICT"
+        ? 0.95
+        : link.type === "CORRIDOR"
+        ? 0.8
+        : 0.7;
+      const lineWidth = isIncident
+        ? 4.5
+        : link.type === "CONFLICT"
+        ? 3.5
+        : link.type === "CORRIDOR"
+        ? 2.8
+        : 2.2;
+
+      return {
+        type: "Feature",
+        geometry: {
+          type: "LineString",
+          coordinates: [link.source_coords, link.target_coords],
+        },
+        properties: {
+          id: link.id,
+          type: link.type,
+          color: link.color,
+          glow_color: link.glow_color,
+          line_width: lineWidth,
+          line_opacity: opacity,
+          glow_opacity: opacity * 0.5,
+          label: link.label,
+          source_id: link.source_id,
+          target_id: link.target_id,
+          distance_m: link.distance_m,
+          description: link.description,
+        },
+      };
+    });
+
+    const nodeFeatures = meshGraph.nodes.map((node) => {
+      const isSelected = selectedMeshNodeId === node.id;
+      const isNeighbor =
+        selectedMeshNodeId && node.connected_node_ids.includes(selectedMeshNodeId);
+      const isFaded = selectedMeshNodeId && !isSelected && !isNeighbor;
+      const opacity = isFaded ? 0.25 : 1.0;
+      const radius = isSelected ? 10 : node.has_conflict ? 8.5 : 7.0;
+
+      return {
+        type: "Feature",
+        geometry: {
+          type: "Point",
+          coordinates: [node.lng, node.lat],
+        },
+        properties: {
+          id: node.id,
+          name: node.name,
+          department: node.department,
+          color: node.dept_color,
+          has_conflict: node.has_conflict,
+          is_selected: isSelected,
+          radius: radius,
+          pulse_radius: radius + 14,
+          opacity: opacity,
+        },
+      };
+    });
+
+    const linkCollection: GeoJSON.FeatureCollection = {
+      type: "FeatureCollection",
+      features: linkFeatures as any,
+    };
+
+    const nodeCollection: GeoJSON.FeatureCollection = {
+      type: "FeatureCollection",
+      features: nodeFeatures as any,
+    };
+
+    // 1. Links Source & Layers
+    if (map.getSource("mesh-network-links")) {
+      (map.getSource("mesh-network-links") as any).setData(linkCollection);
+    } else {
+      map.addSource("mesh-network-links", {
+        type: "geojson",
+        data: linkCollection,
+      });
+
+      map.addLayer({
+        id: "mesh-links-glow",
+        type: "line",
+        source: "mesh-network-links",
+        paint: {
+          "line-width": 12,
+          "line-color": ["get", "glow_color"],
+          "line-opacity": ["get", "glow_opacity"],
+          "line-blur": 4,
+        },
+      });
+
+      map.addLayer({
+        id: "mesh-links-core",
+        type: "line",
+        source: "mesh-network-links",
+        paint: {
+          "line-width": ["get", "line_width"],
+          "line-color": ["get", "color"],
+          "line-opacity": ["get", "line_opacity"],
+          "line-dasharray": [3, 2],
+        },
+      });
+
+      map.on("mouseenter", "mesh-links-core", () => (map.getCanvas().style.cursor = "pointer"));
+      map.on("mouseleave", "mesh-links-core", () => (map.getCanvas().style.cursor = ""));
+
+      map.on("click", "mesh-links-core", (e: any) => {
+        if (!e.features || e.features.length === 0) return;
+        const linkId = e.features[0].properties?.id;
+        const linkObj = meshGraph.links.find((l) => l.id === linkId);
+        if (linkObj) {
+          setSelectedMeshLink(linkObj);
+          const midLng = (linkObj.source_coords[0] + linkObj.target_coords[0]) / 2;
+          const midLat = (linkObj.source_coords[1] + linkObj.target_coords[1]) / 2;
+          map.flyTo({ center: [midLng, midLat], zoom: 16.8, pitch: 56, duration: 1000 });
+        }
+      });
+    }
+
+    // 2. Nodes Source & Layers
+    if (map.getSource("mesh-network-nodes")) {
+      (map.getSource("mesh-network-nodes") as any).setData(nodeCollection);
+    } else {
+      map.addSource("mesh-network-nodes", {
+        type: "geojson",
+        data: nodeCollection,
+      });
+
+      map.addLayer({
+        id: "mesh-nodes-pulse",
+        type: "circle",
+        source: "mesh-network-nodes",
+        paint: {
+          "circle-radius": ["get", "pulse_radius"],
+          "circle-color": "transparent",
+          "circle-stroke-width": 2,
+          "circle-stroke-color": ["get", "color"],
+          "circle-stroke-opacity": ["get", "opacity"],
+        },
+      });
+
+      map.addLayer({
+        id: "mesh-nodes-core",
+        type: "circle",
+        source: "mesh-network-nodes",
+        paint: {
+          "circle-radius": ["get", "radius"],
+          "circle-color": ["get", "color"],
+          "circle-opacity": ["get", "opacity"],
+          "circle-stroke-width": 2.5,
+          "circle-stroke-color": "#ffffff",
+        },
+      });
+
+      map.on("mouseenter", "mesh-nodes-core", () => (map.getCanvas().style.cursor = "pointer"));
+      map.on("mouseleave", "mesh-nodes-core", () => (map.getCanvas().style.cursor = ""));
+
+      map.on("click", "mesh-nodes-core", (e: any) => {
+        if (!e.features || e.features.length === 0) return;
+        const nodeId = e.features[0].properties?.id;
+        setSelectedMeshNodeId((prev) => (prev === nodeId ? null : nodeId));
+        const coords = e.features[0].geometry.coordinates;
+        map.flyTo({ center: coords, zoom: 16.5, pitch: 58, duration: 1000 });
+      });
+    }
+  }, [mapLoaded, meshGraph, meshNetworkActive, meshFilter, selectedMeshNodeId]);
+
   // Reactive Effect: Pan and focus map on selected project
   useEffect(() => {
     if (!mapInstanceRef.current || !mapLoaded) return;
@@ -1414,6 +1634,34 @@ export default function MapComponent({
             {subsurfaceXRay ? "Subsurface: X-Ray ON" : "Subsurface Cutaway"}
           </button>
 
+          {/* 3D Construction Mesh Network Toggle */}
+          <button
+            type="button"
+            onClick={() => setMeshNetworkActive(!meshNetworkActive)}
+            className={`inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg border font-bold transition text-xs shadow-xs ${
+              meshNetworkActive
+                ? "bg-emerald-950 border-emerald-500 text-emerald-300 ring-1 ring-emerald-500 shadow-md shadow-emerald-950"
+                : "bg-slate-800 border-slate-700 text-slate-300 hover:bg-slate-700"
+            }`}
+            title="Toggle 3D Construction Coordination Mesh Network (Node-to-Node Interconnects & Conflict Arcs)"
+          >
+            <Network className="w-3.5 h-3.5 text-emerald-400" />
+            {meshNetworkActive ? "3D Mesh: ON" : "3D Mesh Network"}
+          </button>
+
+          {/* Interactive Topology Graph Modal Button */}
+          {meshNetworkActive && (
+            <button
+              type="button"
+              onClick={() => setMeshGraphModalOpen(true)}
+              className="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 border border-emerald-500/50 text-emerald-300 font-bold transition text-xs shadow-md shadow-emerald-950"
+              title="Open Node-to-Node Topological Flow Graph"
+            >
+              <Share2 className="w-3.5 h-3.5 text-emerald-400" />
+              <span>Topology Graph</span>
+            </button>
+          )}
+
           {/* GenCity 3D Studio Button */}
           {onOpenGenCityStudio && (
             <button
@@ -1576,6 +1824,189 @@ export default function MapComponent({
             </div>
           )}
         </div>
+
+        {/* 3D Coordination Mesh Telemetry Bar */}
+        {meshNetworkActive && (
+          <div className="absolute top-3 right-3 sm:right-16 z-20 bg-slate-900/90 backdrop-blur-md px-3 py-2 rounded-2xl border border-emerald-500/40 shadow-xl text-xs flex flex-wrap items-center gap-2 pointer-events-auto text-white">
+            <div className="flex items-center gap-1.5 font-bold text-emerald-400">
+              <Network className="w-4 h-4 animate-pulse text-emerald-400" />
+              <span className="hidden sm:inline">3D Mesh:</span>
+              <span className="font-mono text-white text-[11px]">
+                {meshGraph.stats.total_nodes} Nodes &bull; {meshGraph.stats.total_links} Links
+              </span>
+            </div>
+
+            <div className="h-4 w-px bg-slate-700 hidden sm:block" />
+
+            {/* Filter Chips */}
+            <div className="flex items-center gap-1 text-[10px]">
+              <button
+                type="button"
+                onClick={() => setMeshFilter("ALL")}
+                className={`px-2 py-0.5 rounded-md font-semibold transition ${
+                  meshFilter === "ALL"
+                    ? "bg-emerald-600 text-white shadow-xs"
+                    : "bg-slate-800 text-slate-300 hover:bg-slate-700"
+                }`}
+              >
+                All
+              </button>
+              <button
+                type="button"
+                onClick={() => setMeshFilter("CONFLICTS")}
+                className={`px-2 py-0.5 rounded-md font-semibold transition flex items-center gap-1 ${
+                  meshFilter === "CONFLICTS"
+                    ? "bg-red-600 text-white shadow-xs"
+                    : "bg-slate-800 text-red-300 hover:bg-slate-700"
+                }`}
+              >
+                <AlertTriangle className="w-2.5 h-2.5" />
+                Clashes ({meshGraph.stats.conflict_links})
+              </button>
+              <button
+                type="button"
+                onClick={() => setMeshFilter("CORRIDORS")}
+                className={`px-2 py-0.5 rounded-md font-semibold transition flex items-center gap-1 ${
+                  meshFilter === "CORRIDORS"
+                    ? "bg-cyan-600 text-white shadow-xs"
+                    : "bg-slate-800 text-cyan-300 hover:bg-slate-700"
+                }`}
+              >
+                <Layers className="w-2.5 h-2.5" />
+                Corridors ({meshGraph.stats.corridor_links})
+              </button>
+              <button
+                type="button"
+                onClick={() => setMeshFilter("JOINT_TRENCH")}
+                className={`px-2 py-0.5 rounded-md font-semibold transition flex items-center gap-1 ${
+                  meshFilter === "JOINT_TRENCH"
+                    ? "bg-emerald-600 text-white shadow-xs"
+                    : "bg-slate-800 text-emerald-300 hover:bg-slate-700"
+                }`}
+              >
+                <Zap className="w-2.5 h-2.5" />
+                Joint Dig ({meshGraph.stats.joint_trench_links})
+              </button>
+            </div>
+
+            <button
+              type="button"
+              onClick={() => setMeshGraphModalOpen(true)}
+              className="px-2.5 py-1 rounded-lg bg-emerald-950 hover:bg-emerald-900 border border-emerald-500 text-emerald-300 font-bold transition flex items-center gap-1 text-[11px] shadow-xs"
+              title="View Full Topological Flow Graph"
+            >
+              <Share2 className="w-3 h-3 text-emerald-400" />
+              <span className="hidden md:inline">Graph View</span>
+            </button>
+          </div>
+        )}
+
+        {/* Selected Mesh Node Floating Details Card */}
+        {meshNetworkActive && selectedMeshNodeId && (() => {
+          const node = meshGraph.nodes.find((n) => n.id === selectedMeshNodeId);
+          if (!node) return null;
+          const incidentLinks = meshGraph.links.filter(
+            (l) => l.source_id === node.id || l.target_id === node.id
+          );
+          return (
+            <div className="absolute top-16 right-3 sm:right-6 z-20 max-w-xs sm:max-w-sm bg-slate-900/95 backdrop-blur-md p-3.5 rounded-2xl border border-emerald-500/50 shadow-2xl text-xs space-y-2 animate-in fade-in slide-in-from-right-2 pointer-events-auto text-white">
+              <div className="flex items-center justify-between border-b border-slate-800 pb-2">
+                <div className="flex items-center gap-2">
+                  <span className="w-3 h-3 rounded-full" style={{ backgroundColor: node.dept_color }} />
+                  <span className="font-bold text-white uppercase text-[11px] tracking-wider truncate max-w-[170px]">
+                    {node.department}
+                  </span>
+                </div>
+                <button
+                  onClick={() => setSelectedMeshNodeId(null)}
+                  className="text-slate-400 hover:text-white p-1 rounded-md hover:bg-slate-800"
+                  title="Clear selection"
+                >
+                  <X className="w-3.5 h-3.5" />
+                </button>
+              </div>
+              <div>
+                <h4 className="font-bold text-white text-xs">{node.name}</h4>
+                <p className="text-[10px] text-slate-400 font-mono mt-0.5">
+                  {node.road_name} &bull; {node.start_date} to {node.end_date}
+                </p>
+              </div>
+              <div>
+                <span className="text-[10px] uppercase font-mono text-slate-400 font-bold block mb-1">
+                  Active Coordination Links ({incidentLinks.length})
+                </span>
+                <div className="space-y-1 max-h-36 overflow-y-auto pr-1">
+                  {incidentLinks.map((l) => (
+                    <div
+                      key={l.id}
+                      className={`p-1.5 rounded-lg border text-[10px] ${
+                        l.type === "CONFLICT"
+                          ? "bg-red-950/40 border-red-800/60 text-red-200"
+                          : l.type === "JOINT_TRENCH"
+                          ? "bg-emerald-950/40 border-emerald-800/60 text-emerald-200"
+                          : "bg-cyan-950/40 border-cyan-800/60 text-cyan-200"
+                      }`}
+                    >
+                      <div className="flex items-center justify-between font-bold">
+                        <span>{l.label}</span>
+                        <span>{l.distance_m}m</span>
+                      </div>
+                      <p className="text-[9px] text-slate-300 mt-0.5 line-clamp-1">{l.description}</p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+              <div className="flex items-center gap-2 pt-1 border-t border-slate-800">
+                <button
+                  type="button"
+                  onClick={() => {
+                    if (mapInstanceRef.current) {
+                      mapInstanceRef.current.flyTo({ center: [node.lng, node.lat], zoom: 17, pitch: 62, duration: 1000 });
+                    }
+                  }}
+                  className="flex-1 py-1.5 px-2 bg-gradient-to-r from-emerald-600 to-cyan-600 hover:from-emerald-500 hover:to-cyan-500 text-white font-bold rounded-lg text-[10px] transition flex items-center justify-center gap-1 shadow-xs"
+                >
+                  <Compass className="w-3 h-3" /> Focus Site
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setSelectedMeshNodeId(null)}
+                  className="py-1.5 px-2 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-lg text-[10px] border border-slate-700"
+                >
+                  Clear
+                </button>
+              </div>
+            </div>
+          );
+        })()}
+
+        {/* Selected Mesh Link Details Card */}
+        {meshNetworkActive && selectedMeshLink && !selectedMeshNodeId && (
+          <div className="absolute top-16 right-3 sm:right-6 z-20 max-w-xs sm:max-w-sm bg-slate-900/95 backdrop-blur-md p-3.5 rounded-2xl border border-cyan-500/50 shadow-2xl text-xs space-y-2 animate-in fade-in slide-in-from-right-2 pointer-events-auto text-white">
+            <div className="flex items-center justify-between border-b border-slate-800 pb-2">
+              <span className="font-bold text-white text-xs flex items-center gap-1.5">
+                <Zap className="w-3.5 h-3.5 text-cyan-400" />
+                {selectedMeshLink.label}
+              </span>
+              <button
+                onClick={() => setSelectedMeshLink(null)}
+                className="text-slate-400 hover:text-white p-1 rounded-md hover:bg-slate-800"
+              >
+                <X className="w-3.5 h-3.5" />
+              </button>
+            </div>
+            <p className="text-[11px] text-slate-300 leading-snug">{selectedMeshLink.description}</p>
+            {selectedMeshLink.suggested_sequence && (
+              <div className="p-2 rounded-xl bg-amber-950/40 border border-amber-800/60 text-[10px] text-amber-200">
+                <strong>Recommended Sequence:</strong> {selectedMeshLink.suggested_sequence}
+              </div>
+            )}
+            <div className="flex items-center justify-between text-[10px] font-mono text-emerald-400 pt-1 border-t border-slate-800">
+              <span>Municipal Rework Avoidance:</span>
+              <span className="font-bold">₹{selectedMeshLink.cost_avoided_inr.toLocaleString()} INR</span>
+            </div>
+          </div>
+        )}
 
         {/* Selected Project Floating Inspection Card */}
         {selectedProjectId && (() => {
@@ -1761,6 +2192,25 @@ export default function MapComponent({
             </div>
           );
         })()}
+
+        {/* 3D Construction Mesh Network Topology Modal */}
+        <MeshGraphModal
+          graph={meshGraph}
+          isOpen={meshGraphModalOpen}
+          onClose={() => setMeshGraphModalOpen(false)}
+          onSelectNode={(node) => {
+            setSelectedMeshNodeId(node.id);
+            if (mapInstanceRef.current) {
+              mapInstanceRef.current.flyTo({
+                center: [node.lng, node.lat],
+                zoom: 16.8,
+                pitch: 58,
+                bearing: -20,
+                duration: 1200,
+              });
+            }
+          }}
+        />
       </div>
     </div>
   );
