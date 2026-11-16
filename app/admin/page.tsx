@@ -8,6 +8,8 @@ import RegisterProjectModal from "@/components/RegisterProjectModal";
 import ProjectDrawer from "@/components/ProjectDrawer";
 import ConflictDetailModal from "@/components/ConflictDetailModal";
 import GanttChartView from "@/components/GanttChartView";
+import AICopilotDrawer from "@/components/AICopilotDrawer";
+import GenCityStudio from "@/components/GenCityStudio";
 import {
   Project,
   Conflict,
@@ -87,6 +89,7 @@ export default function AdminDashboardPage() {
   const [registerModalOpen, setRegisterModalOpen] = useState(false);
   const [drawerProject, setDrawerProject] = useState<Project | null>(null);
   const [activeConflictModal, setActiveConflictModal] = useState<Conflict | null>(null);
+  const [copilotOpen, setCopilotOpen] = useState(false);
 
   // Filter states for Projects tab
   const [projDeptFilter, setProjDeptFilter] = useState("ALL");
@@ -328,6 +331,8 @@ export default function AdminDashboardPage() {
               ? "Municipal Master Gantt Schedule"
               : currentTab === "map"
               ? "Shared City Infrastructure Map"
+              : currentTab === "gencity"
+              ? "GenCity — AI 3D Urban Digital Twin Studio"
               : currentTab === "conflicts"
               ? "Corridor Conflict Gate"
               : currentTab === "road_history"
@@ -345,6 +350,7 @@ export default function AdminDashboardPage() {
           onToggleMobileSidebar={() => setMobileSidebarOpen(!mobileSidebarOpen)}
           onRefresh={handleManualRefresh}
           isRefreshing={isRefreshing}
+          onOpenAICopilot={() => setCopilotOpen(true)}
         />
 
         {/* Tab View Container */}
@@ -1080,7 +1086,18 @@ export default function AdminDashboardPage() {
                 selectedProjectId={drawerProject?.id}
                 onSelectProject={(p) => setDrawerProject(p)}
                 selectedConflict={activeConflictModal}
+                onOpenAICopilot={() => setCopilotOpen(true)}
+                onOpenGenCityStudio={() => setCurrentTab("gencity")}
               />
+            </div>
+          )}
+
+          {/* ============================================================ */}
+          {/* 3B. GENCITY 3D AI STUDIO */}
+          {/* ============================================================ */}
+          {currentTab === "gencity" && (
+            <div className="w-full max-w-7xl mx-auto">
+              <GenCityStudio onNavigateToMap={() => setCurrentTab("map")} />
             </div>
           )}
 
@@ -1595,6 +1612,15 @@ export default function AdminDashboardPage() {
         onClose={() => setActiveConflictModal(null)}
         onAcknowledged={handleConflictAcknowledged}
         currentRole={currentRole}
+      />
+
+      {/* Municipal AI Infrastructure Copilot Drawer */}
+      <AICopilotDrawer
+        isOpen={copilotOpen}
+        onClose={() => setCopilotOpen(false)}
+        conflicts={conflicts}
+        projects={projects}
+        selectedConflict={activeConflictModal}
       />
     </div>
   );

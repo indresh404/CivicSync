@@ -1,0 +1,989 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "id": "BLDG-001",
+      "properties": {
+        "id": "BLDG-001",
+        "name": "Mira Road Station Terminal",
+        "height": 22.0,
+        "min_height": 0,
+        "levels": 5,
+        "building_type": "civic",
+        "height_source": "measured",
+        "address": "Mira Road Station Terminal, Mira Road East, Mumbai MMR"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.85465,
+              19.280549999999998
+            ],
+            [
+              72.85535,
+              19.280549999999998
+            ],
+            [
+              72.85535,
+              19.28105
+            ],
+            [
+              72.85465,
+              19.28105
+            ],
+            [
+              72.85465,
+              19.280549999999998
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "BLDG-002",
+      "properties": {
+        "id": "BLDG-002",
+        "name": "Railway Platform North Concourse",
+        "height": 14.0,
+        "min_height": 0,
+        "levels": 3,
+        "building_type": "transport",
+        "height_source": "measured",
+        "address": "Railway Platform North Concourse, Mira Road East, Mumbai MMR"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.85495,
+              19.28125
+            ],
+            [
+              72.85565,
+              19.28125
+            ],
+            [
+              72.85565,
+              19.281750000000002
+            ],
+            [
+              72.85495,
+              19.281750000000002
+            ],
+            [
+              72.85495,
+              19.28125
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "BLDG-003",
+      "properties": {
+        "id": "BLDG-003",
+        "name": "Station Skywalk & Bus Terminus",
+        "height": 12.0,
+        "min_height": 0,
+        "levels": 2,
+        "building_type": "transport",
+        "height_source": "measured",
+        "address": "Station Skywalk & Bus Terminus, Mira Road East, Mumbai MMR"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.85425000000001,
+              19.280949999999997
+            ],
+            [
+              72.85495,
+              19.280949999999997
+            ],
+            [
+              72.85495,
+              19.28145
+            ],
+            [
+              72.85425000000001,
+              19.28145
+            ],
+            [
+              72.85425000000001,
+              19.280949999999997
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "BLDG-004",
+      "properties": {
+        "id": "BLDG-004",
+        "name": "Shanti Shopping Center",
+        "height": 28.0,
+        "min_height": 0,
+        "levels": 7,
+        "building_type": "commercial",
+        "height_source": "measured",
+        "address": "Shanti Shopping Center, Mira Road East, Mumbai MMR"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.85585,
+              19.28115
+            ],
+            [
+              72.85655,
+              19.28115
+            ],
+            [
+              72.85655,
+              19.281650000000003
+            ],
+            [
+              72.85585,
+              19.281650000000003
+            ],
+            [
+              72.85585,
+              19.28115
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "BLDG-005",
+      "properties": {
+        "id": "BLDG-005",
+        "name": "Mira Commercial Arcade",
+        "height": 32.0,
+        "min_height": 0,
+        "levels": 8,
+        "building_type": "commercial",
+        "height_source": "measured",
+        "address": "Mira Commercial Arcade, Mira Road East, Mumbai MMR"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.85545,
+              19.27995
+            ],
+            [
+              72.85615,
+              19.27995
+            ],
+            [
+              72.85615,
+              19.280450000000002
+            ],
+            [
+              72.85545,
+              19.280450000000002
+            ],
+            [
+              72.85545,
+              19.27995
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "BLDG-006",
+      "properties": {
+        "id": "BLDG-006",
+        "name": "Kanakia Spaces Tower A",
+        "height": 68.0,
+        "min_height": 0,
+        "levels": 22,
+        "building_type": "residential",
+        "height_source": "measured",
+        "address": "Kanakia Spaces Tower A, Mira Road East, Mumbai MMR"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.85845,
+              19.282249999999998
+            ],
+            [
+              72.85915,
+              19.282249999999998
+            ],
+            [
+              72.85915,
+              19.28275
+            ],
+            [
+              72.85845,
+              19.28275
+            ],
+            [
+              72.85845,
+              19.282249999999998
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "BLDG-007",
+      "properties": {
+        "id": "BLDG-007",
+        "name": "Kanakia Spaces Tower B",
+        "height": 72.0,
+        "min_height": 0,
+        "levels": 24,
+        "building_type": "residential",
+        "height_source": "measured",
+        "address": "Kanakia Spaces Tower B, Mira Road East, Mumbai MMR"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.85905,
+              19.28265
+            ],
+            [
+              72.85974999999999,
+              19.28265
+            ],
+            [
+              72.85974999999999,
+              19.283150000000003
+            ],
+            [
+              72.85905,
+              19.283150000000003
+            ],
+            [
+              72.85905,
+              19.28265
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "BLDG-008",
+      "properties": {
+        "id": "BLDG-008",
+        "name": "Beverly Park Heights 1",
+        "height": 58.0,
+        "min_height": 0,
+        "levels": 19,
+        "building_type": "residential",
+        "height_source": "measured",
+        "address": "Beverly Park Heights 1, Mira Road East, Mumbai MMR"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.86085,
+              19.28625
+            ],
+            [
+              72.86155,
+              19.28625
+            ],
+            [
+              72.86155,
+              19.28675
+            ],
+            [
+              72.86085,
+              19.28675
+            ],
+            [
+              72.86085,
+              19.28625
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "BLDG-009",
+      "properties": {
+        "id": "BLDG-009",
+        "name": "Beverly Park Heights 2",
+        "height": 62.0,
+        "min_height": 0,
+        "levels": 20,
+        "building_type": "residential",
+        "height_source": "measured",
+        "address": "Beverly Park Heights 2, Mira Road East, Mumbai MMR"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.86145,
+              19.286749999999998
+            ],
+            [
+              72.86215,
+              19.286749999999998
+            ],
+            [
+              72.86215,
+              19.28725
+            ],
+            [
+              72.86145,
+              19.28725
+            ],
+            [
+              72.86145,
+              19.286749999999998
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "BLDG-010",
+      "properties": {
+        "id": "BLDG-010",
+        "name": "GCC International Hub",
+        "height": 35.0,
+        "min_height": 0,
+        "levels": 9,
+        "building_type": "commercial",
+        "height_source": "measured",
+        "address": "GCC International Hub, Mira Road East, Mumbai MMR"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.86315,
+              19.28795
+            ],
+            [
+              72.86385,
+              19.28795
+            ],
+            [
+              72.86385,
+              19.28845
+            ],
+            [
+              72.86315,
+              19.28845
+            ],
+            [
+              72.86315,
+              19.28795
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "BLDG-011",
+      "properties": {
+        "id": "BLDG-011",
+        "name": "Mira Bhayandar Municipal Corp (MBMC Hub)",
+        "height": 42.0,
+        "min_height": 0,
+        "levels": 11,
+        "building_type": "civic",
+        "height_source": "measured",
+        "address": "Mira Bhayandar Municipal Corp (MBMC Hub), Mira Road East, Mumbai MMR"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.86445,
+              19.285549999999997
+            ],
+            [
+              72.86515,
+              19.285549999999997
+            ],
+            [
+              72.86515,
+              19.28605
+            ],
+            [
+              72.86445,
+              19.28605
+            ],
+            [
+              72.86445,
+              19.285549999999997
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "BLDG-012",
+      "properties": {
+        "id": "BLDG-012",
+        "name": "Silver Arch Residency",
+        "height": 54.0,
+        "min_height": 0,
+        "levels": 18,
+        "building_type": "residential",
+        "height_source": "measured",
+        "address": "Silver Arch Residency, Mira Road East, Mumbai MMR"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.86615,
+              19.28475
+            ],
+            [
+              72.86685,
+              19.28475
+            ],
+            [
+              72.86685,
+              19.28525
+            ],
+            [
+              72.86615,
+              19.28525
+            ],
+            [
+              72.86615,
+              19.28475
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "BLDG-013",
+      "properties": {
+        "id": "BLDG-013",
+        "name": "Regency Park Tower",
+        "height": 60.0,
+        "min_height": 0,
+        "levels": 20,
+        "building_type": "residential",
+        "height_source": "default (levels x 3m)",
+        "address": "Regency Park Tower, Mira Road East, Mumbai MMR"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.86685,
+              19.285249999999998
+            ],
+            [
+              72.86755,
+              19.285249999999998
+            ],
+            [
+              72.86755,
+              19.28575
+            ],
+            [
+              72.86685,
+              19.28575
+            ],
+            [
+              72.86685,
+              19.285249999999998
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "BLDG-014",
+      "properties": {
+        "id": "BLDG-014",
+        "name": "Maxus Mall Complex",
+        "height": 28.0,
+        "min_height": 0,
+        "levels": 6,
+        "building_type": "commercial",
+        "height_source": "default (levels x 3m)",
+        "address": "Maxus Mall Complex, Mira Road East, Mumbai MMR"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.86815,
+              19.28595
+            ],
+            [
+              72.86885,
+              19.28595
+            ],
+            [
+              72.86885,
+              19.286450000000002
+            ],
+            [
+              72.86815,
+              19.286450000000002
+            ],
+            [
+              72.86815,
+              19.28595
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "BLDG-015",
+      "properties": {
+        "id": "BLDG-015",
+        "name": "Cineprime Entertainment Plaza",
+        "height": 24.0,
+        "min_height": 0,
+        "levels": 5,
+        "building_type": "commercial",
+        "height_source": "default (levels x 3m)",
+        "address": "Cineprime Entertainment Plaza, Mira Road East, Mumbai MMR"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.86885000000001,
+              19.28655
+            ],
+            [
+              72.86955,
+              19.28655
+            ],
+            [
+              72.86955,
+              19.28705
+            ],
+            [
+              72.86885000000001,
+              19.28705
+            ],
+            [
+              72.86885000000001,
+              19.28655
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "BLDG-016",
+      "properties": {
+        "id": "BLDG-016",
+        "name": "Pooja Enclave High-Rise",
+        "height": 52.0,
+        "min_height": 0,
+        "levels": 17,
+        "building_type": "residential",
+        "height_source": "default (levels x 3m)",
+        "address": "Pooja Enclave High-Rise, Mira Road East, Mumbai MMR"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.86485,
+              19.283949999999997
+            ],
+            [
+              72.86555,
+              19.283949999999997
+            ],
+            [
+              72.86555,
+              19.28445
+            ],
+            [
+              72.86485,
+              19.28445
+            ],
+            [
+              72.86485,
+              19.283949999999997
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "BLDG-017",
+      "properties": {
+        "id": "BLDG-017",
+        "name": "Shanti Nagar Sector 1 Tower",
+        "height": 45.0,
+        "min_height": 0,
+        "levels": 15,
+        "building_type": "residential",
+        "height_source": "default (levels x 3m)",
+        "address": "Shanti Nagar Sector 1 Tower, Mira Road East, Mumbai MMR"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.85315,
+              19.277949999999997
+            ],
+            [
+              72.85385,
+              19.277949999999997
+            ],
+            [
+              72.85385,
+              19.27845
+            ],
+            [
+              72.85315,
+              19.27845
+            ],
+            [
+              72.85315,
+              19.277949999999997
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "BLDG-018",
+      "properties": {
+        "id": "BLDG-018",
+        "name": "Shanti Nagar Sector 2 Plaza",
+        "height": 38.0,
+        "min_height": 0,
+        "levels": 12,
+        "building_type": "residential",
+        "height_source": "default (levels x 3m)",
+        "address": "Shanti Nagar Sector 2 Plaza, Mira Road East, Mumbai MMR"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.85385000000001,
+              19.27855
+            ],
+            [
+              72.85455,
+              19.27855
+            ],
+            [
+              72.85455,
+              19.27905
+            ],
+            [
+              72.85385000000001,
+              19.27905
+            ],
+            [
+              72.85385000000001,
+              19.27855
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "BLDG-019",
+      "properties": {
+        "id": "BLDG-019",
+        "name": "Shanti Nagar Civic Health Center",
+        "height": 18.0,
+        "min_height": 0,
+        "levels": 4,
+        "building_type": "civic",
+        "height_source": "default (levels x 3m)",
+        "address": "Shanti Nagar Civic Health Center, Mira Road East, Mumbai MMR"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.85245,
+              19.277549999999998
+            ],
+            [
+              72.85315,
+              19.277549999999998
+            ],
+            [
+              72.85315,
+              19.27805
+            ],
+            [
+              72.85245,
+              19.27805
+            ],
+            [
+              72.85245,
+              19.277549999999998
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "BLDG-020",
+      "properties": {
+        "id": "BLDG-020",
+        "name": "Green Park Society Block A",
+        "height": 48.0,
+        "min_height": 0,
+        "levels": 16,
+        "building_type": "residential",
+        "height_source": "default (levels x 3m)",
+        "address": "Green Park Society Block A, Mira Road East, Mumbai MMR"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.85465,
+              19.27895
+            ],
+            [
+              72.85535,
+              19.27895
+            ],
+            [
+              72.85535,
+              19.27945
+            ],
+            [
+              72.85465,
+              19.27945
+            ],
+            [
+              72.85465,
+              19.27895
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "BLDG-021",
+      "properties": {
+        "id": "BLDG-021",
+        "name": "Green Park Society Block B",
+        "height": 50.0,
+        "min_height": 0,
+        "levels": 16,
+        "building_type": "residential",
+        "height_source": "default (levels x 3m)",
+        "address": "Green Park Society Block B, Mira Road East, Mumbai MMR"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.85525,
+              19.279349999999997
+            ],
+            [
+              72.85594999999999,
+              19.279349999999997
+            ],
+            [
+              72.85594999999999,
+              19.27985
+            ],
+            [
+              72.85525,
+              19.27985
+            ],
+            [
+              72.85525,
+              19.279349999999997
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "BLDG-022",
+      "properties": {
+        "id": "BLDG-022",
+        "name": "Hatkesh Industrial Arcade",
+        "height": 26.0,
+        "min_height": 0,
+        "levels": 6,
+        "building_type": "commercial",
+        "height_source": "default (levels x 3m)",
+        "address": "Hatkesh Industrial Arcade, Mira Road East, Mumbai MMR"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.87065,
+              19.288249999999998
+            ],
+            [
+              72.87134999999999,
+              19.288249999999998
+            ],
+            [
+              72.87134999999999,
+              19.28875
+            ],
+            [
+              72.87065,
+              19.28875
+            ],
+            [
+              72.87065,
+              19.288249999999998
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "BLDG-023",
+      "properties": {
+        "id": "BLDG-023",
+        "name": "Silver Park Sky-Villas",
+        "height": 64.0,
+        "min_height": 0,
+        "levels": 21,
+        "building_type": "residential",
+        "height_source": "default (levels x 3m)",
+        "address": "Silver Park Sky-Villas, Mira Road East, Mumbai MMR"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.87215,
+              19.28955
+            ],
+            [
+              72.87285,
+              19.28955
+            ],
+            [
+              72.87285,
+              19.29005
+            ],
+            [
+              72.87215,
+              19.29005
+            ],
+            [
+              72.87215,
+              19.28955
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "BLDG-024",
+      "properties": {
+        "id": "BLDG-024",
+        "name": "Lodha Aqua Heritage",
+        "height": 75.0,
+        "min_height": 0,
+        "levels": 25,
+        "building_type": "residential",
+        "height_source": "default (levels x 3m)",
+        "address": "Lodha Aqua Heritage, Mira Road East, Mumbai MMR"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.87365,
+              19.29075
+            ],
+            [
+              72.87434999999999,
+              19.29075
+            ],
+            [
+              72.87434999999999,
+              19.29125
+            ],
+            [
+              72.87365,
+              19.29125
+            ],
+            [
+              72.87365,
+              19.29075
+            ]
+          ]
+        ]
+      }
+    }
+  ]
+}

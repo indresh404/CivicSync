@@ -191,3 +191,61 @@ export type DepartmentRole =
   | "Gas Department";
 
 export type SimulatedRole = DepartmentRole;
+
+// --- CivicSync GenCity AI 3D Urban Digital Twin Types ---
+export interface GenCity3DAsset {
+  id: string;
+  name: string;
+  category: "Building" | "Subsurface Utility" | "Construction Scene" | "Heavy Machinery" | "Other";
+  description: string;
+  model_url: string;
+  file_size_kb: number;
+  format: string;
+  poly_count: number;
+  scale: [number, number, number];
+  created_via: string;
+  created_at: string;
+}
+
+export interface GenCityAIJob {
+  job_id: string;
+  status: "pending" | "processing" | "completed" | "failed";
+  progress_percent: number;
+  prompt: string;
+  asset_type: string;
+  model_output_url?: string;
+  asset_name?: string;
+  poly_count?: number;
+  format?: string;
+  engine?: string;
+  created_at: string;
+  metadata?: any;
+}
+
+export interface ConstructionProgressAnalysis {
+  status: string;
+  image_analyzed: string;
+  project_id: string;
+  road_corridor: string;
+  detected_stage: string;
+  progress_percentage: number;
+  schedule_status: string;
+  safety_audit: {
+    safety_score_out_of_100: number;
+    barricade_compliance: string;
+    trench_shoring_status: string;
+    ppe_compliance: string;
+  };
+  civil_engineer_notes: string;
+  analyzed_at: string;
+  engine: string;
+}
+
+export interface HFStatusResponse {
+  status: "connected" | "unconfigured" | "invalid_token" | "error";
+  username?: string;
+  fullname?: string;
+  token_type?: string;
+  error?: string;
+}
+

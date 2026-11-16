@@ -14,6 +14,7 @@ import {
   Eye,
   RefreshCw,
   Activity,
+  Sparkles,
 } from "lucide-react";
 import { DepartmentRole, SimulatedRole } from "@/lib/types";
 
@@ -28,6 +29,7 @@ interface AdminHeaderProps {
   onToggleMobileSidebar?: () => void;
   onRefresh?: () => void;
   isRefreshing?: boolean;
+  onOpenAICopilot?: () => void;
 }
 
 export default function AdminHeader({
@@ -41,6 +43,7 @@ export default function AdminHeader({
   onToggleMobileSidebar,
   onRefresh,
   isRefreshing,
+  onOpenAICopilot,
 }: AdminHeaderProps) {
   const router = useRouter();
   const [hasLoggedInUser, setHasLoggedInUser] = useState(false);
@@ -150,6 +153,18 @@ export default function AdminHeader({
           <span>Citizen Portal</span>
         </Link>
 
+        {/* AI Copilot Button */}
+        {onOpenAICopilot && (
+          <button
+            type="button"
+            onClick={onOpenAICopilot}
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 text-white font-bold text-xs shadow-md shadow-cyan-600/20 active:scale-[0.98] transition"
+          >
+            <Sparkles className="w-3.5 h-3.5 text-cyan-200" />
+            <span>AI Copilot</span>
+          </button>
+        )}
+
         {/* Primary CTA: Register Project */}
         <button
           type="button"
@@ -160,24 +175,11 @@ export default function AdminHeader({
           <span>Register Project</span>
         </button>
 
-        {/* Sign In / Sign Out */}
-        {hasLoggedInUser ? (
-          <button
-            type="button"
-            onClick={handleSignOut}
-            className="p-1.5 rounded-lg text-slate-400 hover:text-red-600 hover:bg-red-50 transition"
-            title="Sign Out"
-          >
-            <LogOut className="w-4 h-4" />
-          </button>
-        ) : (
-          <Link
-            href="/login"
-            className="text-xs font-semibold text-slate-600 hover:text-blue-600 px-2 py-1"
-          >
-            Sign In
-          </Link>
-        )}
+        {/* Direct Access Indicator */}
+        <div className="hidden sm:flex items-center gap-1 text-[11px] font-semibold text-emerald-700 bg-emerald-50 border border-emerald-200 px-2.5 py-1 rounded-lg">
+          <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+          Direct Access Mode
+        </div>
       </div>
     </header>
   );

@@ -161,14 +161,23 @@ export default function LoginPage() {
 
       {/* Form Panel (Right) */}
       <div className="lg:col-span-7 flex flex-col justify-center px-6 sm:px-12 md:px-16 py-12 max-w-2xl mx-auto w-full">
-        <div className="space-y-2 mb-8">
+        <div className="space-y-2 mb-6">
           <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
-            Municipal Staff Sign In
+            Municipal Command Center Access
           </h2>
           <p className="text-sm text-slate-600">
-            Enter your departmental credentials or select an authorized agency account to access the coordination portal.
+            Direct access mode is enabled. No password or sign-in barrier required.
           </p>
         </div>
+
+        {/* Direct Access Fast Track */}
+        <Link
+          href="/"
+          className="w-full py-3.5 px-4 rounded-xl bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700 text-white font-bold text-sm shadow-lg shadow-blue-600/25 flex items-center justify-center gap-2 mb-6 active:scale-[0.99] transition"
+        >
+          <span>Enter Command Center Directly (No Login Required)</span>
+          <ArrowRight className="w-4 h-4" />
+        </Link>
 
         {/* Agency Account Quick Access */}
         <div className="mb-6 p-4 rounded-xl bg-blue-50/70 border border-blue-200/80 space-y-3">

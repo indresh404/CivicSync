@@ -159,3 +159,33 @@ class Config(Base):
     key = Column(String(100), primary_key=True)
     value = Column(String(255), nullable=False)
     description = Column(Text, nullable=True)
+
+class UtilityAsset(Base):
+    __tablename__ = "utility_assets"
+
+    id = Column(String(50), primary_key=True, index=True)
+    road_name = Column(String(255), nullable=False)
+    department_id = Column(String(50), nullable=True)
+    department_name = Column(String(100), nullable=False)
+    utility_type = Column(String(100), nullable=False)
+    label = Column(String(255), nullable=False)
+    depth_m = Column(Float, default=1.5)
+    lat = Column(Float, nullable=False)
+    lng = Column(Float, nullable=False)
+    end_lat = Column(Float, nullable=True)
+    end_lng = Column(Float, nullable=True)
+    is_simulated = Column(Boolean, default=True)
+    installed_on = Column(Date, nullable=True)
+    created_at = Column(DateTime, default=datetime.datetime.utcnow)
+
+class RoadSegment(Base):
+    __tablename__ = "road_segments"
+
+    id = Column(String(50), primary_key=True, index=True)
+    road_id = Column(String(100), unique=True, nullable=False)
+    name = Column(String(255), nullable=False)
+    road_type = Column(String(50), default="Residential")
+    osm_id = Column(String(50), nullable=True)
+    length_meters = Column(Float, default=500.0)
+    created_at = Column(DateTime, default=datetime.datetime.utcnow)
+

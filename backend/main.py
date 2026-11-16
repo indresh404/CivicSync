@@ -28,7 +28,17 @@ from backend.config import (
     PORT,
 )
 from backend.database import engine, Base, get_db
-from backend.models import Department, User, Project, Conflict, Acknowledgment, AuditLog, Config
+from backend.models import Department, User, Project, Conflict, Acknowledgment, AuditLog, Config, UtilityAsset, RoadSegment
+from backend.ai_service import analyze_conflict_ai, chat_copilot_ai
+from backend.gencity_service import (
+    verify_hf_connection,
+    list_gencity_assets,
+    get_gencity_asset,
+    trigger_ai_asset_generation,
+    get_job_status,
+    analyze_construction_progress,
+    reconstruct_3d_city_tile,
+)
 from backend.schemas import (
     LoginRequest,
     TokenResponse,
@@ -103,6 +113,12 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+# Serve 3D GLB assets statically
+from fastapi.staticfiles import StaticFiles
+models_static_dir = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "public", "models")
+if os.path.exists(models_static_dir):
+    app.mount("/models", StaticFiles(directory=models_static_dir), name="models")
 
 # Helper: log audit event
 def log_audit_event(
@@ -1206,6 +1222,164 @@ def get_audit_logs(
         q = q.filter(AuditLog.action_type == action_type)
 
     return q.order_by(desc(AuditLog.created_at)).limit(limit).all()
+
+# --- UTILITY ASSETS & ROADS (3D DIGITAL TWIN) ---
+
+@app.get("/utility-assets")
+@app.get("/api/utility-assets")
+def get_utility_assets(
+    road_name: Optional[str] = Query(None),
+    department_id: Optional[str] = Query(None),
+    db: Session = Depends(get_db)
+):
+    """Retrieve underground utility assets (pipes, cables, drains) for 3D subsurface twin."""
+    q = db.query(UtilityAsset)
+    if road_name:
+        q = q.filter(UtilityAsset.road_name == road_name)
+    if department_id:
+        q = q.filter(UtilityAsset.department_id == department_id)
+    return q.all()
+
+@app.get("/roads")
+@app.get("/api/roads")
+def get_roads(db: Session = Depends(get_db)):
+    """Retrieve Mira Road arterial and residential network corridors."""
+    return db.query(RoadSegment).all()
+
+# --- AI INFRASTRUCTURE COPILOT ---
+
+@app.post("/ai/analyze-conflict/{conflict_id}")
+@app.post("/api/ai/analyze-conflict/{conflict_id}")
+def ai_analyze_conflict(
+    conflict_id: str,
+    gemini_key: Optional[str] = Query(None),
+    db: Session = Depends(get_db)
+):
+    """Deep AI-assisted conflict analysis and sequencing synthesis."""
+    conf = db.query(Conflict).filter(Conflict.id == conflict_id).first()
+    if not conf:
+        raise HTTPException(status_code=404, detail="Conflict not found")
+    
+    proj_a = db.query(Project).filter(Project.id == conf.project_a_id).first()
+    proj_b = db.query(Project).filter(Project.id == conf.project_b_id).first()
+    if not proj_a or not proj_b:
+        raise HTTPException(status_code=404, detail="Associated projects not found")
+
+    conf_dict = {
+        "id": conf.id,
+        "calculated_distance": conf.calculated_distance,
+        "overlapping_days": conf.overlapping_days,
+        "overlap_start": str(conf.overlap_start),
+        "overlap_end": str(conf.overlap_end),
+        "severity_score": conf.severity_score,
+        "severity_level": conf.severity_level,
+    }
+    proj_a_dict = {
+        "id": proj_a.id,
+        "name": proj_a.name,
+        "department": proj_a.department,
+        "project_type": proj_a.project_type,
+        "category": getattr(proj_a, "category", "surface"),
+        "road_name": proj_a.road_name,
+        "road_type": proj_a.road_type,
+    }
+    proj_b_dict = {
+        "id": proj_b.id,
+        "name": proj_b.name,
+        "department": proj_b.department,
+        "project_type": proj_b.project_type,
+        "category": getattr(proj_b, "category", "surface"),
+        "road_name": proj_b.road_name,
+        "road_type": proj_b.road_type,
+    }
+
+    result = analyze_conflict_ai(conf_dict, proj_a_dict, proj_b_dict, gemini_key)
+    return result
+
+@app.post("/ai/chat")
+@app.post("/api/ai/chat")
+def ai_copilot_chat(
+    payload: Dict[str, Any],
+    db: Session = Depends(get_db)
+):
+    """Interactive chat with CivicSync Municipal Infrastructure AI Copilot."""
+    query = payload.get("query", "").strip()
+    if not query:
+        raise HTTPException(status_code=400, detail="Query cannot be empty")
+    gemini_key = payload.get("gemini_key")
+    
+    # Gather live municipal context
+    active_conflicts = db.query(Conflict).filter(Conflict.status != "Closed").count()
+    projects_count = db.query(Project).count()
+    context = {
+        "jurisdiction": "Mira Road (MBMC, Mumbai MMR)",
+        "active_conflicts_count": active_conflicts,
+        "total_projects_count": projects_count,
+        "cooldown_months": 24,
+        "monsoon_embargo": "June 1 to September 30"
+    }
+
+    response = chat_copilot_ai(query, context, gemini_key)
+    return response
+
+# --- CIVICSYNC GENCITY: AI 3D URBAN DIGITAL TWIN ---
+
+@app.get("/ai/hf-status")
+@app.get("/api/ai/hf-status")
+def get_hf_status():
+    """Verify Hugging Face API connection and user identity."""
+    return verify_hf_connection()
+
+@app.get("/ai/assets")
+@app.get("/api/ai/assets")
+def get_3d_assets():
+    """Retrieve catalog of generated 3D GLB assets (buildings, trenches, pipes, machinery)."""
+    return list_gencity_assets()
+
+@app.get("/ai/assets/{asset_id}")
+@app.get("/api/ai/assets/{asset_id}")
+def get_3d_asset_by_id(asset_id: str):
+    """Retrieve a specific 3D GLB asset metadata."""
+    asset = get_gencity_asset(asset_id)
+    if not asset:
+        raise HTTPException(status_code=404, detail="Asset not found")
+    return asset
+
+@app.post("/ai/generate-asset")
+@app.post("/api/ai/generate-asset")
+def generate_3d_asset(payload: Dict[str, Any]):
+    """Generate or retrieve a 3D GLB model via Hugging Face TRELLIS / Stable Fast 3D."""
+    prompt = payload.get("prompt", "Mira Road Commercial Tower")
+    asset_type = payload.get("asset_type", "building")
+    image_url = payload.get("image_url")
+    return trigger_ai_asset_generation(prompt, asset_type, image_url)
+
+@app.get("/ai/jobs/{job_id}")
+@app.get("/api/ai/jobs/{job_id}")
+def get_generation_job(job_id: str):
+    """Check asynchronous 3D generation job progress."""
+    job = get_job_status(job_id)
+    if not job:
+        raise HTTPException(status_code=404, detail="Job not found")
+    return job
+
+@app.post("/ai/analyze-progress")
+@app.post("/api/ai/analyze-progress")
+def analyze_progress(payload: Dict[str, Any]):
+    """Deep learning recognition of construction stages (excavation, pipe laying, backfilling, asphalt)."""
+    image_name = payload.get("image_name", "site_excavation.jpg")
+    project_id = payload.get("project_id")
+    road_name = payload.get("road_name")
+    return analyze_construction_progress(image_name, project_id, road_name)
+
+@app.post("/ai/reconstruct")
+@app.post("/api/ai/reconstruct")
+def reconstruct_city(payload: Dict[str, Any]):
+    """Reconstruct 3D urban digital twin scene from satellite / aerial coordinates."""
+    lat = float(payload.get("lat", 19.2812))
+    lng = float(payload.get("lng", 72.8561))
+    radius = float(payload.get("radius_m", 250.0))
+    return reconstruct_3d_city_tile(lat, lng, radius)
 
 # --- BASELINE SEED & RESET ---
 

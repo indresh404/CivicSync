@@ -16,6 +16,7 @@ import {
   Clock,
   Eye,
   CalendarRange,
+  Box,
 } from "lucide-react";
 import { DepartmentRole, SimulatedRole } from "@/lib/types";
 
@@ -24,6 +25,7 @@ export type AdminTab =
   | "projects"
   | "gantt"
   | "map"
+  | "gencity"
   | "conflicts"
   | "road_history"
   | "approvals"
@@ -59,6 +61,11 @@ export default function AdminSidebar({
       id: "map",
       label: "Live Map",
       icon: <Map className="w-4 h-4" />,
+    },
+    {
+      id: "gencity",
+      label: "GenCity 3D AI",
+      icon: <Box className="w-4 h-4 text-cyan-400" />,
     },
     {
       id: "projects",
