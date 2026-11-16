@@ -40,6 +40,10 @@ import {
   Share2,
   GitBranch,
   Activity,
+  Car,
+  Gauge,
+  Clock,
+  Route,
 } from "lucide-react";
 import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
@@ -47,6 +51,13 @@ import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 import { formatDate } from "@/lib/utils";
 import { buildConstructionMesh, MeshGraph, MeshNode, MeshLink } from "@/lib/meshNetwork";
 import MeshGraphModal from "./MeshGraphModal";
+import {
+  simulateTrafficConditions,
+  TrafficSegment,
+  PeakPeriodPreset,
+  PEAK_PERIOD_PRESETS,
+  CityTrafficSnapshot,
+} from "@/lib/trafficData";
 
 interface MapComponentProps {
   projects: Project[];
@@ -137,8 +148,8 @@ export const MIRA_ROAD_3D_ASSETS = [
 ];
 
 const STYLE_OPTIONS = [
-  { id: "liberty", label: "OpenFreeMap Liberty (3D Buildings)", url: "https://tiles.openfreemap.org/styles/liberty" },
   { id: "dark", label: "Dark Matter 3D (Command Center)", url: "https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json" },
+  { id: "liberty", label: "OpenFreeMap Liberty (3D Buildings)", url: "https://tiles.openfreemap.org/styles/liberty" },
   { id: "positron", label: "Positron 3D (Civic Blueprint)", url: "https://tiles.openfreemap.org/styles/positron" },
   { id: "bright", label: "OpenFreeMap Bright 3D", url: "https://tiles.openfreemap.org/styles/bright" },
 ];
@@ -513,7 +524,7 @@ export default function MapComponent({
   const [conflictOnly, setConflictOnly] = useState(false);
   const [filterDepartment, setFilterDepartment] = useState<string>("ALL");
   const [filterStatus, setFilterStatus] = useState<string>("ALL");
-  const [selectedStyleId, setSelectedStyleId] = useState<string>("liberty");
+  const [selectedStyleId, setSelectedStyleId] = useState<string>("dark");
 
   // 3D Specific States
   const [is3DMode, setIs3DMode] = useState(true);
@@ -534,6 +545,17 @@ export default function MapComponent({
   const meshGraph = React.useMemo(
     () => buildConstructionMesh(projects, conflicts, MIRA_ROAD_3D_ASSETS),
     [projects, conflicts]
+  );
+
+  // Live Urban Traffic & Peak Hours Engine States
+  const [showTraffic, setShowTraffic] = useState(true);
+  const [trafficHour, setTrafficHour] = useState<number>(8.5); // Default: Morning Peak (08:30 AM)
+  const [selectedTrafficSegment, setSelectedTrafficSegment] = useState<TrafficSegment | null>(null);
+  const [trafficHudCollapsed, setTrafficHudCollapsed] = useState(false);
+
+  const trafficSnapshot = React.useMemo(
+    () => simulateTrafficConditions(trafficHour, projects, conflicts),
+    [trafficHour, projects, conflicts]
   );
 
   // Search autocomplete state
@@ -720,14 +742,16 @@ export default function MapComponent({
                           "interpolate",
                           ["linear"],
                           ["get", "height"],
-                          12, "#1e293b",
-                          25, "#0284c7",
-                          50, "#06b6d4",
-                          75, "#38bdf8"
+                          14, "#0f172a",
+                          25, "#0369a1",
+                          45, "#0284c7",
+                          65, "#06b6d4",
+                          85, "#38bdf8",
+                          105, "#818cf8"
                         ],
                         "fill-extrusion-height": ["get", "height"],
                         "fill-extrusion-base": ["get", "min_height"],
-                        "fill-extrusion-opacity": 0.9,
+                        "fill-extrusion-opacity": 0.92,
                         "fill-extrusion-vertical-gradient": true
                       }
                     },
@@ -1407,6 +1431,181 @@ export default function MapComponent({
     }
   }, [mapLoaded, meshGraph, meshNetworkActive, meshFilter, selectedMeshNodeId]);
 
+  // Live Urban Traffic Corridors and Detour Layer Management
+  useEffect(() => {
+    if (!mapInstanceRef.current || !mapLoaded) return;
+    const map = mapInstanceRef.current;
+    if (!map.isStyleLoaded()) return;
+
+    if (!showTraffic) {
+      if (map.getSource("traffic-corridors")) {
+        (map.getSource("traffic-corridors") as any).setData({ type: "FeatureCollection", features: [] });
+      }
+      if (map.getSource("traffic-detours")) {
+        (map.getSource("traffic-detours") as any).setData({ type: "FeatureCollection", features: [] });
+      }
+      return;
+    }
+
+    const corridorFeatures = trafficSnapshot.segments.map((seg) => {
+      let color = seg.color;
+
+      return {
+        type: "Feature",
+        geometry: {
+          type: "LineString",
+          coordinates: seg.coordinates,
+        },
+        properties: {
+          id: seg.id,
+          name: seg.road_name,
+          current_speed_kmh: seg.current_speed_kmh,
+          free_flow_speed_kmh: seg.base_speed_kmh,
+          delay_minutes: seg.delay_mins,
+          congestion_ratio: seg.congestion_score,
+          is_bottleneck: seg.level === "CRITICAL_BOTTLENECK",
+          active_roadwork: seg.is_construction_impacted,
+          roadwork_details: seg.cause,
+          detour_name: seg.alternate_detour_name || "",
+          detour_extra_min: seg.delay_mins,
+          color: color,
+        },
+      };
+    });
+
+    const detourFeatures = trafficSnapshot.segments
+      .filter((s) => s.detour_coordinates && s.detour_coordinates.length > 0)
+      .map((s) => ({
+        type: "Feature",
+        geometry: {
+          type: "LineString",
+          coordinates: s.detour_coordinates!,
+        },
+        properties: {
+          id: `detour-${s.id}`,
+          name: s.alternate_detour_name || "Alternate Bypass",
+          corridor_name: s.road_name,
+          extra_minutes: s.delay_mins,
+          description: `Alternate detour bypassing roadwork on ${s.road_name}`,
+        },
+      }));
+
+    const corridorCollection: GeoJSON.FeatureCollection = {
+      type: "FeatureCollection",
+      features: corridorFeatures as any,
+    };
+
+    const detourCollection: GeoJSON.FeatureCollection = {
+      type: "FeatureCollection",
+      features: detourFeatures as any,
+    };
+
+    // 1. Traffic Corridors Source & Layers
+    if (map.getSource("traffic-corridors")) {
+      (map.getSource("traffic-corridors") as any).setData(corridorCollection);
+    } else {
+      map.addSource("traffic-corridors", {
+        type: "geojson",
+        data: corridorCollection,
+      });
+
+      // Dark Casing
+      map.addLayer({
+        id: "traffic-corridors-casing",
+        type: "line",
+        source: "traffic-corridors",
+        layout: { "line-join": "round", "line-cap": "round" },
+        paint: {
+          "line-color": "#020617",
+          "line-width": 8,
+          "line-opacity": 0.85,
+        },
+      });
+
+      // Flow Line
+      map.addLayer({
+        id: "traffic-corridors-flow",
+        type: "line",
+        source: "traffic-corridors",
+        layout: { "line-join": "round", "line-cap": "round" },
+        paint: {
+          "line-color": ["get", "color"],
+          "line-width": 4.5,
+          "line-opacity": 0.95,
+        },
+      });
+
+      // Interactive Tooltip & Click
+      map.on("mouseenter", "traffic-corridors-flow", (e: any) => {
+        map.getCanvas().style.cursor = "pointer";
+        const p = e.features?.[0]?.properties;
+        if (!p) return;
+        if (hoverPopupRef.current) hoverPopupRef.current.remove();
+
+        import("maplibre-gl").then(({ default: maplibregl }) => {
+          hoverPopupRef.current = new maplibregl.Popup({
+            closeButton: false,
+            offset: 14,
+            className: "civicsync-map-popup",
+          })
+            .setLngLat(e.lngLat)
+            .setHTML(`
+              <div style="background: rgba(15, 23, 42, 0.96); backdrop-filter: blur(12px); border: 1px solid rgba(245, 158, 11, 0.5); border-radius: 10px; font-family: system-ui, sans-serif; font-size: 11px; padding: 9px 12px; min-width: 180px; color: #f8fafc; box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.6);">
+                <div style="font-weight: 700; color: #fbbf24; margin-bottom: 3px; font-size: 12px; display: flex; align-items: center; justify-content: space-between;">
+                  <span>${p.name}</span>
+                  <span style="font-size: 10px; color: ${p.is_bottleneck ? '#f87171' : '#34d399'}; font-weight: 800;">
+                    ${p.is_bottleneck ? 'BOTTLENECK' : 'NORMAL'}
+                  </span>
+                </div>
+                <div style="color: #e2e8f0; font-weight: 600;">Speed: <span style="color: ${p.color}; font-weight: 700;">${p.current_speed_kmh} km/h</span> (Free: ${p.free_flow_speed_kmh} km/h)</div>
+                <div style="color: #94a3b8; font-size: 10px; margin-top: 2px;">Delay: <span style="color: #f87171; font-weight: 700;">+${p.delay_minutes} min</span></div>
+                ${p.active_roadwork ? `<div style="margin-top: 5px; padding: 4px 6px; background: rgba(239, 68, 68, 0.2); border: 1px solid rgba(239, 68, 68, 0.4); border-radius: 6px; color: #fca5a5; font-size: 9.5px;">⚠️ ${p.roadwork_details}</div>` : ''}
+                ${p.detour_name ? `<div style="margin-top: 4px; color: #38bdf8; font-size: 9.5px;">🔄 Alt: ${p.detour_name} (+${p.detour_extra_min}m)</div>` : ''}
+              </div>
+            `)
+            .addTo(map);
+        });
+      });
+
+      map.on("mouseleave", "traffic-corridors-flow", () => {
+        map.getCanvas().style.cursor = "";
+        if (hoverPopupRef.current) hoverPopupRef.current.remove();
+      });
+
+      map.on("click", "traffic-corridors-flow", (e: any) => {
+        if (!e.features || e.features.length === 0) return;
+        const segmentId = e.features[0].properties?.id;
+        const seg = trafficSnapshot.segments.find((s) => s.id === segmentId);
+        if (seg) {
+          setSelectedTrafficSegment(seg);
+        }
+      });
+    }
+
+    // 2. Detour Routes Source & Layers
+    if (map.getSource("traffic-detours")) {
+      (map.getSource("traffic-detours") as any).setData(detourCollection);
+    } else {
+      map.addSource("traffic-detours", {
+        type: "geojson",
+        data: detourCollection,
+      });
+
+      map.addLayer({
+        id: "traffic-detours-glow",
+        type: "line",
+        source: "traffic-detours",
+        layout: { "line-join": "round", "line-cap": "round" },
+        paint: {
+          "line-color": "#38bdf8",
+          "line-width": 3.5,
+          "line-dasharray": [2, 2],
+          "line-opacity": 0.85,
+        },
+      });
+    }
+  }, [mapLoaded, showTraffic, trafficSnapshot]);
+
   // Reactive Effect: Pan and focus map on selected project
   useEffect(() => {
     if (!mapInstanceRef.current || !mapLoaded) return;
@@ -1649,6 +1848,21 @@ export default function MapComponent({
             {meshNetworkActive ? "3D Mesh: ON" : "3D Mesh Network"}
           </button>
 
+          {/* Live Urban Traffic & Peak Hours Engine Toggle */}
+          <button
+            type="button"
+            onClick={() => setShowTraffic(!showTraffic)}
+            className={`inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg border font-bold transition text-xs shadow-xs ${
+              showTraffic
+                ? "bg-amber-950 border-amber-500 text-amber-300 ring-1 ring-amber-500 shadow-md shadow-amber-950"
+                : "bg-slate-800 border-slate-700 text-slate-300 hover:bg-slate-700"
+            }`}
+            title="Toggle Live Urban Traffic Flow, Peak Hours Simulation, & Alternate Detour Navigation"
+          >
+            <Car className="w-3.5 h-3.5 text-amber-400" />
+            {showTraffic ? "Traffic: ON" : "Traffic Flow"}
+          </button>
+
           {/* Interactive Topology Graph Modal Button */}
           {meshNetworkActive && (
             <button
@@ -1777,50 +1991,253 @@ export default function MapComponent({
       <div className="relative flex-1 w-full h-full min-h-[420px]">
         <div ref={mapContainerRef} className="absolute inset-0 w-full h-full" />
 
-        {/* 3D Legend & Encoding Overlay */}
-        <div className="absolute top-3 left-3 z-10 bg-slate-900/90 backdrop-blur-md rounded-xl border border-slate-800 shadow-xl text-xs pointer-events-auto text-slate-300 transition-all">
-          <div className="p-2.5 flex items-center justify-between gap-2 border-b border-slate-800/80">
-            <span className="font-bold text-white flex items-center gap-1.5 text-[11px] uppercase tracking-wide">
-              <Sparkles className="w-3.5 h-3.5 text-cyan-400" /> 3D Digital Twin Encoding
-            </span>
-            <button
-              type="button"
-              onClick={() => setIsLegendCollapsed(!isLegendCollapsed)}
-              className="text-slate-400 hover:text-white text-[10px] px-1.5 py-0.5 rounded bg-slate-800 hover:bg-slate-700 transition"
-              title={isLegendCollapsed ? "Expand legend" : "Collapse legend"}
-            >
-              {isLegendCollapsed ? "Expand" : "Collapse"}
-            </button>
+        {/* Left Floating Overlays: 3D Legend & Live Traffic HUD */}
+        <div className="absolute top-3 left-3 z-20 flex flex-col gap-2.5 max-w-[310px] pointer-events-none">
+          {/* 3D Legend & Encoding Overlay */}
+          <div className="bg-slate-900/90 backdrop-blur-md rounded-xl border border-slate-800 shadow-xl text-xs pointer-events-auto text-slate-300 transition-all">
+            <div className="p-2.5 flex items-center justify-between gap-2 border-b border-slate-800/80">
+              <span className="font-bold text-white flex items-center gap-1.5 text-[11px] uppercase tracking-wide">
+                <Sparkles className="w-3.5 h-3.5 text-cyan-400" /> 3D Digital Twin Encoding
+              </span>
+              <button
+                type="button"
+                onClick={() => setIsLegendCollapsed(!isLegendCollapsed)}
+                className="text-slate-400 hover:text-white text-[10px] px-1.5 py-0.5 rounded bg-slate-800 hover:bg-slate-700 transition"
+                title={isLegendCollapsed ? "Expand legend" : "Collapse legend"}
+              >
+                {isLegendCollapsed ? "Expand" : "Collapse"}
+              </button>
+            </div>
+
+            {!isLegendCollapsed && (
+              <div className="p-3 space-y-1.5 text-[11px]">
+                <div className="flex items-center gap-2">
+                  <span className="w-4 h-4 rounded-full border-2 border-red-500 bg-red-500/20 flex items-center justify-center shrink-0 animate-ping">
+                    <span className="w-1.5 h-1.5 rounded-full bg-red-500" />
+                  </span>
+                  <span className="text-red-400 font-bold">Red Pulse: Spatial Collision</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <span className="w-3.5 h-3.5 rounded-md bg-cyan-500 border border-cyan-300 shrink-0" />
+                  <span className="text-slate-200">3D Extruded Buildings (Levels x 3m)</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <span className="w-3.5 h-3.5 rounded-full bg-blue-500 border border-white shrink-0" />
+                  <span className="text-slate-300">Roads Dept (Surface Resurfacing)</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <span className="w-3.5 h-3.5 rounded-full bg-cyan-400 border border-white shrink-0" />
+                  <span className="text-slate-300">Water Dept (Subsurface Pipeline)</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <span className="w-3.5 h-3.5 rounded-full bg-amber-400 border border-white shrink-0" />
+                  <span className="text-slate-300">Electricity (11kV Subsurface Cabling)</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <span className="w-3.5 h-3.5 rounded-full bg-purple-400 border border-white shrink-0" />
+                  <span className="text-slate-300">Telecom (5G Optical Fiber)</span>
+                </div>
+              </div>
+            )}
           </div>
 
-          {!isLegendCollapsed && (
-            <div className="p-3 space-y-1.5 text-[11px]">
-              <div className="flex items-center gap-2">
-                <span className="w-4 h-4 rounded-full border-2 border-red-500 bg-red-500/20 flex items-center justify-center shrink-0 animate-ping">
-                  <span className="w-1.5 h-1.5 rounded-full bg-red-500" />
-                </span>
-                <span className="text-red-400 font-bold">Red Pulse: Spatial Collision</span>
+          {/* Live Urban Traffic & Peak Hours Engine HUD */}
+          {showTraffic && (
+            <div className="bg-slate-900/95 backdrop-blur-md rounded-2xl border border-amber-500/40 shadow-2xl text-xs pointer-events-auto text-white transition-all overflow-hidden max-w-[310px]">
+              {/* Header */}
+              <div className="p-2.5 bg-gradient-to-r from-amber-950/60 to-slate-900 flex items-center justify-between border-b border-amber-500/30">
+                <div className="flex items-center gap-1.5 font-bold text-amber-300">
+                  <Car className="w-3.5 h-3.5 text-amber-400 animate-pulse" />
+                  <span className="text-[11px] uppercase tracking-wider">Traffic & Peak Hours</span>
+                </div>
+                <div className="flex items-center gap-1.5">
+                  <span className="text-[10px] font-mono px-2 py-0.5 rounded-md bg-amber-950 border border-amber-800/80 text-amber-300 font-extrabold">
+                    {trafficSnapshot.timeString}
+                  </span>
+                  <button
+                    type="button"
+                    onClick={() => setTrafficHudCollapsed(!trafficHudCollapsed)}
+                    className="text-slate-400 hover:text-white text-[10px] px-1.5 py-0.5 rounded bg-slate-800 hover:bg-slate-700 transition"
+                  >
+                    {trafficHudCollapsed ? "Expand" : "Collapse"}
+                  </button>
+                </div>
               </div>
-              <div className="flex items-center gap-2">
-                <span className="w-3.5 h-3.5 rounded-md bg-cyan-500 border border-cyan-300 shrink-0" />
-                <span className="text-slate-200">3D Extruded Buildings (Levels x 3m)</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <span className="w-3.5 h-3.5 rounded-full bg-blue-500 border border-white shrink-0" />
-                <span className="text-slate-300">Roads Dept (Surface Resurfacing)</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <span className="w-3.5 h-3.5 rounded-full bg-cyan-400 border border-white shrink-0" />
-                <span className="text-slate-300">Water Dept (Subsurface Pipeline)</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <span className="w-3.5 h-3.5 rounded-full bg-amber-400 border border-white shrink-0" />
-                <span className="text-slate-300">Electricity (11kV Subsurface Cabling)</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <span className="w-3.5 h-3.5 rounded-full bg-purple-400 border border-white shrink-0" />
-                <span className="text-slate-300">Telecom (5G Optical Fiber)</span>
-              </div>
+
+              {!trafficHudCollapsed && (
+                <div className="p-3 space-y-2.5 text-[11px]">
+                  {/* Peak Period Presets */}
+                  <div>
+                    <span className="text-[10px] font-mono uppercase text-slate-400 font-bold block mb-1.5 flex items-center gap-1">
+                      <Clock className="w-3 h-3 text-cyan-400" /> Rush Hour Scenarios:
+                    </span>
+                    <div className="grid grid-cols-2 gap-1.5">
+                      {PEAK_PERIOD_PRESETS.map((preset) => {
+                        const isSelected = Math.abs(trafficHour - preset.hour) < 0.25;
+                        return (
+                          <button
+                            key={preset.id}
+                            type="button"
+                            onClick={() => {
+                              setTrafficHour(preset.hour);
+                              setSelectedTrafficSegment(null);
+                            }}
+                            className={`p-1.5 rounded-lg border text-left transition ${
+                              isSelected
+                                ? "bg-amber-950/80 border-amber-500 text-amber-200 shadow-sm shadow-amber-950"
+                                : "bg-slate-800/80 border-slate-700 hover:bg-slate-800 text-slate-300"
+                            }`}
+                          >
+                            <div className="font-bold text-[10px] truncate">{preset.label}</div>
+                            <div className="text-[9px] text-slate-400 font-mono">
+                              {preset.timeDisplay} &bull; {preset.periodName}
+                            </div>
+                          </button>
+                        );
+                      })}
+                    </div>
+                  </div>
+
+                  {/* 24-Hour Slider */}
+                  <div className="pt-1 border-t border-slate-800/80 space-y-1">
+                    <div className="flex items-center justify-between text-[10px]">
+                      <span className="text-slate-400">Simulation Clock (24h)</span>
+                      <span className="font-mono font-bold text-cyan-300">
+                        {String(Math.floor(trafficHour)).padStart(2, "0")}:
+                        {String(Math.round((trafficHour % 1) * 60)).padStart(2, "0")}
+                      </span>
+                    </div>
+                    <input
+                      type="range"
+                      min="0"
+                      max="23.5"
+                      step="0.5"
+                      value={trafficHour}
+                      onChange={(e) => {
+                        setTrafficHour(parseFloat(e.target.value));
+                        setSelectedTrafficSegment(null);
+                      }}
+                      className="w-full accent-amber-400 h-1.5 bg-slate-800 rounded-lg cursor-pointer"
+                    />
+                    <div className="flex justify-between text-[9px] font-mono text-slate-500">
+                      <span>00:00 (Night)</span>
+                      <span>08:30 (AM Peak)</span>
+                      <span>19:00 (PM Peak)</span>
+                    </div>
+                  </div>
+
+                  {/* City-Wide Telemetry Grid */}
+                  <div className="grid grid-cols-3 gap-1.5 pt-1 border-t border-slate-800/80">
+                    <div className="p-1.5 rounded-lg bg-slate-950/60 border border-slate-800 text-center">
+                      <span className="text-[9px] text-slate-400 block">Congestion</span>
+                      <span
+                        className={`text-xs font-bold font-mono ${
+                          trafficSnapshot.cityCongestionScore >= 65
+                            ? "text-red-400"
+                            : trafficSnapshot.cityCongestionScore >= 40
+                            ? "text-amber-400"
+                            : "text-emerald-400"
+                        }`}
+                      >
+                        {trafficSnapshot.cityCongestionScore}/100
+                      </span>
+                    </div>
+
+                    <div className="p-1.5 rounded-lg bg-slate-950/60 border border-slate-800 text-center">
+                      <span className="text-[9px] text-slate-400 block">Avg Speed</span>
+                      <span className="text-xs font-bold font-mono text-cyan-300">
+                        {trafficSnapshot.avgSpeedKmh} km/h
+                      </span>
+                    </div>
+
+                    <div className="p-1.5 rounded-lg bg-slate-950/60 border border-slate-800 text-center">
+                      <span className="text-[9px] text-slate-400 block">Bottlenecks</span>
+                      <span className="text-xs font-bold font-mono text-red-400">
+                        {trafficSnapshot.activeBottlenecksCount} Sites
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* Selected Corridor Inspection & Detour Recommendation */}
+                  {selectedTrafficSegment ? (
+                    <div className="p-2 rounded-xl bg-slate-950 border border-amber-500/50 space-y-1.5">
+                      <div className="flex items-center justify-between">
+                        <strong className="text-white text-[11px] truncate">{selectedTrafficSegment.road_name}</strong>
+                        <button
+                          type="button"
+                          onClick={() => setSelectedTrafficSegment(null)}
+                          className="text-slate-400 hover:text-white"
+                        >
+                          <X className="w-3 h-3" />
+                        </button>
+                      </div>
+                      <div className="flex items-center justify-between text-[10px]">
+                        <span className="text-slate-400">Current Speed:</span>
+                        <span
+                          className={`font-mono font-bold ${
+                            selectedTrafficSegment.level === "CRITICAL_BOTTLENECK" ? "text-red-400" : "text-emerald-400"
+                          }`}
+                        >
+                          {selectedTrafficSegment.current_speed_kmh} km/h (Free: {selectedTrafficSegment.base_speed_kmh} km/h)
+                        </span>
+                      </div>
+                      {selectedTrafficSegment.is_construction_impacted && (
+                        <div className="p-1.5 rounded bg-red-950/40 border border-red-800/60 text-[9.5px] text-red-200">
+                          ⚠️ {selectedTrafficSegment.cause}
+                        </div>
+                      )}
+                      {selectedTrafficSegment.alternate_detour_name && (
+                        <div className="p-1.5 rounded bg-cyan-950/40 border border-cyan-800/60 text-[9.5px] text-cyan-200 space-y-1">
+                          <div className="flex items-center justify-between font-bold">
+                            <span className="flex items-center gap-1">
+                              <Route className="w-3 h-3 text-cyan-400" />
+                              {selectedTrafficSegment.alternate_detour_name}
+                            </span>
+                            <span className="text-emerald-400">+{selectedTrafficSegment.delay_mins} min</span>
+                          </div>
+                          <p className="text-[9px] text-slate-300">
+                            Alternate bypass route active due to municipal digging.
+                          </p>
+                        </div>
+                      )}
+                    </div>
+                  ) : (
+                    /* Critical Bottlenecks Quick Navigator */
+                    trafficSnapshot.activeBottlenecksCount > 0 && (
+                      <div className="space-y-1 pt-1 border-t border-slate-800/80">
+                        <span className="text-[10px] font-mono text-red-400 font-bold block">
+                          Restricted Corridors ({trafficSnapshot.activeBottlenecksCount}):
+                        </span>
+                        <div className="space-y-1 max-h-24 overflow-y-auto pr-0.5">
+                          {trafficSnapshot.segments
+                            .filter((s) => s.level === "CRITICAL_BOTTLENECK" || s.current_speed_kmh < 18)
+                            .map((seg) => (
+                              <div
+                                key={seg.id}
+                                onClick={() => {
+                                  setSelectedTrafficSegment(seg);
+                                  if (mapInstanceRef.current && seg.coordinates.length > 0) {
+                                    const mid = seg.coordinates[Math.floor(seg.coordinates.length / 2)];
+                                    mapInstanceRef.current.flyTo({
+                                      center: mid,
+                                      zoom: 16.2,
+                                      pitch: 58,
+                                      duration: 1000,
+                                    });
+                                  }
+                                }}
+                                className="p-1.5 rounded bg-slate-950/80 border border-red-800/50 hover:border-red-500 cursor-pointer flex items-center justify-between transition text-[10px]"
+                              >
+                                <span className="font-semibold text-slate-200 truncate max-w-[170px]">{seg.road_name}</span>
+                                <span className="font-mono text-red-400 font-bold">{seg.current_speed_kmh} km/h</span>
+                              </div>
+                            ))}
+                        </div>
+                      </div>
+                    )
+                  )}
+                </div>
+              )}
             </div>
           )}
         </div>

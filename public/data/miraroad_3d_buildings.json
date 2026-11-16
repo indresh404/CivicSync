@@ -6,37 +6,39 @@
       "id": "BLDG-001",
       "properties": {
         "id": "BLDG-001",
-        "name": "Mira Road Station Terminal",
-        "height": 22.0,
-        "min_height": 0,
-        "levels": 5,
-        "building_type": "civic",
+        "name": "Mira Road Main Concourse & Terminal",
+        "height": 41.0,
+        "min_height": 0.0,
+        "levels": 12,
+        "building_type": "transport",
         "height_source": "measured",
-        "address": "Mira Road Station Terminal, Mira Road East, Mumbai MMR"
+        "sector": "Mira Road Station & Transit District",
+        "address": "Mira Road Main Concourse & Terminal, Mira Road Station & Transit District, Mira Road (East), Mumbai MMR",
+        "glow_color": "#0284c7"
       },
       "geometry": {
         "type": "Polygon",
         "coordinates": [
           [
             [
-              72.85465,
-              19.280549999999998
+              72.852876,
+              19.281562
             ],
             [
-              72.85535,
-              19.280549999999998
+              72.853261,
+              19.281562
             ],
             [
-              72.85535,
-              19.28105
+              72.853261,
+              19.282225
             ],
             [
-              72.85465,
-              19.28105
+              72.852876,
+              19.282225
             ],
             [
-              72.85465,
-              19.280549999999998
+              72.852876,
+              19.281562
             ]
           ]
         ]
@@ -47,37 +49,39 @@
       "id": "BLDG-002",
       "properties": {
         "id": "BLDG-002",
-        "name": "Railway Platform North Concourse",
-        "height": 14.0,
-        "min_height": 0,
-        "levels": 3,
-        "building_type": "transport",
+        "name": "Platform 1-2 Skywalk Interchange",
+        "height": 42.3,
+        "min_height": 0.0,
+        "levels": 13,
+        "building_type": "civic",
         "height_source": "measured",
-        "address": "Railway Platform North Concourse, Mira Road East, Mumbai MMR"
+        "sector": "Mira Road Station & Transit District",
+        "address": "Platform 1-2 Skywalk Interchange, Mira Road Station & Transit District, Mira Road (East), Mumbai MMR",
+        "glow_color": "#0284c7"
       },
       "geometry": {
         "type": "Polygon",
         "coordinates": [
           [
             [
-              72.85495,
-              19.28125
+              72.852906,
+              19.279805
             ],
             [
-              72.85565,
-              19.28125
+              72.853424,
+              19.279805
             ],
             [
-              72.85565,
-              19.281750000000002
+              72.853424,
+              19.2804
             ],
             [
-              72.85495,
-              19.281750000000002
+              72.852906,
+              19.2804
             ],
             [
-              72.85495,
-              19.28125
+              72.852906,
+              19.279805
             ]
           ]
         ]
@@ -88,37 +92,39 @@
       "id": "BLDG-003",
       "properties": {
         "id": "BLDG-003",
-        "name": "Station Skywalk & Bus Terminus",
-        "height": 12.0,
-        "min_height": 0,
-        "levels": 2,
-        "building_type": "transport",
+        "name": "Platform 3-4 High-Speed Rail Gantry",
+        "height": 29.6,
+        "min_height": 0.0,
+        "levels": 9,
+        "building_type": "commercial",
         "height_source": "measured",
-        "address": "Station Skywalk & Bus Terminus, Mira Road East, Mumbai MMR"
+        "sector": "Mira Road Station & Transit District",
+        "address": "Platform 3-4 High-Speed Rail Gantry, Mira Road Station & Transit District, Mira Road (East), Mumbai MMR",
+        "glow_color": "#1e293b"
       },
       "geometry": {
         "type": "Polygon",
         "coordinates": [
           [
             [
-              72.85425000000001,
-              19.280949999999997
+              72.851836,
+              19.278909
             ],
             [
-              72.85495,
-              19.280949999999997
+              72.852569,
+              19.278909
             ],
             [
-              72.85495,
-              19.28145
+              72.852569,
+              19.279314
             ],
             [
-              72.85425000000001,
-              19.28145
+              72.851836,
+              19.279314
             ],
             [
-              72.85425000000001,
-              19.280949999999997
+              72.851836,
+              19.278909
             ]
           ]
         ]
@@ -129,37 +135,39 @@
       "id": "BLDG-004",
       "properties": {
         "id": "BLDG-004",
-        "name": "Shanti Shopping Center",
-        "height": 28.0,
-        "min_height": 0,
-        "levels": 7,
-        "building_type": "commercial",
+        "name": "Station South Bus Depot Complex",
+        "height": 45.4,
+        "min_height": 0.0,
+        "levels": 14,
+        "building_type": "transport",
         "height_source": "measured",
-        "address": "Shanti Shopping Center, Mira Road East, Mumbai MMR"
+        "sector": "Mira Road Station & Transit District",
+        "address": "Station South Bus Depot Complex, Mira Road Station & Transit District, Mira Road (East), Mumbai MMR",
+        "glow_color": "#0284c7"
       },
       "geometry": {
         "type": "Polygon",
         "coordinates": [
           [
             [
-              72.85585,
-              19.28115
+              72.855792,
+              19.279584
             ],
             [
-              72.85655,
-              19.28115
+              72.856357,
+              19.279584
             ],
             [
-              72.85655,
-              19.281650000000003
+              72.856357,
+              19.28019
             ],
             [
-              72.85585,
-              19.281650000000003
+              72.855792,
+              19.28019
             ],
             [
-              72.85585,
-              19.28115
+              72.855792,
+              19.279584
             ]
           ]
         ]
@@ -170,37 +178,39 @@
       "id": "BLDG-005",
       "properties": {
         "id": "BLDG-005",
-        "name": "Mira Commercial Arcade",
-        "height": 32.0,
-        "min_height": 0,
-        "levels": 8,
-        "building_type": "commercial",
+        "name": "West Railway Colony High-Rise A",
+        "height": 42.0,
+        "min_height": 0.0,
+        "levels": 13,
+        "building_type": "civic",
         "height_source": "measured",
-        "address": "Mira Commercial Arcade, Mira Road East, Mumbai MMR"
+        "sector": "Mira Road Station & Transit District",
+        "address": "West Railway Colony High-Rise A, Mira Road Station & Transit District, Mira Road (East), Mumbai MMR",
+        "glow_color": "#0284c7"
       },
       "geometry": {
         "type": "Polygon",
         "coordinates": [
           [
             [
-              72.85545,
-              19.27995
+              72.856784,
+              19.283064
             ],
             [
-              72.85615,
-              19.27995
+              72.857225,
+              19.283064
             ],
             [
-              72.85615,
-              19.280450000000002
+              72.857225,
+              19.28343
             ],
             [
-              72.85545,
-              19.280450000000002
+              72.856784,
+              19.28343
             ],
             [
-              72.85545,
-              19.27995
+              72.856784,
+              19.283064
             ]
           ]
         ]
@@ -211,37 +221,39 @@
       "id": "BLDG-006",
       "properties": {
         "id": "BLDG-006",
-        "name": "Kanakia Spaces Tower A",
-        "height": 68.0,
-        "min_height": 0,
-        "levels": 22,
-        "building_type": "residential",
+        "name": "West Railway Colony High-Rise B",
+        "height": 39.6,
+        "min_height": 0.0,
+        "levels": 12,
+        "building_type": "commercial",
         "height_source": "measured",
-        "address": "Kanakia Spaces Tower A, Mira Road East, Mumbai MMR"
+        "sector": "Mira Road Station & Transit District",
+        "address": "West Railway Colony High-Rise B, Mira Road Station & Transit District, Mira Road (East), Mumbai MMR",
+        "glow_color": "#0284c7"
       },
       "geometry": {
         "type": "Polygon",
         "coordinates": [
           [
             [
-              72.85845,
-              19.282249999999998
+              72.855545,
+              19.279384
             ],
             [
-              72.85915,
-              19.282249999999998
+              72.856043,
+              19.279384
             ],
             [
-              72.85915,
-              19.28275
+              72.856043,
+              19.279861
             ],
             [
-              72.85845,
-              19.28275
+              72.855545,
+              19.279861
             ],
             [
-              72.85845,
-              19.282249999999998
+              72.855545,
+              19.279384
             ]
           ]
         ]
@@ -252,37 +264,39 @@
       "id": "BLDG-007",
       "properties": {
         "id": "BLDG-007",
-        "name": "Kanakia Spaces Tower B",
-        "height": 72.0,
-        "min_height": 0,
-        "levels": 24,
-        "building_type": "residential",
+        "name": "Auto-Rickshaw & Feeder Transit Plaza",
+        "height": 26.3,
+        "min_height": 0.0,
+        "levels": 8,
+        "building_type": "transport",
         "height_source": "measured",
-        "address": "Kanakia Spaces Tower B, Mira Road East, Mumbai MMR"
+        "sector": "Mira Road Station & Transit District",
+        "address": "Auto-Rickshaw & Feeder Transit Plaza, Mira Road Station & Transit District, Mira Road (East), Mumbai MMR",
+        "glow_color": "#1e293b"
       },
       "geometry": {
         "type": "Polygon",
         "coordinates": [
           [
             [
-              72.85905,
-              19.28265
+              72.852182,
+              19.279011
             ],
             [
-              72.85974999999999,
-              19.28265
+              72.85264,
+              19.279011
             ],
             [
-              72.85974999999999,
-              19.283150000000003
+              72.85264,
+              19.279523
             ],
             [
-              72.85905,
-              19.283150000000003
+              72.852182,
+              19.279523
             ],
             [
-              72.85905,
-              19.28265
+              72.852182,
+              19.279011
             ]
           ]
         ]
@@ -293,37 +307,39 @@
       "id": "BLDG-008",
       "properties": {
         "id": "BLDG-008",
-        "name": "Beverly Park Heights 1",
-        "height": 58.0,
-        "min_height": 0,
-        "levels": 19,
-        "building_type": "residential",
+        "name": "Station Road Municipal Commercial Arcade",
+        "height": 19.1,
+        "min_height": 0.0,
+        "levels": 5,
+        "building_type": "civic",
         "height_source": "measured",
-        "address": "Beverly Park Heights 1, Mira Road East, Mumbai MMR"
+        "sector": "Mira Road Station & Transit District",
+        "address": "Station Road Municipal Commercial Arcade, Mira Road Station & Transit District, Mira Road (East), Mumbai MMR",
+        "glow_color": "#1e293b"
       },
       "geometry": {
         "type": "Polygon",
         "coordinates": [
           [
             [
-              72.86085,
-              19.28625
+              72.85133,
+              19.277797
             ],
             [
-              72.86155,
-              19.28625
+              72.851787,
+              19.277797
             ],
             [
-              72.86155,
-              19.28675
+              72.851787,
+              19.278257
             ],
             [
-              72.86085,
-              19.28675
+              72.85133,
+              19.278257
             ],
             [
-              72.86085,
-              19.28625
+              72.85133,
+              19.277797
             ]
           ]
         ]
@@ -334,37 +350,39 @@
       "id": "BLDG-009",
       "properties": {
         "id": "BLDG-009",
-        "name": "Beverly Park Heights 2",
-        "height": 62.0,
-        "min_height": 0,
-        "levels": 20,
-        "building_type": "residential",
+        "name": "Mira Road Post Office & Civic Hub",
+        "height": 49.1,
+        "min_height": 0.0,
+        "levels": 15,
+        "building_type": "commercial",
         "height_source": "measured",
-        "address": "Beverly Park Heights 2, Mira Road East, Mumbai MMR"
+        "sector": "Mira Road Station & Transit District",
+        "address": "Mira Road Post Office & Civic Hub, Mira Road Station & Transit District, Mira Road (East), Mumbai MMR",
+        "glow_color": "#0284c7"
       },
       "geometry": {
         "type": "Polygon",
         "coordinates": [
           [
             [
-              72.86145,
-              19.286749999999998
+              72.858269,
+              19.283634
             ],
             [
-              72.86215,
-              19.286749999999998
+              72.858725,
+              19.283634
             ],
             [
-              72.86215,
-              19.28725
+              72.858725,
+              19.284144
             ],
             [
-              72.86145,
-              19.28725
+              72.858269,
+              19.284144
             ],
             [
-              72.86145,
-              19.286749999999998
+              72.858269,
+              19.283634
             ]
           ]
         ]
@@ -375,37 +393,39 @@
       "id": "BLDG-010",
       "properties": {
         "id": "BLDG-010",
-        "name": "GCC International Hub",
-        "height": 35.0,
-        "min_height": 0,
+        "name": "Railway Police Headquarters & Control",
+        "height": 31.6,
+        "min_height": 0.0,
         "levels": 9,
-        "building_type": "commercial",
+        "building_type": "transport",
         "height_source": "measured",
-        "address": "GCC International Hub, Mira Road East, Mumbai MMR"
+        "sector": "Mira Road Station & Transit District",
+        "address": "Railway Police Headquarters & Control, Mira Road Station & Transit District, Mira Road (East), Mumbai MMR",
+        "glow_color": "#1e293b"
       },
       "geometry": {
         "type": "Polygon",
         "coordinates": [
           [
             [
-              72.86315,
-              19.28795
+              72.857718,
+              19.28348
             ],
             [
-              72.86385,
-              19.28795
+              72.858467,
+              19.28348
             ],
             [
-              72.86385,
-              19.28845
+              72.858467,
+              19.283907
             ],
             [
-              72.86315,
-              19.28845
+              72.857718,
+              19.283907
             ],
             [
-              72.86315,
-              19.28795
+              72.857718,
+              19.28348
             ]
           ]
         ]
@@ -416,37 +436,39 @@
       "id": "BLDG-011",
       "properties": {
         "id": "BLDG-011",
-        "name": "Mira Bhayandar Municipal Corp (MBMC Hub)",
-        "height": 42.0,
-        "min_height": 0,
-        "levels": 11,
+        "name": "Station Foot Overbridge Gateway Tower",
+        "height": 44.9,
+        "min_height": 0.0,
+        "levels": 14,
         "building_type": "civic",
         "height_source": "measured",
-        "address": "Mira Bhayandar Municipal Corp (MBMC Hub), Mira Road East, Mumbai MMR"
+        "sector": "Mira Road Station & Transit District",
+        "address": "Station Foot Overbridge Gateway Tower, Mira Road Station & Transit District, Mira Road (East), Mumbai MMR",
+        "glow_color": "#0284c7"
       },
       "geometry": {
         "type": "Polygon",
         "coordinates": [
           [
             [
-              72.86445,
-              19.285549999999997
+              72.852726,
+              19.279343
             ],
             [
-              72.86515,
-              19.285549999999997
+              72.853102,
+              19.279343
             ],
             [
-              72.86515,
-              19.28605
+              72.853102,
+              19.279841
             ],
             [
-              72.86445,
-              19.28605
+              72.852726,
+              19.279841
             ],
             [
-              72.86445,
-              19.285549999999997
+              72.852726,
+              19.279343
             ]
           ]
         ]
@@ -457,37 +479,39 @@
       "id": "BLDG-012",
       "properties": {
         "id": "BLDG-012",
-        "name": "Silver Arch Residency",
-        "height": 54.0,
-        "min_height": 0,
-        "levels": 18,
-        "building_type": "residential",
+        "name": "East Skywalk Terminal Mall",
+        "height": 21.9,
+        "min_height": 0.0,
+        "levels": 6,
+        "building_type": "commercial",
         "height_source": "measured",
-        "address": "Silver Arch Residency, Mira Road East, Mumbai MMR"
+        "sector": "Mira Road Station & Transit District",
+        "address": "East Skywalk Terminal Mall, Mira Road Station & Transit District, Mira Road (East), Mumbai MMR",
+        "glow_color": "#1e293b"
       },
       "geometry": {
         "type": "Polygon",
         "coordinates": [
           [
             [
-              72.86615,
-              19.28475
+              72.849392,
+              19.285007
             ],
             [
-              72.86685,
-              19.28475
+              72.850042,
+              19.285007
             ],
             [
-              72.86685,
-              19.28525
+              72.850042,
+              19.285667
             ],
             [
-              72.86615,
-              19.28525
+              72.849392,
+              19.285667
             ],
             [
-              72.86615,
-              19.28475
+              72.849392,
+              19.285007
             ]
           ]
         ]
@@ -498,37 +522,39 @@
       "id": "BLDG-013",
       "properties": {
         "id": "BLDG-013",
-        "name": "Regency Park Tower",
-        "height": 60.0,
-        "min_height": 0,
-        "levels": 20,
-        "building_type": "residential",
-        "height_source": "default (levels x 3m)",
-        "address": "Regency Park Tower, Mira Road East, Mumbai MMR"
+        "name": "Station Road Multilevel Parking Facility",
+        "height": 42.6,
+        "min_height": 0.0,
+        "levels": 13,
+        "building_type": "transport",
+        "height_source": "measured",
+        "sector": "Mira Road Station & Transit District",
+        "address": "Station Road Multilevel Parking Facility, Mira Road Station & Transit District, Mira Road (East), Mumbai MMR",
+        "glow_color": "#0284c7"
       },
       "geometry": {
         "type": "Polygon",
         "coordinates": [
           [
             [
-              72.86685,
-              19.285249999999998
+              72.855851,
+              19.28247
             ],
             [
-              72.86755,
-              19.285249999999998
+              72.85659,
+              19.28247
             ],
             [
-              72.86755,
-              19.28575
+              72.85659,
+              19.283072
             ],
             [
-              72.86685,
-              19.28575
+              72.855851,
+              19.283072
             ],
             [
-              72.86685,
-              19.285249999999998
+              72.855851,
+              19.28247
             ]
           ]
         ]
@@ -539,37 +565,39 @@
       "id": "BLDG-014",
       "properties": {
         "id": "BLDG-014",
-        "name": "Maxus Mall Complex",
-        "height": 28.0,
-        "min_height": 0,
-        "levels": 6,
-        "building_type": "commercial",
-        "height_source": "default (levels x 3m)",
-        "address": "Maxus Mall Complex, Mira Road East, Mumbai MMR"
+        "name": "Commuter Commercial Centre",
+        "height": 35.3,
+        "min_height": 0.0,
+        "levels": 11,
+        "building_type": "civic",
+        "height_source": "measured",
+        "sector": "Mira Road Station & Transit District",
+        "address": "Commuter Commercial Centre, Mira Road Station & Transit District, Mira Road (East), Mumbai MMR",
+        "glow_color": "#0284c7"
       },
       "geometry": {
         "type": "Polygon",
         "coordinates": [
           [
             [
-              72.86815,
-              19.28595
+              72.857557,
+              19.278112
             ],
             [
-              72.86885,
-              19.28595
+              72.858057,
+              19.278112
             ],
             [
-              72.86885,
-              19.286450000000002
+              72.858057,
+              19.278532
             ],
             [
-              72.86815,
-              19.286450000000002
+              72.857557,
+              19.278532
             ],
             [
-              72.86815,
-              19.28595
+              72.857557,
+              19.278112
             ]
           ]
         ]
@@ -580,37 +608,39 @@
       "id": "BLDG-015",
       "properties": {
         "id": "BLDG-015",
-        "name": "Cineprime Entertainment Plaza",
-        "height": 24.0,
-        "min_height": 0,
-        "levels": 5,
+        "name": "Western Railway Electrical Substation",
+        "height": 49.6,
+        "min_height": 0.0,
+        "levels": 15,
         "building_type": "commercial",
-        "height_source": "default (levels x 3m)",
-        "address": "Cineprime Entertainment Plaza, Mira Road East, Mumbai MMR"
+        "height_source": "measured",
+        "sector": "Mira Road Station & Transit District",
+        "address": "Western Railway Electrical Substation, Mira Road Station & Transit District, Mira Road (East), Mumbai MMR",
+        "glow_color": "#0284c7"
       },
       "geometry": {
         "type": "Polygon",
         "coordinates": [
           [
             [
-              72.86885000000001,
-              19.28655
+              72.857388,
+              19.277102
             ],
             [
-              72.86955,
-              19.28655
+              72.858071,
+              19.277102
             ],
             [
-              72.86955,
-              19.28705
+              72.858071,
+              19.27776
             ],
             [
-              72.86885000000001,
-              19.28705
+              72.857388,
+              19.27776
             ],
             [
-              72.86885000000001,
-              19.28655
+              72.857388,
+              19.277102
             ]
           ]
         ]
@@ -621,37 +651,39 @@
       "id": "BLDG-016",
       "properties": {
         "id": "BLDG-016",
-        "name": "Pooja Enclave High-Rise",
-        "height": 52.0,
-        "min_height": 0,
-        "levels": 17,
-        "building_type": "residential",
-        "height_source": "default (levels x 3m)",
-        "address": "Pooja Enclave High-Rise, Mira Road East, Mumbai MMR"
+        "name": "Station Plaza Pedestrian Galleria",
+        "height": 51.3,
+        "min_height": 0.0,
+        "levels": 16,
+        "building_type": "transport",
+        "height_source": "measured",
+        "sector": "Mira Road Station & Transit District",
+        "address": "Station Plaza Pedestrian Galleria, Mira Road Station & Transit District, Mira Road (East), Mumbai MMR",
+        "glow_color": "#0284c7"
       },
       "geometry": {
         "type": "Polygon",
         "coordinates": [
           [
             [
-              72.86485,
-              19.283949999999997
+              72.855904,
+              19.279853
             ],
             [
-              72.86555,
-              19.283949999999997
+              72.856304,
+              19.279853
             ],
             [
-              72.86555,
-              19.28445
+              72.856304,
+              19.28039
             ],
             [
-              72.86485,
-              19.28445
+              72.855904,
+              19.28039
             ],
             [
-              72.86485,
-              19.283949999999997
+              72.855904,
+              19.279853
             ]
           ]
         ]
@@ -662,37 +694,39 @@
       "id": "BLDG-017",
       "properties": {
         "id": "BLDG-017",
-        "name": "Shanti Nagar Sector 1 Tower",
-        "height": 45.0,
-        "min_height": 0,
-        "levels": 15,
-        "building_type": "residential",
-        "height_source": "default (levels x 3m)",
-        "address": "Shanti Nagar Sector 1 Tower, Mira Road East, Mumbai MMR"
+        "name": "Mira Commercial Skyscraper (Twin Landmark)",
+        "height": 94.0,
+        "min_height": 0.0,
+        "levels": 29,
+        "building_type": "commercial",
+        "height_source": "measured",
+        "sector": "Kanakia Commercial & Tech Hub",
+        "address": "Mira Commercial Skyscraper (Twin Landmark), Kanakia Commercial & Tech Hub, Mira Road (East), Mumbai MMR",
+        "glow_color": "#38bdf8"
       },
       "geometry": {
         "type": "Polygon",
         "coordinates": [
           [
             [
-              72.85315,
-              19.277949999999997
+              72.863899,
+              19.279206
             ],
             [
-              72.85385,
-              19.277949999999997
+              72.864525,
+              19.279206
             ],
             [
-              72.85385,
-              19.27845
+              72.864525,
+              19.279821
             ],
             [
-              72.85315,
-              19.27845
+              72.863899,
+              19.279821
             ],
             [
-              72.85315,
-              19.277949999999997
+              72.863899,
+              19.279206
             ]
           ]
         ]
@@ -703,37 +737,39 @@
       "id": "BLDG-018",
       "properties": {
         "id": "BLDG-018",
-        "name": "Shanti Nagar Sector 2 Plaza",
-        "height": 38.0,
-        "min_height": 0,
-        "levels": 12,
-        "building_type": "residential",
-        "height_source": "default (levels x 3m)",
-        "address": "Shanti Nagar Sector 2 Plaza, Mira Road East, Mumbai MMR"
+        "name": "Kanakia Wall Street Commercial Tower",
+        "height": 54.6,
+        "min_height": 0.0,
+        "levels": 17,
+        "building_type": "education",
+        "height_source": "measured",
+        "sector": "Kanakia Commercial & Tech Hub",
+        "address": "Kanakia Wall Street Commercial Tower, Kanakia Commercial & Tech Hub, Mira Road (East), Mumbai MMR",
+        "glow_color": "#0284c7"
       },
       "geometry": {
         "type": "Polygon",
         "coordinates": [
           [
             [
-              72.85385000000001,
-              19.27855
+              72.860715,
+              19.284186
             ],
             [
-              72.85455,
-              19.27855
+              72.8613,
+              19.284186
             ],
             [
-              72.85455,
-              19.27905
+              72.8613,
+              19.284654
             ],
             [
-              72.85385000000001,
-              19.27905
+              72.860715,
+              19.284654
             ],
             [
-              72.85385000000001,
-              19.27855
+              72.860715,
+              19.284186
             ]
           ]
         ]
@@ -744,37 +780,39 @@
       "id": "BLDG-019",
       "properties": {
         "id": "BLDG-019",
-        "name": "Shanti Nagar Civic Health Center",
-        "height": 18.0,
-        "min_height": 0,
-        "levels": 4,
-        "building_type": "civic",
-        "height_source": "default (levels x 3m)",
-        "address": "Shanti Nagar Civic Health Center, Mira Road East, Mumbai MMR"
+        "name": "Kanakia Zillion Tech Park Block A",
+        "height": 92.7,
+        "min_height": 0.0,
+        "levels": 28,
+        "building_type": "residential",
+        "height_source": "measured",
+        "sector": "Kanakia Commercial & Tech Hub",
+        "address": "Kanakia Zillion Tech Park Block A, Kanakia Commercial & Tech Hub, Mira Road (East), Mumbai MMR",
+        "glow_color": "#38bdf8"
       },
       "geometry": {
         "type": "Polygon",
         "coordinates": [
           [
             [
-              72.85245,
-              19.277549999999998
+              72.857164,
+              19.280492
             ],
             [
-              72.85315,
-              19.277549999999998
+              72.857543,
+              19.280492
             ],
             [
-              72.85315,
-              19.27805
+              72.857543,
+              19.281143
             ],
             [
-              72.85245,
-              19.27805
+              72.857164,
+              19.281143
             ],
             [
-              72.85245,
-              19.277549999999998
+              72.857164,
+              19.280492
             ]
           ]
         ]
@@ -785,37 +823,39 @@
       "id": "BLDG-020",
       "properties": {
         "id": "BLDG-020",
-        "name": "Green Park Society Block A",
-        "height": 48.0,
-        "min_height": 0,
-        "levels": 16,
-        "building_type": "residential",
-        "height_source": "default (levels x 3m)",
-        "address": "Green Park Society Block A, Mira Road East, Mumbai MMR"
+        "name": "Kanakia Zillion Tech Park Block B",
+        "height": 68.5,
+        "min_height": 0.0,
+        "levels": 21,
+        "building_type": "commercial",
+        "height_source": "measured",
+        "sector": "Kanakia Commercial & Tech Hub",
+        "address": "Kanakia Zillion Tech Park Block B, Kanakia Commercial & Tech Hub, Mira Road (East), Mumbai MMR",
+        "glow_color": "#38bdf8"
       },
       "geometry": {
         "type": "Polygon",
         "coordinates": [
           [
             [
-              72.85465,
-              19.27895
+              72.861718,
+              19.279529
             ],
             [
-              72.85535,
-              19.27895
+              72.862105,
+              19.279529
             ],
             [
-              72.85535,
-              19.27945
+              72.862105,
+              19.280021
             ],
             [
-              72.85465,
-              19.27945
+              72.861718,
+              19.280021
             ],
             [
-              72.85465,
-              19.27895
+              72.861718,
+              19.279529
             ]
           ]
         ]
@@ -826,37 +866,39 @@
       "id": "BLDG-021",
       "properties": {
         "id": "BLDG-021",
-        "name": "Green Park Society Block B",
-        "height": 50.0,
-        "min_height": 0,
-        "levels": 16,
-        "building_type": "residential",
-        "height_source": "default (levels x 3m)",
-        "address": "Green Park Society Block B, Mira Road East, Mumbai MMR"
+        "name": "Kanakia Samarpan Residential Pinnacle",
+        "height": 97.1,
+        "min_height": 0.0,
+        "levels": 30,
+        "building_type": "education",
+        "height_source": "measured",
+        "sector": "Kanakia Commercial & Tech Hub",
+        "address": "Kanakia Samarpan Residential Pinnacle, Kanakia Commercial & Tech Hub, Mira Road (East), Mumbai MMR",
+        "glow_color": "#38bdf8"
       },
       "geometry": {
         "type": "Polygon",
         "coordinates": [
           [
             [
-              72.85525,
-              19.279349999999997
+              72.856208,
+              19.284144
             ],
             [
-              72.85594999999999,
-              19.279349999999997
+              72.856719,
+              19.284144
             ],
             [
-              72.85594999999999,
-              19.27985
+              72.856719,
+              19.284528
             ],
             [
-              72.85525,
-              19.27985
+              72.856208,
+              19.284528
             ],
             [
-              72.85525,
-              19.279349999999997
+              72.856208,
+              19.284144
             ]
           ]
         ]
@@ -867,37 +909,39 @@
       "id": "BLDG-022",
       "properties": {
         "id": "BLDG-022",
-        "name": "Hatkesh Industrial Arcade",
-        "height": 26.0,
-        "min_height": 0,
-        "levels": 6,
-        "building_type": "commercial",
-        "height_source": "default (levels x 3m)",
-        "address": "Hatkesh Industrial Arcade, Mira Road East, Mumbai MMR"
+        "name": "Techniplex IT Tower 1",
+        "height": 52.3,
+        "min_height": 0.0,
+        "levels": 16,
+        "building_type": "residential",
+        "height_source": "measured",
+        "sector": "Kanakia Commercial & Tech Hub",
+        "address": "Techniplex IT Tower 1, Kanakia Commercial & Tech Hub, Mira Road (East), Mumbai MMR",
+        "glow_color": "#0284c7"
       },
       "geometry": {
         "type": "Polygon",
         "coordinates": [
           [
             [
-              72.87065,
-              19.288249999999998
+              72.861895,
+              19.279566
             ],
             [
-              72.87134999999999,
-              19.288249999999998
+              72.862595,
+              19.279566
             ],
             [
-              72.87134999999999,
-              19.28875
+              72.862595,
+              19.280078
             ],
             [
-              72.87065,
-              19.28875
+              72.861895,
+              19.280078
             ],
             [
-              72.87065,
-              19.288249999999998
+              72.861895,
+              19.279566
             ]
           ]
         ]
@@ -908,37 +952,39 @@
       "id": "BLDG-023",
       "properties": {
         "id": "BLDG-023",
-        "name": "Silver Park Sky-Villas",
-        "height": 64.0,
-        "min_height": 0,
-        "levels": 21,
-        "building_type": "residential",
-        "height_source": "default (levels x 3m)",
-        "address": "Silver Park Sky-Villas, Mira Road East, Mumbai MMR"
+        "name": "Techniplex IT Tower 2",
+        "height": 93.9,
+        "min_height": 0.0,
+        "levels": 29,
+        "building_type": "commercial",
+        "height_source": "measured",
+        "sector": "Kanakia Commercial & Tech Hub",
+        "address": "Techniplex IT Tower 2, Kanakia Commercial & Tech Hub, Mira Road (East), Mumbai MMR",
+        "glow_color": "#38bdf8"
       },
       "geometry": {
         "type": "Polygon",
         "coordinates": [
           [
             [
-              72.87215,
-              19.28955
+              72.854118,
+              19.279828
             ],
             [
-              72.87285,
-              19.28955
+              72.854535,
+              19.279828
             ],
             [
-              72.87285,
-              19.29005
+              72.854535,
+              19.280476
             ],
             [
-              72.87215,
-              19.29005
+              72.854118,
+              19.280476
             ],
             [
-              72.87215,
-              19.28955
+              72.854118,
+              19.279828
             ]
           ]
         ]
@@ -949,37 +995,4597 @@
       "id": "BLDG-024",
       "properties": {
         "id": "BLDG-024",
-        "name": "Lodha Aqua Heritage",
-        "height": 75.0,
-        "min_height": 0,
-        "levels": 25,
-        "building_type": "residential",
-        "height_source": "default (levels x 3m)",
-        "address": "Lodha Aqua Heritage, Mira Road East, Mumbai MMR"
+        "name": "Kanakia Corporate Financial Suites",
+        "height": 97.2,
+        "min_height": 0.0,
+        "levels": 30,
+        "building_type": "education",
+        "height_source": "measured",
+        "sector": "Kanakia Commercial & Tech Hub",
+        "address": "Kanakia Corporate Financial Suites, Kanakia Commercial & Tech Hub, Mira Road (East), Mumbai MMR",
+        "glow_color": "#38bdf8"
       },
       "geometry": {
         "type": "Polygon",
         "coordinates": [
           [
             [
-              72.87365,
-              19.29075
+              72.856898,
+              19.284089
             ],
             [
-              72.87434999999999,
-              19.29075
+              72.857562,
+              19.284089
             ],
             [
-              72.87434999999999,
-              19.29125
+              72.857562,
+              19.284532
             ],
             [
-              72.87365,
-              19.29125
+              72.856898,
+              19.284532
             ],
             [
-              72.87365,
-              19.29075
+              72.856898,
+              19.284089
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "BLDG-025",
+      "properties": {
+        "id": "BLDG-025",
+        "name": "Imperial Heights Premier Residence",
+        "height": 45.3,
+        "min_height": 0.0,
+        "levels": 14,
+        "building_type": "residential",
+        "height_source": "measured",
+        "sector": "Kanakia Commercial & Tech Hub",
+        "address": "Imperial Heights Premier Residence, Kanakia Commercial & Tech Hub, Mira Road (East), Mumbai MMR",
+        "glow_color": "#0284c7"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.861006,
+              19.283887
+            ],
+            [
+              72.86138,
+              19.283887
+            ],
+            [
+              72.86138,
+              19.284494
+            ],
+            [
+              72.861006,
+              19.284494
+            ],
+            [
+              72.861006,
+              19.283887
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "BLDG-026",
+      "properties": {
+        "id": "BLDG-026",
+        "name": "Regency Commercial Atrium",
+        "height": 70.4,
+        "min_height": 0.0,
+        "levels": 22,
+        "building_type": "commercial",
+        "height_source": "measured",
+        "sector": "Kanakia Commercial & Tech Hub",
+        "address": "Regency Commercial Atrium, Kanakia Commercial & Tech Hub, Mira Road (East), Mumbai MMR",
+        "glow_color": "#38bdf8"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.857752,
+              19.283266
+            ],
+            [
+              72.85813,
+              19.283266
+            ],
+            [
+              72.85813,
+              19.283914
+            ],
+            [
+              72.857752,
+              19.283914
+            ],
+            [
+              72.857752,
+              19.283266
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "BLDG-027",
+      "properties": {
+        "id": "BLDG-027",
+        "name": "Seven Square International Academy",
+        "height": 44.2,
+        "min_height": 0.0,
+        "levels": 13,
+        "building_type": "education",
+        "height_source": "measured",
+        "sector": "Kanakia Commercial & Tech Hub",
+        "address": "Seven Square International Academy, Kanakia Commercial & Tech Hub, Mira Road (East), Mumbai MMR",
+        "glow_color": "#0284c7"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.85458,
+              19.284875
+            ],
+            [
+              72.855192,
+              19.284875
+            ],
+            [
+              72.855192,
+              19.285254
+            ],
+            [
+              72.85458,
+              19.285254
+            ],
+            [
+              72.85458,
+              19.284875
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "BLDG-028",
+      "properties": {
+        "id": "BLDG-028",
+        "name": "Kanakia Cinepolis Entertainment Complex",
+        "height": 64.2,
+        "min_height": 0.0,
+        "levels": 20,
+        "building_type": "residential",
+        "height_source": "measured",
+        "sector": "Kanakia Commercial & Tech Hub",
+        "address": "Kanakia Cinepolis Entertainment Complex, Kanakia Commercial & Tech Hub, Mira Road (East), Mumbai MMR",
+        "glow_color": "#38bdf8"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.860688,
+              19.283716
+            ],
+            [
+              72.861158,
+              19.283716
+            ],
+            [
+              72.861158,
+              19.284301
+            ],
+            [
+              72.860688,
+              19.284301
+            ],
+            [
+              72.860688,
+              19.283716
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "BLDG-029",
+      "properties": {
+        "id": "BLDG-029",
+        "name": "Regent Plaza Corporate Hub",
+        "height": 53.9,
+        "min_height": 0.0,
+        "levels": 16,
+        "building_type": "commercial",
+        "height_source": "measured",
+        "sector": "Kanakia Commercial & Tech Hub",
+        "address": "Regent Plaza Corporate Hub, Kanakia Commercial & Tech Hub, Mira Road (East), Mumbai MMR",
+        "glow_color": "#0284c7"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.855802,
+              19.280102
+            ],
+            [
+              72.856525,
+              19.280102
+            ],
+            [
+              72.856525,
+              19.280544
+            ],
+            [
+              72.855802,
+              19.280544
+            ],
+            [
+              72.855802,
+              19.280102
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "BLDG-030",
+      "properties": {
+        "id": "BLDG-030",
+        "name": "Mira Trade Centre Tower",
+        "height": 81.4,
+        "min_height": 0.0,
+        "levels": 25,
+        "building_type": "education",
+        "height_source": "measured",
+        "sector": "Kanakia Commercial & Tech Hub",
+        "address": "Mira Trade Centre Tower, Kanakia Commercial & Tech Hub, Mira Road (East), Mumbai MMR",
+        "glow_color": "#38bdf8"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.863311,
+              19.285084
+            ],
+            [
+              72.864056,
+              19.285084
+            ],
+            [
+              72.864056,
+              19.285648
+            ],
+            [
+              72.863311,
+              19.285648
+            ],
+            [
+              72.863311,
+              19.285084
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "BLDG-031",
+      "properties": {
+        "id": "BLDG-031",
+        "name": "Kanakia Country Club Pavilion",
+        "height": 49.5,
+        "min_height": 0.0,
+        "levels": 15,
+        "building_type": "residential",
+        "height_source": "measured",
+        "sector": "Kanakia Commercial & Tech Hub",
+        "address": "Kanakia Country Club Pavilion, Kanakia Commercial & Tech Hub, Mira Road (East), Mumbai MMR",
+        "glow_color": "#0284c7"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.85731,
+              19.283496
+            ],
+            [
+              72.857703,
+              19.283496
+            ],
+            [
+              72.857703,
+              19.283887
+            ],
+            [
+              72.85731,
+              19.283887
+            ],
+            [
+              72.85731,
+              19.283496
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "BLDG-032",
+      "properties": {
+        "id": "BLDG-032",
+        "name": "Apex Business Park Phase 1",
+        "height": 89.8,
+        "min_height": 0.0,
+        "levels": 28,
+        "building_type": "commercial",
+        "height_source": "measured",
+        "sector": "Kanakia Commercial & Tech Hub",
+        "address": "Apex Business Park Phase 1, Kanakia Commercial & Tech Hub, Mira Road (East), Mumbai MMR",
+        "glow_color": "#38bdf8"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.856509,
+              19.280399
+            ],
+            [
+              72.85696,
+              19.280399
+            ],
+            [
+              72.85696,
+              19.280926
+            ],
+            [
+              72.856509,
+              19.280926
+            ],
+            [
+              72.856509,
+              19.280399
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "BLDG-033",
+      "properties": {
+        "id": "BLDG-033",
+        "name": "Apex Business Park Phase 2",
+        "height": 85.2,
+        "min_height": 0.0,
+        "levels": 26,
+        "building_type": "education",
+        "height_source": "measured",
+        "sector": "Kanakia Commercial & Tech Hub",
+        "address": "Apex Business Park Phase 2, Kanakia Commercial & Tech Hub, Mira Road (East), Mumbai MMR",
+        "glow_color": "#38bdf8"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.857748,
+              19.283483
+            ],
+            [
+              72.858203,
+              19.283483
+            ],
+            [
+              72.858203,
+              19.284056
+            ],
+            [
+              72.857748,
+              19.284056
+            ],
+            [
+              72.857748,
+              19.283483
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "BLDG-034",
+      "properties": {
+        "id": "BLDG-034",
+        "name": "Kanakia Park Avenue Tower",
+        "height": 91.5,
+        "min_height": 0.0,
+        "levels": 28,
+        "building_type": "residential",
+        "height_source": "measured",
+        "sector": "Kanakia Commercial & Tech Hub",
+        "address": "Kanakia Park Avenue Tower, Kanakia Commercial & Tech Hub, Mira Road (East), Mumbai MMR",
+        "glow_color": "#38bdf8"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.85638,
+              19.284611
+            ],
+            [
+              72.856949,
+              19.284611
+            ],
+            [
+              72.856949,
+              19.285278
+            ],
+            [
+              72.85638,
+              19.285278
+            ],
+            [
+              72.85638,
+              19.284611
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "BLDG-035",
+      "properties": {
+        "id": "BLDG-035",
+        "name": "Kanakia Silicon Galleria",
+        "height": 92.3,
+        "min_height": 0.0,
+        "levels": 28,
+        "building_type": "commercial",
+        "height_source": "measured",
+        "sector": "Kanakia Commercial & Tech Hub",
+        "address": "Kanakia Silicon Galleria, Kanakia Commercial & Tech Hub, Mira Road (East), Mumbai MMR",
+        "glow_color": "#38bdf8"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.855883,
+              19.279821
+            ],
+            [
+              72.856577,
+              19.279821
+            ],
+            [
+              72.856577,
+              19.280449
+            ],
+            [
+              72.855883,
+              19.280449
+            ],
+            [
+              72.855883,
+              19.279821
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "BLDG-036",
+      "properties": {
+        "id": "BLDG-036",
+        "name": "Kanakia Skyview Condos",
+        "height": 91.5,
+        "min_height": 0.0,
+        "levels": 28,
+        "building_type": "education",
+        "height_source": "measured",
+        "sector": "Kanakia Commercial & Tech Hub",
+        "address": "Kanakia Skyview Condos, Kanakia Commercial & Tech Hub, Mira Road (East), Mumbai MMR",
+        "glow_color": "#38bdf8"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.860835,
+              19.280631
+            ],
+            [
+              72.861434,
+              19.280631
+            ],
+            [
+              72.861434,
+              19.281123
+            ],
+            [
+              72.860835,
+              19.281123
+            ],
+            [
+              72.860835,
+              19.280631
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "BLDG-037",
+      "properties": {
+        "id": "BLDG-037",
+        "name": "Kanakia Horizon Executive Suites",
+        "height": 43.4,
+        "min_height": 0.0,
+        "levels": 13,
+        "building_type": "residential",
+        "height_source": "measured",
+        "sector": "Kanakia Commercial & Tech Hub",
+        "address": "Kanakia Horizon Executive Suites, Kanakia Commercial & Tech Hub, Mira Road (East), Mumbai MMR",
+        "glow_color": "#0284c7"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.853787,
+              19.27806
+            ],
+            [
+              72.854269,
+              19.27806
+            ],
+            [
+              72.854269,
+              19.278668
+            ],
+            [
+              72.853787,
+              19.278668
+            ],
+            [
+              72.853787,
+              19.27806
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "BLDG-038",
+      "properties": {
+        "id": "BLDG-038",
+        "name": "Kanakia Sovereign Business Centre",
+        "height": 44.2,
+        "min_height": 0.0,
+        "levels": 13,
+        "building_type": "commercial",
+        "height_source": "measured",
+        "sector": "Kanakia Commercial & Tech Hub",
+        "address": "Kanakia Sovereign Business Centre, Kanakia Commercial & Tech Hub, Mira Road (East), Mumbai MMR",
+        "glow_color": "#0284c7"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.855239,
+              19.27958
+            ],
+            [
+              72.855669,
+              19.27958
+            ],
+            [
+              72.855669,
+              19.280095
+            ],
+            [
+              72.855239,
+              19.280095
+            ],
+            [
+              72.855239,
+              19.27958
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "BLDG-039",
+      "properties": {
+        "id": "BLDG-039",
+        "name": "Shanti Park Avenue Sector 1 High-Rise",
+        "height": 41.1,
+        "min_height": 0.0,
+        "levels": 12,
+        "building_type": "residential",
+        "height_source": "measured",
+        "sector": "Shanti Park & Shanti Nagar Residential Hub",
+        "address": "Shanti Park Avenue Sector 1 High-Rise, Shanti Park & Shanti Nagar Residential Hub, Mira Road (East), Mumbai MMR",
+        "glow_color": "#0284c7"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.859469,
+              19.279715
+            ],
+            [
+              72.860128,
+              19.279715
+            ],
+            [
+              72.860128,
+              19.280089
+            ],
+            [
+              72.859469,
+              19.280089
+            ],
+            [
+              72.859469,
+              19.279715
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "BLDG-040",
+      "properties": {
+        "id": "BLDG-040",
+        "name": "Shanti Park Sector 2 Residential Block",
+        "height": 40.3,
+        "min_height": 0.0,
+        "levels": 12,
+        "building_type": "civic",
+        "height_source": "measured",
+        "sector": "Shanti Park & Shanti Nagar Residential Hub",
+        "address": "Shanti Park Sector 2 Residential Block, Shanti Park & Shanti Nagar Residential Hub, Mira Road (East), Mumbai MMR",
+        "glow_color": "#0284c7"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.858265,
+              19.283985
+            ],
+            [
+              72.859008,
+              19.283985
+            ],
+            [
+              72.859008,
+              19.284538
+            ],
+            [
+              72.858265,
+              19.284538
+            ],
+            [
+              72.858265,
+              19.283985
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "BLDG-041",
+      "properties": {
+        "id": "BLDG-041",
+        "name": "Shanti Park Sector 3 Green View",
+        "height": 74.3,
+        "min_height": 0.0,
+        "levels": 23,
+        "building_type": "healthcare",
+        "height_source": "measured",
+        "sector": "Shanti Park & Shanti Nagar Residential Hub",
+        "address": "Shanti Park Sector 3 Green View, Shanti Park & Shanti Nagar Residential Hub, Mira Road (East), Mumbai MMR",
+        "glow_color": "#38bdf8"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.864655,
+              19.284076
+            ],
+            [
+              72.865365,
+              19.284076
+            ],
+            [
+              72.865365,
+              19.284467
+            ],
+            [
+              72.864655,
+              19.284467
+            ],
+            [
+              72.864655,
+              19.284076
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "BLDG-042",
+      "properties": {
+        "id": "BLDG-042",
+        "name": "Shanti Park Sector 4 Central Towers",
+        "height": 31.3,
+        "min_height": 0.0,
+        "levels": 9,
+        "building_type": "education",
+        "height_source": "measured",
+        "sector": "Shanti Park & Shanti Nagar Residential Hub",
+        "address": "Shanti Park Sector 4 Central Towers, Shanti Park & Shanti Nagar Residential Hub, Mira Road (East), Mumbai MMR",
+        "glow_color": "#1e293b"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.860508,
+              19.282015
+            ],
+            [
+              72.86099,
+              19.282015
+            ],
+            [
+              72.86099,
+              19.282597
+            ],
+            [
+              72.860508,
+              19.282597
+            ],
+            [
+              72.860508,
+              19.282015
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "BLDG-043",
+      "properties": {
+        "id": "BLDG-043",
+        "name": "Shanti Park Sector 5 Family Condos",
+        "height": 60.8,
+        "min_height": 0.0,
+        "levels": 18,
+        "building_type": "residential",
+        "height_source": "measured",
+        "sector": "Shanti Park & Shanti Nagar Residential Hub",
+        "address": "Shanti Park Sector 5 Family Condos, Shanti Park & Shanti Nagar Residential Hub, Mira Road (East), Mumbai MMR",
+        "glow_color": "#38bdf8"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.86536,
+              19.28437
+            ],
+            [
+              72.865787,
+              19.28437
+            ],
+            [
+              72.865787,
+              19.284914
+            ],
+            [
+              72.86536,
+              19.284914
+            ],
+            [
+              72.86536,
+              19.28437
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "BLDG-044",
+      "properties": {
+        "id": "BLDG-044",
+        "name": "Shanti Park Sector 6 Executive Residency",
+        "height": 67.2,
+        "min_height": 0.0,
+        "levels": 21,
+        "building_type": "civic",
+        "height_source": "measured",
+        "sector": "Shanti Park & Shanti Nagar Residential Hub",
+        "address": "Shanti Park Sector 6 Executive Residency, Shanti Park & Shanti Nagar Residential Hub, Mira Road (East), Mumbai MMR",
+        "glow_color": "#38bdf8"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.864083,
+              19.27923
+            ],
+            [
+              72.864517,
+              19.27923
+            ],
+            [
+              72.864517,
+              19.279686
+            ],
+            [
+              72.864083,
+              19.279686
+            ],
+            [
+              72.864083,
+              19.27923
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "BLDG-045",
+      "properties": {
+        "id": "BLDG-045",
+        "name": "Shanti Nagar Municipal Civic Ward Office",
+        "height": 52.0,
+        "min_height": 0.0,
+        "levels": 16,
+        "building_type": "healthcare",
+        "height_source": "measured",
+        "sector": "Shanti Park & Shanti Nagar Residential Hub",
+        "address": "Shanti Nagar Municipal Civic Ward Office, Shanti Park & Shanti Nagar Residential Hub, Mira Road (East), Mumbai MMR",
+        "glow_color": "#0284c7"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.86505,
+              19.283655
+            ],
+            [
+              72.865784,
+              19.283655
+            ],
+            [
+              72.865784,
+              19.284283
+            ],
+            [
+              72.86505,
+              19.284283
+            ],
+            [
+              72.86505,
+              19.283655
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "BLDG-046",
+      "properties": {
+        "id": "BLDG-046",
+        "name": "Shanti Shopping Centre & Supermarket",
+        "height": 72.7,
+        "min_height": 0.0,
+        "levels": 22,
+        "building_type": "education",
+        "height_source": "measured",
+        "sector": "Shanti Park & Shanti Nagar Residential Hub",
+        "address": "Shanti Shopping Centre & Supermarket, Shanti Park & Shanti Nagar Residential Hub, Mira Road (East), Mumbai MMR",
+        "glow_color": "#38bdf8"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.864399,
+              19.283951
+            ],
+            [
+              72.864873,
+              19.283951
+            ],
+            [
+              72.864873,
+              19.284383
+            ],
+            [
+              72.864399,
+              19.284383
+            ],
+            [
+              72.864399,
+              19.283951
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "BLDG-047",
+      "properties": {
+        "id": "BLDG-047",
+        "name": "Bhaktivedanta Swami Memorial Hall",
+        "height": 64.1,
+        "min_height": 0.0,
+        "levels": 20,
+        "building_type": "residential",
+        "height_source": "measured",
+        "sector": "Shanti Park & Shanti Nagar Residential Hub",
+        "address": "Bhaktivedanta Swami Memorial Hall, Shanti Park & Shanti Nagar Residential Hub, Mira Road (East), Mumbai MMR",
+        "glow_color": "#38bdf8"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.863412,
+              19.280079
+            ],
+            [
+              72.864117,
+              19.280079
+            ],
+            [
+              72.864117,
+              19.280588
+            ],
+            [
+              72.863412,
+              19.280588
+            ],
+            [
+              72.863412,
+              19.280079
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "BLDG-048",
+      "properties": {
+        "id": "BLDG-048",
+        "name": "Shanti Nagar Public Library & Cultural Centre",
+        "height": 60.3,
+        "min_height": 0.0,
+        "levels": 18,
+        "building_type": "civic",
+        "height_source": "measured",
+        "sector": "Shanti Park & Shanti Nagar Residential Hub",
+        "address": "Shanti Nagar Public Library & Cultural Centre, Shanti Park & Shanti Nagar Residential Hub, Mira Road (East), Mumbai MMR",
+        "glow_color": "#38bdf8"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.858771,
+              19.28396
+            ],
+            [
+              72.859465,
+              19.28396
+            ],
+            [
+              72.859465,
+              19.284622
+            ],
+            [
+              72.858771,
+              19.284622
+            ],
+            [
+              72.858771,
+              19.28396
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "BLDG-049",
+      "properties": {
+        "id": "BLDG-049",
+        "name": "Saraswati Vidyalaya High School & College",
+        "height": 39.7,
+        "min_height": 0.0,
+        "levels": 12,
+        "building_type": "healthcare",
+        "height_source": "measured",
+        "sector": "Shanti Park & Shanti Nagar Residential Hub",
+        "address": "Saraswati Vidyalaya High School & College, Shanti Park & Shanti Nagar Residential Hub, Mira Road (East), Mumbai MMR",
+        "glow_color": "#0284c7"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.864595,
+              19.278702
+            ],
+            [
+              72.865127,
+              19.278702
+            ],
+            [
+              72.865127,
+              19.279349
+            ],
+            [
+              72.864595,
+              19.279349
+            ],
+            [
+              72.864595,
+              19.278702
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "BLDG-050",
+      "properties": {
+        "id": "BLDG-050",
+        "name": "Shanti Garden Society Block A",
+        "height": 61.8,
+        "min_height": 0.0,
+        "levels": 19,
+        "building_type": "education",
+        "height_source": "measured",
+        "sector": "Shanti Park & Shanti Nagar Residential Hub",
+        "address": "Shanti Garden Society Block A, Shanti Park & Shanti Nagar Residential Hub, Mira Road (East), Mumbai MMR",
+        "glow_color": "#38bdf8"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.865183,
+              19.284506
+            ],
+            [
+              72.865865,
+              19.284506
+            ],
+            [
+              72.865865,
+              19.285033
+            ],
+            [
+              72.865183,
+              19.285033
+            ],
+            [
+              72.865183,
+              19.284506
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "BLDG-051",
+      "properties": {
+        "id": "BLDG-051",
+        "name": "Shanti Garden Society Block B",
+        "height": 41.0,
+        "min_height": 0.0,
+        "levels": 12,
+        "building_type": "residential",
+        "height_source": "measured",
+        "sector": "Shanti Park & Shanti Nagar Residential Hub",
+        "address": "Shanti Garden Society Block B, Shanti Park & Shanti Nagar Residential Hub, Mira Road (East), Mumbai MMR",
+        "glow_color": "#0284c7"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.856965,
+              19.284364
+            ],
+            [
+              72.857509,
+              19.284364
+            ],
+            [
+              72.857509,
+              19.284987
+            ],
+            [
+              72.856965,
+              19.284987
+            ],
+            [
+              72.856965,
+              19.284364
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "BLDG-052",
+      "properties": {
+        "id": "BLDG-052",
+        "name": "Shanti Garden Society Block C",
+        "height": 53.4,
+        "min_height": 0.0,
+        "levels": 16,
+        "building_type": "civic",
+        "height_source": "measured",
+        "sector": "Shanti Park & Shanti Nagar Residential Hub",
+        "address": "Shanti Garden Society Block C, Shanti Park & Shanti Nagar Residential Hub, Mira Road (East), Mumbai MMR",
+        "glow_color": "#0284c7"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.864151,
+              19.28311
+            ],
+            [
+              72.864594,
+              19.28311
+            ],
+            [
+              72.864594,
+              19.283508
+            ],
+            [
+              72.864151,
+              19.283508
+            ],
+            [
+              72.864151,
+              19.28311
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "BLDG-053",
+      "properties": {
+        "id": "BLDG-053",
+        "name": "Shanti Vihar Society Phase 1",
+        "height": 47.5,
+        "min_height": 0.0,
+        "levels": 14,
+        "building_type": "healthcare",
+        "height_source": "measured",
+        "sector": "Shanti Park & Shanti Nagar Residential Hub",
+        "address": "Shanti Vihar Society Phase 1, Shanti Park & Shanti Nagar Residential Hub, Mira Road (East), Mumbai MMR",
+        "glow_color": "#0284c7"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.865275,
+              19.278638
+            ],
+            [
+              72.865793,
+              19.278638
+            ],
+            [
+              72.865793,
+              19.279061
+            ],
+            [
+              72.865275,
+              19.279061
+            ],
+            [
+              72.865275,
+              19.278638
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "BLDG-054",
+      "properties": {
+        "id": "BLDG-054",
+        "name": "Shanti Vihar Society Phase 2",
+        "height": 72.3,
+        "min_height": 0.0,
+        "levels": 22,
+        "building_type": "education",
+        "height_source": "measured",
+        "sector": "Shanti Park & Shanti Nagar Residential Hub",
+        "address": "Shanti Vihar Society Phase 2, Shanti Park & Shanti Nagar Residential Hub, Mira Road (East), Mumbai MMR",
+        "glow_color": "#38bdf8"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.864781,
+              19.27838
+            ],
+            [
+              72.865287,
+              19.27838
+            ],
+            [
+              72.865287,
+              19.278834
+            ],
+            [
+              72.864781,
+              19.278834
+            ],
+            [
+              72.864781,
+              19.27838
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "BLDG-055",
+      "properties": {
+        "id": "BLDG-055",
+        "name": "Shanti Sadan Cooperative Housing",
+        "height": 29.4,
+        "min_height": 0.0,
+        "levels": 9,
+        "building_type": "residential",
+        "height_source": "measured",
+        "sector": "Shanti Park & Shanti Nagar Residential Hub",
+        "address": "Shanti Sadan Cooperative Housing, Shanti Park & Shanti Nagar Residential Hub, Mira Road (East), Mumbai MMR",
+        "glow_color": "#1e293b"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.865439,
+              19.278185
+            ],
+            [
+              72.866061,
+              19.278185
+            ],
+            [
+              72.866061,
+              19.278653
+            ],
+            [
+              72.865439,
+              19.278653
+            ],
+            [
+              72.865439,
+              19.278185
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "BLDG-056",
+      "properties": {
+        "id": "BLDG-056",
+        "name": "Gokul Park Residency Towers",
+        "height": 55.8,
+        "min_height": 0.0,
+        "levels": 17,
+        "building_type": "civic",
+        "height_source": "measured",
+        "sector": "Shanti Park & Shanti Nagar Residential Hub",
+        "address": "Gokul Park Residency Towers, Shanti Park & Shanti Nagar Residential Hub, Mira Road (East), Mumbai MMR",
+        "glow_color": "#0284c7"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.859728,
+              19.282882
+            ],
+            [
+              72.860112,
+              19.282882
+            ],
+            [
+              72.860112,
+              19.283464
+            ],
+            [
+              72.859728,
+              19.283464
+            ],
+            [
+              72.859728,
+              19.282882
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "BLDG-057",
+      "properties": {
+        "id": "BLDG-057",
+        "name": "Gokul Village Complex Block 1",
+        "height": 49.4,
+        "min_height": 0.0,
+        "levels": 15,
+        "building_type": "healthcare",
+        "height_source": "measured",
+        "sector": "Shanti Park & Shanti Nagar Residential Hub",
+        "address": "Gokul Village Complex Block 1, Shanti Park & Shanti Nagar Residential Hub, Mira Road (East), Mumbai MMR",
+        "glow_color": "#0284c7"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.86528,
+              19.278802
+            ],
+            [
+              72.865982,
+              19.278802
+            ],
+            [
+              72.865982,
+              19.27927
+            ],
+            [
+              72.86528,
+              19.27927
+            ],
+            [
+              72.86528,
+              19.278802
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "BLDG-058",
+      "properties": {
+        "id": "BLDG-058",
+        "name": "Gokul Village Complex Block 2",
+        "height": 63.2,
+        "min_height": 0.0,
+        "levels": 19,
+        "building_type": "education",
+        "height_source": "measured",
+        "sector": "Shanti Park & Shanti Nagar Residential Hub",
+        "address": "Gokul Village Complex Block 2, Shanti Park & Shanti Nagar Residential Hub, Mira Road (East), Mumbai MMR",
+        "glow_color": "#38bdf8"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.857454,
+              19.28429
+            ],
+            [
+              72.858185,
+              19.28429
+            ],
+            [
+              72.858185,
+              19.284659
+            ],
+            [
+              72.857454,
+              19.284659
+            ],
+            [
+              72.857454,
+              19.28429
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "BLDG-059",
+      "properties": {
+        "id": "BLDG-059",
+        "name": "Sangeet Complex Residential Block",
+        "height": 29.0,
+        "min_height": 0.0,
+        "levels": 9,
+        "building_type": "residential",
+        "height_source": "measured",
+        "sector": "Shanti Park & Shanti Nagar Residential Hub",
+        "address": "Sangeet Complex Residential Block, Shanti Park & Shanti Nagar Residential Hub, Mira Road (East), Mumbai MMR",
+        "glow_color": "#1e293b"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.860594,
+              19.280018
+            ],
+            [
+              72.860994,
+              19.280018
+            ],
+            [
+              72.860994,
+              19.280422
+            ],
+            [
+              72.860594,
+              19.280422
+            ],
+            [
+              72.860594,
+              19.280018
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "BLDG-060",
+      "properties": {
+        "id": "BLDG-060",
+        "name": "Deepak Hospital & Emergency Trauma Centre",
+        "height": 35.9,
+        "min_height": 0.0,
+        "levels": 11,
+        "building_type": "civic",
+        "height_source": "measured",
+        "sector": "Shanti Park & Shanti Nagar Residential Hub",
+        "address": "Deepak Hospital & Emergency Trauma Centre, Shanti Park & Shanti Nagar Residential Hub, Mira Road (East), Mumbai MMR",
+        "glow_color": "#0284c7"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.865081,
+              19.278857
+            ],
+            [
+              72.86573,
+              19.278857
+            ],
+            [
+              72.86573,
+              19.27942
+            ],
+            [
+              72.865081,
+              19.27942
+            ],
+            [
+              72.865081,
+              19.278857
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "BLDG-061",
+      "properties": {
+        "id": "BLDG-061",
+        "name": "Shanti Nagar Post & Telegraph Hub",
+        "height": 55.1,
+        "min_height": 0.0,
+        "levels": 17,
+        "building_type": "healthcare",
+        "height_source": "measured",
+        "sector": "Shanti Park & Shanti Nagar Residential Hub",
+        "address": "Shanti Nagar Post & Telegraph Hub, Shanti Park & Shanti Nagar Residential Hub, Mira Road (East), Mumbai MMR",
+        "glow_color": "#0284c7"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.857109,
+              19.283624
+            ],
+            [
+              72.857609,
+              19.283624
+            ],
+            [
+              72.857609,
+              19.284292
+            ],
+            [
+              72.857109,
+              19.284292
+            ],
+            [
+              72.857109,
+              19.283624
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "BLDG-062",
+      "properties": {
+        "id": "BLDG-062",
+        "name": "Shanti Park Sports Complex & Gymkhana",
+        "height": 56.2,
+        "min_height": 0.0,
+        "levels": 17,
+        "building_type": "education",
+        "height_source": "measured",
+        "sector": "Shanti Park & Shanti Nagar Residential Hub",
+        "address": "Shanti Park Sports Complex & Gymkhana, Shanti Park & Shanti Nagar Residential Hub, Mira Road (East), Mumbai MMR",
+        "glow_color": "#0284c7"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.863784,
+              19.280128
+            ],
+            [
+              72.864528,
+              19.280128
+            ],
+            [
+              72.864528,
+              19.280521
+            ],
+            [
+              72.863784,
+              19.280521
+            ],
+            [
+              72.863784,
+              19.280128
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "BLDG-063",
+      "properties": {
+        "id": "BLDG-063",
+        "name": "Shanti Heights Luxury Tower",
+        "height": 44.0,
+        "min_height": 0.0,
+        "levels": 13,
+        "building_type": "residential",
+        "height_source": "measured",
+        "sector": "Shanti Park & Shanti Nagar Residential Hub",
+        "address": "Shanti Heights Luxury Tower, Shanti Park & Shanti Nagar Residential Hub, Mira Road (East), Mumbai MMR",
+        "glow_color": "#0284c7"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.859343,
+              19.283174
+            ],
+            [
+              72.860022,
+              19.283174
+            ],
+            [
+              72.860022,
+              19.283822
+            ],
+            [
+              72.859343,
+              19.283822
+            ],
+            [
+              72.859343,
+              19.283174
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "BLDG-064",
+      "properties": {
+        "id": "BLDG-064",
+        "name": "Shanti Elegance Residential Suites",
+        "height": 52.5,
+        "min_height": 0.0,
+        "levels": 16,
+        "building_type": "civic",
+        "height_source": "measured",
+        "sector": "Shanti Park & Shanti Nagar Residential Hub",
+        "address": "Shanti Elegance Residential Suites, Shanti Park & Shanti Nagar Residential Hub, Mira Road (East), Mumbai MMR",
+        "glow_color": "#0284c7"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.865284,
+              19.284985
+            ],
+            [
+              72.865881,
+              19.284985
+            ],
+            [
+              72.865881,
+              19.285563
+            ],
+            [
+              72.865284,
+              19.285563
+            ],
+            [
+              72.865284,
+              19.284985
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "BLDG-065",
+      "properties": {
+        "id": "BLDG-065",
+        "name": "Beverly Park Skyview Pinnacle Tower",
+        "height": 59.7,
+        "min_height": 0.0,
+        "levels": 18,
+        "building_type": "residential",
+        "height_source": "measured",
+        "sector": "Beverly Park & Jangid High-Rise District",
+        "address": "Beverly Park Skyview Pinnacle Tower, Beverly Park & Jangid High-Rise District, Mira Road (East), Mumbai MMR",
+        "glow_color": "#0284c7"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.865621,
+              19.28901
+            ],
+            [
+              72.866083,
+              19.28901
+            ],
+            [
+              72.866083,
+              19.289687
+            ],
+            [
+              72.865621,
+              19.289687
+            ],
+            [
+              72.865621,
+              19.28901
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "BLDG-066",
+      "properties": {
+        "id": "BLDG-066",
+        "name": "Beverly Park Residency Phase 1",
+        "height": 55.9,
+        "min_height": 0.0,
+        "levels": 17,
+        "building_type": "healthcare",
+        "height_source": "measured",
+        "sector": "Beverly Park & Jangid High-Rise District",
+        "address": "Beverly Park Residency Phase 1, Beverly Park & Jangid High-Rise District, Mira Road (East), Mumbai MMR",
+        "glow_color": "#0284c7"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.866399,
+              19.288933
+            ],
+            [
+              72.867068,
+              19.288933
+            ],
+            [
+              72.867068,
+              19.289358
+            ],
+            [
+              72.866399,
+              19.289358
+            ],
+            [
+              72.866399,
+              19.288933
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "BLDG-067",
+      "properties": {
+        "id": "BLDG-067",
+        "name": "Beverly Park Residency Phase 2",
+        "height": 88.2,
+        "min_height": 0.0,
+        "levels": 27,
+        "building_type": "commercial",
+        "height_source": "measured",
+        "sector": "Beverly Park & Jangid High-Rise District",
+        "address": "Beverly Park Residency Phase 2, Beverly Park & Jangid High-Rise District, Mira Road (East), Mumbai MMR",
+        "glow_color": "#38bdf8"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.858989,
+              19.289543
+            ],
+            [
+              72.859642,
+              19.289543
+            ],
+            [
+              72.859642,
+              19.290064
+            ],
+            [
+              72.858989,
+              19.290064
+            ],
+            [
+              72.858989,
+              19.289543
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "BLDG-068",
+      "properties": {
+        "id": "BLDG-068",
+        "name": "Beverly Luxury Condominiums Block A",
+        "height": 58.3,
+        "min_height": 0.0,
+        "levels": 18,
+        "building_type": "civic",
+        "height_source": "measured",
+        "sector": "Beverly Park & Jangid High-Rise District",
+        "address": "Beverly Luxury Condominiums Block A, Beverly Park & Jangid High-Rise District, Mira Road (East), Mumbai MMR",
+        "glow_color": "#0284c7"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.859662,
+              19.28875
+            ],
+            [
+              72.860134,
+              19.28875
+            ],
+            [
+              72.860134,
+              19.289342
+            ],
+            [
+              72.859662,
+              19.289342
+            ],
+            [
+              72.859662,
+              19.28875
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "BLDG-069",
+      "properties": {
+        "id": "BLDG-069",
+        "name": "Beverly Luxury Condominiums Block B",
+        "height": 72.2,
+        "min_height": 0.0,
+        "levels": 22,
+        "building_type": "residential",
+        "height_source": "measured",
+        "sector": "Beverly Park & Jangid High-Rise District",
+        "address": "Beverly Luxury Condominiums Block B, Beverly Park & Jangid High-Rise District, Mira Road (East), Mumbai MMR",
+        "glow_color": "#38bdf8"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.864792,
+              19.288362
+            ],
+            [
+              72.865234,
+              19.288362
+            ],
+            [
+              72.865234,
+              19.288819
+            ],
+            [
+              72.864792,
+              19.288819
+            ],
+            [
+              72.864792,
+              19.288362
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "BLDG-070",
+      "properties": {
+        "id": "BLDG-070",
+        "name": "Jangid Heights Skyscraper (32 Floors)",
+        "height": 80.4,
+        "min_height": 0.0,
+        "levels": 25,
+        "building_type": "healthcare",
+        "height_source": "measured",
+        "sector": "Beverly Park & Jangid High-Rise District",
+        "address": "Jangid Heights Skyscraper (32 Floors), Beverly Park & Jangid High-Rise District, Mira Road (East), Mumbai MMR",
+        "glow_color": "#38bdf8"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.864168,
+              19.284697
+            ],
+            [
+              72.864757,
+              19.284697
+            ],
+            [
+              72.864757,
+              19.285313
+            ],
+            [
+              72.864168,
+              19.285313
+            ],
+            [
+              72.864168,
+              19.284697
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "BLDG-071",
+      "properties": {
+        "id": "BLDG-071",
+        "name": "Jangid Complex Tower 1",
+        "height": 87.5,
+        "min_height": 0.0,
+        "levels": 27,
+        "building_type": "commercial",
+        "height_source": "measured",
+        "sector": "Beverly Park & Jangid High-Rise District",
+        "address": "Jangid Complex Tower 1, Beverly Park & Jangid High-Rise District, Mira Road (East), Mumbai MMR",
+        "glow_color": "#38bdf8"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.858834,
+              19.288973
+            ],
+            [
+              72.859202,
+              19.288973
+            ],
+            [
+              72.859202,
+              19.289367
+            ],
+            [
+              72.858834,
+              19.289367
+            ],
+            [
+              72.858834,
+              19.288973
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "BLDG-072",
+      "properties": {
+        "id": "BLDG-072",
+        "name": "Jangid Complex Tower 2",
+        "height": 45.7,
+        "min_height": 0.0,
+        "levels": 14,
+        "building_type": "civic",
+        "height_source": "measured",
+        "sector": "Beverly Park & Jangid High-Rise District",
+        "address": "Jangid Complex Tower 2, Beverly Park & Jangid High-Rise District, Mira Road (East), Mumbai MMR",
+        "glow_color": "#0284c7"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.86394,
+              19.28445
+            ],
+            [
+              72.864481,
+              19.28445
+            ],
+            [
+              72.864481,
+              19.284899
+            ],
+            [
+              72.86394,
+              19.284899
+            ],
+            [
+              72.86394,
+              19.28445
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "BLDG-073",
+      "properties": {
+        "id": "BLDG-073",
+        "name": "Jangid Complex Tower 3",
+        "height": 48.9,
+        "min_height": 0.0,
+        "levels": 15,
+        "building_type": "residential",
+        "height_source": "measured",
+        "sector": "Beverly Park & Jangid High-Rise District",
+        "address": "Jangid Complex Tower 3, Beverly Park & Jangid High-Rise District, Mira Road (East), Mumbai MMR",
+        "glow_color": "#0284c7"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.865671,
+              19.290427
+            ],
+            [
+              72.866252,
+              19.290427
+            ],
+            [
+              72.866252,
+              19.29095
+            ],
+            [
+              72.865671,
+              19.29095
+            ],
+            [
+              72.865671,
+              19.290427
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "BLDG-074",
+      "properties": {
+        "id": "BLDG-074",
+        "name": "Jangid Enclave High-Rise",
+        "height": 90.9,
+        "min_height": 0.0,
+        "levels": 28,
+        "building_type": "healthcare",
+        "height_source": "measured",
+        "sector": "Beverly Park & Jangid High-Rise District",
+        "address": "Jangid Enclave High-Rise, Beverly Park & Jangid High-Rise District, Mira Road (East), Mumbai MMR",
+        "glow_color": "#38bdf8"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.860803,
+              19.287288
+            ],
+            [
+              72.861469,
+              19.287288
+            ],
+            [
+              72.861469,
+              19.28785
+            ],
+            [
+              72.860803,
+              19.28785
+            ],
+            [
+              72.860803,
+              19.287288
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "BLDG-075",
+      "properties": {
+        "id": "BLDG-075",
+        "name": "GCC International Club & Resort Pavilion",
+        "height": 104.4,
+        "min_height": 0.0,
+        "levels": 32,
+        "building_type": "commercial",
+        "height_source": "measured",
+        "sector": "Beverly Park & Jangid High-Rise District",
+        "address": "GCC International Club & Resort Pavilion, Beverly Park & Jangid High-Rise District, Mira Road (East), Mumbai MMR",
+        "glow_color": "#38bdf8"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.86559,
+              19.289039
+            ],
+            [
+              72.866189,
+              19.289039
+            ],
+            [
+              72.866189,
+              19.289496
+            ],
+            [
+              72.86559,
+              19.289496
+            ],
+            [
+              72.86559,
+              19.289039
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "BLDG-076",
+      "properties": {
+        "id": "BLDG-076",
+        "name": "GCC Hotel & Convention Centre",
+        "height": 54.4,
+        "min_height": 0.0,
+        "levels": 17,
+        "building_type": "civic",
+        "height_source": "measured",
+        "sector": "Beverly Park & Jangid High-Rise District",
+        "address": "GCC Hotel & Convention Centre, Beverly Park & Jangid High-Rise District, Mira Road (East), Mumbai MMR",
+        "glow_color": "#0284c7"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.866164,
+              19.283261
+            ],
+            [
+              72.866545,
+              19.283261
+            ],
+            [
+              72.866545,
+              19.283672
+            ],
+            [
+              72.866164,
+              19.283672
+            ],
+            [
+              72.866164,
+              19.283261
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "BLDG-077",
+      "properties": {
+        "id": "BLDG-077",
+        "name": "Beverly Avenue Commercial Galleria",
+        "height": 62.0,
+        "min_height": 0.0,
+        "levels": 19,
+        "building_type": "residential",
+        "height_source": "measured",
+        "sector": "Beverly Park & Jangid High-Rise District",
+        "address": "Beverly Avenue Commercial Galleria, Beverly Park & Jangid High-Rise District, Mira Road (East), Mumbai MMR",
+        "glow_color": "#38bdf8"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.859949,
+              19.288067
+            ],
+            [
+              72.860327,
+              19.288067
+            ],
+            [
+              72.860327,
+              19.288718
+            ],
+            [
+              72.859949,
+              19.288718
+            ],
+            [
+              72.859949,
+              19.288067
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "BLDG-078",
+      "properties": {
+        "id": "BLDG-078",
+        "name": "Wockhardt Multi-Speciality Hospital",
+        "height": 99.5,
+        "min_height": 0.0,
+        "levels": 31,
+        "building_type": "healthcare",
+        "height_source": "measured",
+        "sector": "Beverly Park & Jangid High-Rise District",
+        "address": "Wockhardt Multi-Speciality Hospital, Beverly Park & Jangid High-Rise District, Mira Road (East), Mumbai MMR",
+        "glow_color": "#38bdf8"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.860113,
+              19.284604
+            ],
+            [
+              72.860492,
+              19.284604
+            ],
+            [
+              72.860492,
+              19.285244
+            ],
+            [
+              72.860113,
+              19.285244
+            ],
+            [
+              72.860113,
+              19.284604
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "BLDG-079",
+      "properties": {
+        "id": "BLDG-079",
+        "name": "Singapore International School Wing",
+        "height": 87.0,
+        "min_height": 0.0,
+        "levels": 27,
+        "building_type": "commercial",
+        "height_source": "measured",
+        "sector": "Beverly Park & Jangid High-Rise District",
+        "address": "Singapore International School Wing, Beverly Park & Jangid High-Rise District, Mira Road (East), Mumbai MMR",
+        "glow_color": "#38bdf8"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.864615,
+              19.287854
+            ],
+            [
+              72.865166,
+              19.287854
+            ],
+            [
+              72.865166,
+              19.288534
+            ],
+            [
+              72.864615,
+              19.288534
+            ],
+            [
+              72.864615,
+              19.287854
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "BLDG-080",
+      "properties": {
+        "id": "BLDG-080",
+        "name": "Beverly Hills Residential Society",
+        "height": 46.6,
+        "min_height": 0.0,
+        "levels": 14,
+        "building_type": "civic",
+        "height_source": "measured",
+        "sector": "Beverly Park & Jangid High-Rise District",
+        "address": "Beverly Hills Residential Society, Beverly Park & Jangid High-Rise District, Mira Road (East), Mumbai MMR",
+        "glow_color": "#0284c7"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.863723,
+              19.284892
+            ],
+            [
+              72.864343,
+              19.284892
+            ],
+            [
+              72.864343,
+              19.285322
+            ],
+            [
+              72.863723,
+              19.285322
+            ],
+            [
+              72.863723,
+              19.284892
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "BLDG-081",
+      "properties": {
+        "id": "BLDG-081",
+        "name": "Jangid Estate Premium Towers",
+        "height": 90.8,
+        "min_height": 0.0,
+        "levels": 28,
+        "building_type": "residential",
+        "height_source": "measured",
+        "sector": "Beverly Park & Jangid High-Rise District",
+        "address": "Jangid Estate Premium Towers, Beverly Park & Jangid High-Rise District, Mira Road (East), Mumbai MMR",
+        "glow_color": "#38bdf8"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.865417,
+              19.283216
+            ],
+            [
+              72.865975,
+              19.283216
+            ],
+            [
+              72.865975,
+              19.283627
+            ],
+            [
+              72.865417,
+              19.283627
+            ],
+            [
+              72.865417,
+              19.283216
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "BLDG-082",
+      "properties": {
+        "id": "BLDG-082",
+        "name": "Jangid Pearl Luxury Suites",
+        "height": 73.2,
+        "min_height": 0.0,
+        "levels": 22,
+        "building_type": "healthcare",
+        "height_source": "measured",
+        "sector": "Beverly Park & Jangid High-Rise District",
+        "address": "Jangid Pearl Luxury Suites, Beverly Park & Jangid High-Rise District, Mira Road (East), Mumbai MMR",
+        "glow_color": "#38bdf8"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.864841,
+              19.288038
+            ],
+            [
+              72.865319,
+              19.288038
+            ],
+            [
+              72.865319,
+              19.288531
+            ],
+            [
+              72.864841,
+              19.288531
+            ],
+            [
+              72.864841,
+              19.288038
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "BLDG-083",
+      "properties": {
+        "id": "BLDG-083",
+        "name": "Beverly Crest High-Rise",
+        "height": 69.0,
+        "min_height": 0.0,
+        "levels": 21,
+        "building_type": "commercial",
+        "height_source": "measured",
+        "sector": "Beverly Park & Jangid High-Rise District",
+        "address": "Beverly Crest High-Rise, Beverly Park & Jangid High-Rise District, Mira Road (East), Mumbai MMR",
+        "glow_color": "#38bdf8"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.864172,
+              19.287696
+            ],
+            [
+              72.864536,
+              19.287696
+            ],
+            [
+              72.864536,
+              19.288313
+            ],
+            [
+              72.864172,
+              19.288313
+            ],
+            [
+              72.864172,
+              19.287696
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "BLDG-084",
+      "properties": {
+        "id": "BLDG-084",
+        "name": "Beverly Crown Condos",
+        "height": 94.5,
+        "min_height": 0.0,
+        "levels": 29,
+        "building_type": "civic",
+        "height_source": "measured",
+        "sector": "Beverly Park & Jangid High-Rise District",
+        "address": "Beverly Crown Condos, Beverly Park & Jangid High-Rise District, Mira Road (East), Mumbai MMR",
+        "glow_color": "#38bdf8"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.864525,
+              19.284341
+            ],
+            [
+              72.865223,
+              19.284341
+            ],
+            [
+              72.865223,
+              19.284691
+            ],
+            [
+              72.864525,
+              19.284691
+            ],
+            [
+              72.864525,
+              19.284341
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "BLDG-085",
+      "properties": {
+        "id": "BLDG-085",
+        "name": "Jangid Galaxy Tower A",
+        "height": 90.6,
+        "min_height": 0.0,
+        "levels": 28,
+        "building_type": "residential",
+        "height_source": "measured",
+        "sector": "Beverly Park & Jangid High-Rise District",
+        "address": "Jangid Galaxy Tower A, Beverly Park & Jangid High-Rise District, Mira Road (East), Mumbai MMR",
+        "glow_color": "#38bdf8"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.863675,
+              19.287456
+            ],
+            [
+              72.864244,
+              19.287456
+            ],
+            [
+              72.864244,
+              19.287877
+            ],
+            [
+              72.863675,
+              19.287877
+            ],
+            [
+              72.863675,
+              19.287456
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "BLDG-086",
+      "properties": {
+        "id": "BLDG-086",
+        "name": "Jangid Galaxy Tower B",
+        "height": 63.6,
+        "min_height": 0.0,
+        "levels": 19,
+        "building_type": "healthcare",
+        "height_source": "measured",
+        "sector": "Beverly Park & Jangid High-Rise District",
+        "address": "Jangid Galaxy Tower B, Beverly Park & Jangid High-Rise District, Mira Road (East), Mumbai MMR",
+        "glow_color": "#38bdf8"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.859369,
+              19.28801
+            ],
+            [
+              72.859882,
+              19.28801
+            ],
+            [
+              72.859882,
+              19.288365
+            ],
+            [
+              72.859369,
+              19.288365
+            ],
+            [
+              72.859369,
+              19.28801
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "BLDG-087",
+      "properties": {
+        "id": "BLDG-087",
+        "name": "Mira Bhayandar Municipal Fire Station",
+        "height": 54.2,
+        "min_height": 0.0,
+        "levels": 16,
+        "building_type": "commercial",
+        "height_source": "measured",
+        "sector": "Beverly Park & Jangid High-Rise District",
+        "address": "Mira Bhayandar Municipal Fire Station, Beverly Park & Jangid High-Rise District, Mira Road (East), Mumbai MMR",
+        "glow_color": "#0284c7"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.858087,
+              19.283108
+            ],
+            [
+              72.858553,
+              19.283108
+            ],
+            [
+              72.858553,
+              19.283784
+            ],
+            [
+              72.858087,
+              19.283784
+            ],
+            [
+              72.858087,
+              19.283108
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "BLDG-088",
+      "properties": {
+        "id": "BLDG-088",
+        "name": "Beverly Park Electrical 33kV Substation",
+        "height": 53.7,
+        "min_height": 0.0,
+        "levels": 16,
+        "building_type": "civic",
+        "height_source": "measured",
+        "sector": "Beverly Park & Jangid High-Rise District",
+        "address": "Beverly Park Electrical 33kV Substation, Beverly Park & Jangid High-Rise District, Mira Road (East), Mumbai MMR",
+        "glow_color": "#0284c7"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.85973,
+              19.288801
+            ],
+            [
+              72.86032,
+              19.288801
+            ],
+            [
+              72.86032,
+              19.289218
+            ],
+            [
+              72.85973,
+              19.289218
+            ],
+            [
+              72.85973,
+              19.288801
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "BLDG-089",
+      "properties": {
+        "id": "BLDG-089",
+        "name": "Maxus Mall & 6-Screen INOX Multiplex",
+        "height": 76.7,
+        "min_height": 0.0,
+        "levels": 23,
+        "building_type": "commercial",
+        "height_source": "measured",
+        "sector": "150 Feet Road & Maxus Mall Commercial Corridor",
+        "address": "Maxus Mall & 6-Screen INOX Multiplex, 150 Feet Road & Maxus Mall Commercial Corridor, Mira Road (East), Mumbai MMR",
+        "glow_color": "#38bdf8"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.85383,
+              19.292115
+            ],
+            [
+              72.854181,
+              19.292115
+            ],
+            [
+              72.854181,
+              19.292559
+            ],
+            [
+              72.85383,
+              19.292559
+            ],
+            [
+              72.85383,
+              19.292115
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "BLDG-090",
+      "properties": {
+        "id": "BLDG-090",
+        "name": "Maxus Commercial Offices Tower",
+        "height": 53.3,
+        "min_height": 0.0,
+        "levels": 16,
+        "building_type": "healthcare",
+        "height_source": "measured",
+        "sector": "150 Feet Road & Maxus Mall Commercial Corridor",
+        "address": "Maxus Commercial Offices Tower, 150 Feet Road & Maxus Mall Commercial Corridor, Mira Road (East), Mumbai MMR",
+        "glow_color": "#0284c7"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.856171,
+              19.296899
+            ],
+            [
+              72.856738,
+              19.296899
+            ],
+            [
+              72.856738,
+              19.297442
+            ],
+            [
+              72.856171,
+              19.297442
+            ],
+            [
+              72.856171,
+              19.296899
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "BLDG-091",
+      "properties": {
+        "id": "BLDG-091",
+        "name": "D-Mart Hypermarket Mira Road Flagship",
+        "height": 47.4,
+        "min_height": 0.0,
+        "levels": 14,
+        "building_type": "residential",
+        "height_source": "measured",
+        "sector": "150 Feet Road & Maxus Mall Commercial Corridor",
+        "address": "D-Mart Hypermarket Mira Road Flagship, 150 Feet Road & Maxus Mall Commercial Corridor, Mira Road (East), Mumbai MMR",
+        "glow_color": "#0284c7"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.850007,
+              19.290977
+            ],
+            [
+              72.850374,
+              19.290977
+            ],
+            [
+              72.850374,
+              19.291598
+            ],
+            [
+              72.850007,
+              19.291598
+            ],
+            [
+              72.850007,
+              19.290977
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "BLDG-092",
+      "properties": {
+        "id": "BLDG-092",
+        "name": "150 Feet Road Corporate Banking Centre",
+        "height": 37.0,
+        "min_height": 0.0,
+        "levels": 11,
+        "building_type": "civic",
+        "height_source": "measured",
+        "sector": "150 Feet Road & Maxus Mall Commercial Corridor",
+        "address": "150 Feet Road Corporate Banking Centre, 150 Feet Road & Maxus Mall Commercial Corridor, Mira Road (East), Mumbai MMR",
+        "glow_color": "#0284c7"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.848758,
+              19.295845
+            ],
+            [
+              72.849344,
+              19.295845
+            ],
+            [
+              72.849344,
+              19.296371
+            ],
+            [
+              72.848758,
+              19.296371
+            ],
+            [
+              72.848758,
+              19.295845
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "BLDG-093",
+      "properties": {
+        "id": "BLDG-093",
+        "name": "Big Bazaar Retail Megastore",
+        "height": 42.6,
+        "min_height": 0.0,
+        "levels": 13,
+        "building_type": "commercial",
+        "height_source": "measured",
+        "sector": "150 Feet Road & Maxus Mall Commercial Corridor",
+        "address": "Big Bazaar Retail Megastore, 150 Feet Road & Maxus Mall Commercial Corridor, Mira Road (East), Mumbai MMR",
+        "glow_color": "#0284c7"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.85516,
+              19.29573
+            ],
+            [
+              72.855898,
+              19.29573
+            ],
+            [
+              72.855898,
+              19.296385
+            ],
+            [
+              72.85516,
+              19.296385
+            ],
+            [
+              72.85516,
+              19.29573
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "BLDG-094",
+      "properties": {
+        "id": "BLDG-094",
+        "name": "Bhayandar West Crossway Gateway Tower",
+        "height": 80.1,
+        "min_height": 0.0,
+        "levels": 25,
+        "building_type": "healthcare",
+        "height_source": "measured",
+        "sector": "150 Feet Road & Maxus Mall Commercial Corridor",
+        "address": "Bhayandar West Crossway Gateway Tower, 150 Feet Road & Maxus Mall Commercial Corridor, Mira Road (East), Mumbai MMR",
+        "glow_color": "#38bdf8"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.856131,
+              19.295898
+            ],
+            [
+              72.856825,
+              19.295898
+            ],
+            [
+              72.856825,
+              19.296546
+            ],
+            [
+              72.856131,
+              19.296546
+            ],
+            [
+              72.856131,
+              19.295898
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "BLDG-095",
+      "properties": {
+        "id": "BLDG-095",
+        "name": "Maxus Grand Residency Tower A",
+        "height": 47.4,
+        "min_height": 0.0,
+        "levels": 14,
+        "building_type": "residential",
+        "height_source": "measured",
+        "sector": "150 Feet Road & Maxus Mall Commercial Corridor",
+        "address": "Maxus Grand Residency Tower A, 150 Feet Road & Maxus Mall Commercial Corridor, Mira Road (East), Mumbai MMR",
+        "glow_color": "#0284c7"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.849924,
+              19.295306
+            ],
+            [
+              72.850389,
+              19.295306
+            ],
+            [
+              72.850389,
+              19.295895
+            ],
+            [
+              72.849924,
+              19.295895
+            ],
+            [
+              72.849924,
+              19.295306
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "BLDG-096",
+      "properties": {
+        "id": "BLDG-096",
+        "name": "Maxus Grand Residency Tower B",
+        "height": 71.8,
+        "min_height": 0.0,
+        "levels": 22,
+        "building_type": "civic",
+        "height_source": "measured",
+        "sector": "150 Feet Road & Maxus Mall Commercial Corridor",
+        "address": "Maxus Grand Residency Tower B, 150 Feet Road & Maxus Mall Commercial Corridor, Mira Road (East), Mumbai MMR",
+        "glow_color": "#38bdf8"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.850869,
+              19.29182
+            ],
+            [
+              72.851237,
+              19.29182
+            ],
+            [
+              72.851237,
+              19.292487
+            ],
+            [
+              72.850869,
+              19.292487
+            ],
+            [
+              72.850869,
+              19.29182
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "BLDG-097",
+      "properties": {
+        "id": "BLDG-097",
+        "name": "Bhakti Vedanta Hospital & Research Wing",
+        "height": 65.0,
+        "min_height": 0.0,
+        "levels": 20,
+        "building_type": "commercial",
+        "height_source": "measured",
+        "sector": "150 Feet Road & Maxus Mall Commercial Corridor",
+        "address": "Bhakti Vedanta Hospital & Research Wing, 150 Feet Road & Maxus Mall Commercial Corridor, Mira Road (East), Mumbai MMR",
+        "glow_color": "#38bdf8"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.850119,
+              19.294838
+            ],
+            [
+              72.850537,
+              19.294838
+            ],
+            [
+              72.850537,
+              19.295465
+            ],
+            [
+              72.850119,
+              19.295465
+            ],
+            [
+              72.850119,
+              19.294838
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "BLDG-098",
+      "properties": {
+        "id": "BLDG-098",
+        "name": "Seven Square Academy Senior Secondary Wing",
+        "height": 68.8,
+        "min_height": 0.0,
+        "levels": 21,
+        "building_type": "healthcare",
+        "height_source": "measured",
+        "sector": "150 Feet Road & Maxus Mall Commercial Corridor",
+        "address": "Seven Square Academy Senior Secondary Wing, 150 Feet Road & Maxus Mall Commercial Corridor, Mira Road (East), Mumbai MMR",
+        "glow_color": "#38bdf8"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.848739,
+              19.290059
+            ],
+            [
+              72.849356,
+              19.290059
+            ],
+            [
+              72.849356,
+              19.29057
+            ],
+            [
+              72.848739,
+              19.29057
+            ],
+            [
+              72.848739,
+              19.290059
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "BLDG-099",
+      "properties": {
+        "id": "BLDG-099",
+        "name": "150 Feet Road IT Hub Tower",
+        "height": 85.1,
+        "min_height": 0.0,
+        "levels": 26,
+        "building_type": "residential",
+        "height_source": "measured",
+        "sector": "150 Feet Road & Maxus Mall Commercial Corridor",
+        "address": "150 Feet Road IT Hub Tower, 150 Feet Road & Maxus Mall Commercial Corridor, Mira Road (East), Mumbai MMR",
+        "glow_color": "#38bdf8"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.850149,
+              19.295494
+            ],
+            [
+              72.850619,
+              19.295494
+            ],
+            [
+              72.850619,
+              19.29619
+            ],
+            [
+              72.850149,
+              19.29619
+            ],
+            [
+              72.850149,
+              19.295494
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "BLDG-100",
+      "properties": {
+        "id": "BLDG-100",
+        "name": "Royal Oasis High-Rise Residential",
+        "height": 80.2,
+        "min_height": 0.0,
+        "levels": 25,
+        "building_type": "civic",
+        "height_source": "measured",
+        "sector": "150 Feet Road & Maxus Mall Commercial Corridor",
+        "address": "Royal Oasis High-Rise Residential, 150 Feet Road & Maxus Mall Commercial Corridor, Mira Road (East), Mumbai MMR",
+        "glow_color": "#38bdf8"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.847989,
+              19.296504
+            ],
+            [
+              72.848491,
+              19.296504
+            ],
+            [
+              72.848491,
+              19.296892
+            ],
+            [
+              72.847989,
+              19.296892
+            ],
+            [
+              72.847989,
+              19.296504
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "BLDG-101",
+      "properties": {
+        "id": "BLDG-101",
+        "name": "Royal Palms Executive Condos",
+        "height": 65.0,
+        "min_height": 0.0,
+        "levels": 20,
+        "building_type": "commercial",
+        "height_source": "measured",
+        "sector": "150 Feet Road & Maxus Mall Commercial Corridor",
+        "address": "Royal Palms Executive Condos, 150 Feet Road & Maxus Mall Commercial Corridor, Mira Road (East), Mumbai MMR",
+        "glow_color": "#38bdf8"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.854081,
+              19.294512
+            ],
+            [
+              72.854729,
+              19.294512
+            ],
+            [
+              72.854729,
+              19.295102
+            ],
+            [
+              72.854081,
+              19.295102
+            ],
+            [
+              72.854081,
+              19.294512
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "BLDG-102",
+      "properties": {
+        "id": "BLDG-102",
+        "name": "Maxus Business Hub",
+        "height": 47.2,
+        "min_height": 0.0,
+        "levels": 14,
+        "building_type": "healthcare",
+        "height_source": "measured",
+        "sector": "150 Feet Road & Maxus Mall Commercial Corridor",
+        "address": "Maxus Business Hub, 150 Feet Road & Maxus Mall Commercial Corridor, Mira Road (East), Mumbai MMR",
+        "glow_color": "#0284c7"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.855855,
+              19.296115
+            ],
+            [
+              72.856292,
+              19.296115
+            ],
+            [
+              72.856292,
+              19.296746
+            ],
+            [
+              72.855855,
+              19.296746
+            ],
+            [
+              72.855855,
+              19.296115
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "BLDG-103",
+      "properties": {
+        "id": "BLDG-103",
+        "name": "Western Boulevard Commercial Arcade",
+        "height": 58.4,
+        "min_height": 0.0,
+        "levels": 18,
+        "building_type": "residential",
+        "height_source": "measured",
+        "sector": "150 Feet Road & Maxus Mall Commercial Corridor",
+        "address": "Western Boulevard Commercial Arcade, 150 Feet Road & Maxus Mall Commercial Corridor, Mira Road (East), Mumbai MMR",
+        "glow_color": "#0284c7"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.850368,
+              19.291519
+            ],
+            [
+              72.851011,
+              19.291519
+            ],
+            [
+              72.851011,
+              19.292072
+            ],
+            [
+              72.850368,
+              19.292072
+            ],
+            [
+              72.850368,
+              19.291519
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "BLDG-104",
+      "properties": {
+        "id": "BLDG-104",
+        "name": "Mira Smart City Traffic Command Centre",
+        "height": 81.5,
+        "min_height": 0.0,
+        "levels": 25,
+        "building_type": "civic",
+        "height_source": "measured",
+        "sector": "150 Feet Road & Maxus Mall Commercial Corridor",
+        "address": "Mira Smart City Traffic Command Centre, 150 Feet Road & Maxus Mall Commercial Corridor, Mira Road (East), Mumbai MMR",
+        "glow_color": "#38bdf8"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.849773,
+              19.294698
+            ],
+            [
+              72.850324,
+              19.294698
+            ],
+            [
+              72.850324,
+              19.295176
+            ],
+            [
+              72.849773,
+              19.295176
+            ],
+            [
+              72.849773,
+              19.294698
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "BLDG-105",
+      "properties": {
+        "id": "BLDG-105",
+        "name": "150 Feet Road Telecom Switching Station",
+        "height": 53.0,
+        "min_height": 0.0,
+        "levels": 16,
+        "building_type": "commercial",
+        "height_source": "measured",
+        "sector": "150 Feet Road & Maxus Mall Commercial Corridor",
+        "address": "150 Feet Road Telecom Switching Station, 150 Feet Road & Maxus Mall Commercial Corridor, Mira Road (East), Mumbai MMR",
+        "glow_color": "#0284c7"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.854072,
+              19.295009
+            ],
+            [
+              72.854807,
+              19.295009
+            ],
+            [
+              72.854807,
+              19.295399
+            ],
+            [
+              72.854072,
+              19.295399
+            ],
+            [
+              72.854072,
+              19.295009
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "BLDG-106",
+      "properties": {
+        "id": "BLDG-106",
+        "name": "Om Sai Hospital & Healthcare",
+        "height": 55.9,
+        "min_height": 0.0,
+        "levels": 17,
+        "building_type": "healthcare",
+        "height_source": "measured",
+        "sector": "150 Feet Road & Maxus Mall Commercial Corridor",
+        "address": "Om Sai Hospital & Healthcare, 150 Feet Road & Maxus Mall Commercial Corridor, Mira Road (East), Mumbai MMR",
+        "glow_color": "#0284c7"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.855714,
+              19.297515
+            ],
+            [
+              72.856113,
+              19.297515
+            ],
+            [
+              72.856113,
+              19.297958
+            ],
+            [
+              72.855714,
+              19.297958
+            ],
+            [
+              72.855714,
+              19.297515
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "BLDG-107",
+      "properties": {
+        "id": "BLDG-107",
+        "name": "Poonam Estate Phase 1",
+        "height": 47.4,
+        "min_height": 0.0,
+        "levels": 14,
+        "building_type": "residential",
+        "height_source": "measured",
+        "sector": "150 Feet Road & Maxus Mall Commercial Corridor",
+        "address": "Poonam Estate Phase 1, 150 Feet Road & Maxus Mall Commercial Corridor, Mira Road (East), Mumbai MMR",
+        "glow_color": "#0284c7"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.855041,
+              19.29632
+            ],
+            [
+              72.855744,
+              19.29632
+            ],
+            [
+              72.855744,
+              19.296679
+            ],
+            [
+              72.855041,
+              19.296679
+            ],
+            [
+              72.855041,
+              19.29632
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "BLDG-108",
+      "properties": {
+        "id": "BLDG-108",
+        "name": "Poonam Estate Phase 2",
+        "height": 51.0,
+        "min_height": 0.0,
+        "levels": 15,
+        "building_type": "civic",
+        "height_source": "measured",
+        "sector": "150 Feet Road & Maxus Mall Commercial Corridor",
+        "address": "Poonam Estate Phase 2, 150 Feet Road & Maxus Mall Commercial Corridor, Mira Road (East), Mumbai MMR",
+        "glow_color": "#0284c7"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.857271,
+              19.289707
+            ],
+            [
+              72.857677,
+              19.289707
+            ],
+            [
+              72.857677,
+              19.2902
+            ],
+            [
+              72.857271,
+              19.2902
+            ],
+            [
+              72.857271,
+              19.289707
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "BLDG-109",
+      "properties": {
+        "id": "BLDG-109",
+        "name": "Maxus Plaza Retail Centre",
+        "height": 42.2,
+        "min_height": 0.0,
+        "levels": 13,
+        "building_type": "commercial",
+        "height_source": "measured",
+        "sector": "150 Feet Road & Maxus Mall Commercial Corridor",
+        "address": "Maxus Plaza Retail Centre, 150 Feet Road & Maxus Mall Commercial Corridor, Mira Road (East), Mumbai MMR",
+        "glow_color": "#0284c7"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.849596,
+              19.294651
+            ],
+            [
+              72.850214,
+              19.294651
+            ],
+            [
+              72.850214,
+              19.29516
+            ],
+            [
+              72.849596,
+              19.29516
+            ],
+            [
+              72.849596,
+              19.294651
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "BLDG-110",
+      "properties": {
+        "id": "BLDG-110",
+        "name": "North City Luxury Suites",
+        "height": 69.7,
+        "min_height": 0.0,
+        "levels": 21,
+        "building_type": "healthcare",
+        "height_source": "measured",
+        "sector": "150 Feet Road & Maxus Mall Commercial Corridor",
+        "address": "North City Luxury Suites, 150 Feet Road & Maxus Mall Commercial Corridor, Mira Road (East), Mumbai MMR",
+        "glow_color": "#38bdf8"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.84716,
+              19.296708
+            ],
+            [
+              72.847756,
+              19.296708
+            ],
+            [
+              72.847756,
+              19.29735
+            ],
+            [
+              72.84716,
+              19.29735
+            ],
+            [
+              72.84716,
+              19.296708
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "BLDG-111",
+      "properties": {
+        "id": "BLDG-111",
+        "name": "Hatkesh Industrial & Technology Park Tower 1",
+        "height": 63.4,
+        "min_height": 0.0,
+        "levels": 19,
+        "building_type": "commercial",
+        "height_source": "measured",
+        "sector": "Silver Park, Hatkesh & Highway Corridor",
+        "address": "Hatkesh Industrial & Technology Park Tower 1, Silver Park, Hatkesh & Highway Corridor, Mira Road (East), Mumbai MMR",
+        "glow_color": "#38bdf8"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.870755,
+              19.272247
+            ],
+            [
+              72.871379,
+              19.272247
+            ],
+            [
+              72.871379,
+              19.272632
+            ],
+            [
+              72.870755,
+              19.272632
+            ],
+            [
+              72.870755,
+              19.272247
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "BLDG-112",
+      "properties": {
+        "id": "BLDG-112",
+        "name": "Hatkesh Industrial & Technology Park Tower 2",
+        "height": 29.6,
+        "min_height": 0.0,
+        "levels": 9,
+        "building_type": "civic",
+        "height_source": "measured",
+        "sector": "Silver Park, Hatkesh & Highway Corridor",
+        "address": "Hatkesh Industrial & Technology Park Tower 2, Silver Park, Hatkesh & Highway Corridor, Mira Road (East), Mumbai MMR",
+        "glow_color": "#1e293b"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.871892,
+              19.273379
+            ],
+            [
+              72.872424,
+              19.273379
+            ],
+            [
+              72.872424,
+              19.274026
+            ],
+            [
+              72.871892,
+              19.274026
+            ],
+            [
+              72.871892,
+              19.273379
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "BLDG-113",
+      "properties": {
+        "id": "BLDG-113",
+        "name": "Silver Park Commercial Logistics Hub",
+        "height": 29.8,
+        "min_height": 0.0,
+        "levels": 9,
+        "building_type": "residential",
+        "height_source": "measured",
+        "sector": "Silver Park, Hatkesh & Highway Corridor",
+        "address": "Silver Park Commercial Logistics Hub, Silver Park, Hatkesh & Highway Corridor, Mira Road (East), Mumbai MMR",
+        "glow_color": "#1e293b"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.871148,
+              19.268708
+            ],
+            [
+              72.871525,
+              19.268708
+            ],
+            [
+              72.871525,
+              19.269256
+            ],
+            [
+              72.871148,
+              19.269256
+            ],
+            [
+              72.871148,
+              19.268708
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "BLDG-114",
+      "properties": {
+        "id": "BLDG-114",
+        "name": "Western Express Highway Tollway Plaza Tower",
+        "height": 30.8,
+        "min_height": 0.0,
+        "levels": 9,
+        "building_type": "commercial",
+        "height_source": "measured",
+        "sector": "Silver Park, Hatkesh & Highway Corridor",
+        "address": "Western Express Highway Tollway Plaza Tower, Silver Park, Hatkesh & Highway Corridor, Mira Road (East), Mumbai MMR",
+        "glow_color": "#1e293b"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.866621,
+              19.268944
+            ],
+            [
+              72.866972,
+              19.268944
+            ],
+            [
+              72.866972,
+              19.269609
+            ],
+            [
+              72.866621,
+              19.269609
+            ],
+            [
+              72.866621,
+              19.268944
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "BLDG-115",
+      "properties": {
+        "id": "BLDG-115",
+        "name": "Tata Power 110kV Mira Road Grid Receiving Station",
+        "height": 63.9,
+        "min_height": 0.0,
+        "levels": 19,
+        "building_type": "civic",
+        "height_source": "measured",
+        "sector": "Silver Park, Hatkesh & Highway Corridor",
+        "address": "Tata Power 110kV Mira Road Grid Receiving Station, Silver Park, Hatkesh & Highway Corridor, Mira Road (East), Mumbai MMR",
+        "glow_color": "#38bdf8"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.866915,
+              19.269445
+            ],
+            [
+              72.867408,
+              19.269445
+            ],
+            [
+              72.867408,
+              19.269841
+            ],
+            [
+              72.866915,
+              19.269841
+            ],
+            [
+              72.866915,
+              19.269445
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "BLDG-116",
+      "properties": {
+        "id": "BLDG-116",
+        "name": "Hatkesh Data Centre Facility",
+        "height": 43.4,
+        "min_height": 0.0,
+        "levels": 13,
+        "building_type": "residential",
+        "height_source": "measured",
+        "sector": "Silver Park, Hatkesh & Highway Corridor",
+        "address": "Hatkesh Data Centre Facility, Silver Park, Hatkesh & Highway Corridor, Mira Road (East), Mumbai MMR",
+        "glow_color": "#0284c7"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.865804,
+              19.26874
+            ],
+            [
+              72.866179,
+              19.26874
+            ],
+            [
+              72.866179,
+              19.269129
+            ],
+            [
+              72.865804,
+              19.269129
+            ],
+            [
+              72.865804,
+              19.26874
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "BLDG-117",
+      "properties": {
+        "id": "BLDG-117",
+        "name": "Silver Park Smart Warehousing Block",
+        "height": 26.0,
+        "min_height": 0.0,
+        "levels": 8,
+        "building_type": "commercial",
+        "height_source": "measured",
+        "sector": "Silver Park, Hatkesh & Highway Corridor",
+        "address": "Silver Park Smart Warehousing Block, Silver Park, Hatkesh & Highway Corridor, Mira Road (East), Mumbai MMR",
+        "glow_color": "#1e293b"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.865268,
+              19.268846
+            ],
+            [
+              72.865965,
+              19.268846
+            ],
+            [
+              72.865965,
+              19.269471
+            ],
+            [
+              72.865268,
+              19.269471
+            ],
+            [
+              72.865268,
+              19.268846
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "BLDG-118",
+      "properties": {
+        "id": "BLDG-118",
+        "name": "Mira-Bhayandar Mahanagar Gas City Gate Station",
+        "height": 43.6,
+        "min_height": 0.0,
+        "levels": 13,
+        "building_type": "civic",
+        "height_source": "measured",
+        "sector": "Silver Park, Hatkesh & Highway Corridor",
+        "address": "Mira-Bhayandar Mahanagar Gas City Gate Station, Silver Park, Hatkesh & Highway Corridor, Mira Road (East), Mumbai MMR",
+        "glow_color": "#0284c7"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.871311,
+              19.269142
+            ],
+            [
+              72.871946,
+              19.269142
+            ],
+            [
+              72.871946,
+              19.26953
+            ],
+            [
+              72.871311,
+              19.26953
+            ],
+            [
+              72.871311,
+              19.269142
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "BLDG-119",
+      "properties": {
+        "id": "BLDG-119",
+        "name": "Pleasant Park High-Rise Society",
+        "height": 52.7,
+        "min_height": 0.0,
+        "levels": 16,
+        "building_type": "residential",
+        "height_source": "measured",
+        "sector": "Silver Park, Hatkesh & Highway Corridor",
+        "address": "Pleasant Park High-Rise Society, Silver Park, Hatkesh & Highway Corridor, Mira Road (East), Mumbai MMR",
+        "glow_color": "#0284c7"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.864867,
+              19.274161
+            ],
+            [
+              72.865502,
+              19.274161
+            ],
+            [
+              72.865502,
+              19.274716
+            ],
+            [
+              72.864867,
+              19.274716
+            ],
+            [
+              72.864867,
+              19.274161
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "BLDG-120",
+      "properties": {
+        "id": "BLDG-120",
+        "name": "Pleasant Park Commercial Wing",
+        "height": 56.3,
+        "min_height": 0.0,
+        "levels": 17,
+        "building_type": "commercial",
+        "height_source": "measured",
+        "sector": "Silver Park, Hatkesh & Highway Corridor",
+        "address": "Pleasant Park Commercial Wing, Silver Park, Hatkesh & Highway Corridor, Mira Road (East), Mumbai MMR",
+        "glow_color": "#0284c7"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.870683,
+              19.273107
+            ],
+            [
+              72.871293,
+              19.273107
+            ],
+            [
+              72.871293,
+              19.273756
+            ],
+            [
+              72.870683,
+              19.273756
+            ],
+            [
+              72.870683,
+              19.273107
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "BLDG-121",
+      "properties": {
+        "id": "BLDG-121",
+        "name": "Srishti Housing Sector 3 High-Rise",
+        "height": 62.1,
+        "min_height": 0.0,
+        "levels": 19,
+        "building_type": "civic",
+        "height_source": "measured",
+        "sector": "Silver Park, Hatkesh & Highway Corridor",
+        "address": "Srishti Housing Sector 3 High-Rise, Silver Park, Hatkesh & Highway Corridor, Mira Road (East), Mumbai MMR",
+        "glow_color": "#38bdf8"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.864824,
+              19.268048
+            ],
+            [
+              72.865465,
+              19.268048
+            ],
+            [
+              72.865465,
+              19.268538
+            ],
+            [
+              72.864824,
+              19.268538
+            ],
+            [
+              72.864824,
+              19.268048
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "BLDG-122",
+      "properties": {
+        "id": "BLDG-122",
+        "name": "Srishti Housing Sector 5 Tower",
+        "height": 45.8,
+        "min_height": 0.0,
+        "levels": 14,
+        "building_type": "residential",
+        "height_source": "measured",
+        "sector": "Silver Park, Hatkesh & Highway Corridor",
+        "address": "Srishti Housing Sector 5 Tower, Silver Park, Hatkesh & Highway Corridor, Mira Road (East), Mumbai MMR",
+        "glow_color": "#0284c7"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.865902,
+              19.272458
+            ],
+            [
+              72.866286,
+              19.272458
+            ],
+            [
+              72.866286,
+              19.27284
+            ],
+            [
+              72.865902,
+              19.27284
+            ],
+            [
+              72.865902,
+              19.272458
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "BLDG-123",
+      "properties": {
+        "id": "BLDG-123",
+        "name": "Hatkesh Udyog Nagar IT Centre",
+        "height": 49.8,
+        "min_height": 0.0,
+        "levels": 15,
+        "building_type": "commercial",
+        "height_source": "measured",
+        "sector": "Silver Park, Hatkesh & Highway Corridor",
+        "address": "Hatkesh Udyog Nagar IT Centre, Silver Park, Hatkesh & Highway Corridor, Mira Road (East), Mumbai MMR",
+        "glow_color": "#0284c7"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.864563,
+              19.27408
+            ],
+            [
+              72.864962,
+              19.27408
+            ],
+            [
+              72.864962,
+              19.274546
+            ],
+            [
+              72.864563,
+              19.274546
+            ],
+            [
+              72.864563,
+              19.27408
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "BLDG-124",
+      "properties": {
+        "id": "BLDG-124",
+        "name": "Silver Crest Residential Tower",
+        "height": 51.6,
+        "min_height": 0.0,
+        "levels": 16,
+        "building_type": "civic",
+        "height_source": "measured",
+        "sector": "Silver Park, Hatkesh & Highway Corridor",
+        "address": "Silver Crest Residential Tower, Silver Park, Hatkesh & Highway Corridor, Mira Road (East), Mumbai MMR",
+        "glow_color": "#0284c7"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.864101,
+              19.273917
+            ],
+            [
+              72.864682,
+              19.273917
+            ],
+            [
+              72.864682,
+              19.27439
+            ],
+            [
+              72.864101,
+              19.27439
+            ],
+            [
+              72.864101,
+              19.273917
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "BLDG-125",
+      "properties": {
+        "id": "BLDG-125",
+        "name": "Highway Heights Business Bay",
+        "height": 40.9,
+        "min_height": 0.0,
+        "levels": 12,
+        "building_type": "residential",
+        "height_source": "measured",
+        "sector": "Silver Park, Hatkesh & Highway Corridor",
+        "address": "Highway Heights Business Bay, Silver Park, Hatkesh & Highway Corridor, Mira Road (East), Mumbai MMR",
+        "glow_color": "#0284c7"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.872082,
+              19.267592
+            ],
+            [
+              72.872662,
+              19.267592
+            ],
+            [
+              72.872662,
+              19.268209
+            ],
+            [
+              72.872082,
+              19.268209
+            ],
+            [
+              72.872082,
+              19.267592
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "BLDG-126",
+      "properties": {
+        "id": "BLDG-126",
+        "name": "Silver Plaza Corporate Suites",
+        "height": 36.6,
+        "min_height": 0.0,
+        "levels": 11,
+        "building_type": "commercial",
+        "height_source": "measured",
+        "sector": "Silver Park, Hatkesh & Highway Corridor",
+        "address": "Silver Plaza Corporate Suites, Silver Park, Hatkesh & Highway Corridor, Mira Road (East), Mumbai MMR",
+        "glow_color": "#0284c7"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.871126,
+              19.267398
+            ],
+            [
+              72.871844,
+              19.267398
+            ],
+            [
+              72.871844,
+              19.268015
+            ],
+            [
+              72.871126,
+              19.268015
+            ],
+            [
+              72.871126,
+              19.267398
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "BLDG-127",
+      "properties": {
+        "id": "BLDG-127",
+        "name": "Western Express Transit Interchange",
+        "height": 58.1,
+        "min_height": 0.0,
+        "levels": 18,
+        "building_type": "civic",
+        "height_source": "measured",
+        "sector": "Silver Park, Hatkesh & Highway Corridor",
+        "address": "Western Express Transit Interchange, Silver Park, Hatkesh & Highway Corridor, Mira Road (East), Mumbai MMR",
+        "glow_color": "#0284c7"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.869704,
+              19.269183
+            ],
+            [
+              72.870091,
+              19.269183
+            ],
+            [
+              72.870091,
+              19.269873
+            ],
+            [
+              72.869704,
+              19.269873
+            ],
+            [
+              72.869704,
+              19.269183
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "BLDG-128",
+      "properties": {
+        "id": "BLDG-128",
+        "name": "Hatkesh Engineering Complex",
+        "height": 38.9,
+        "min_height": 0.0,
+        "levels": 12,
+        "building_type": "residential",
+        "height_source": "measured",
+        "sector": "Silver Park, Hatkesh & Highway Corridor",
+        "address": "Hatkesh Engineering Complex, Silver Park, Hatkesh & Highway Corridor, Mira Road (East), Mumbai MMR",
+        "glow_color": "#0284c7"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.870383,
+              19.27243
+            ],
+            [
+              72.870972,
+              19.27243
+            ],
+            [
+              72.870972,
+              19.27311
+            ],
+            [
+              72.870383,
+              19.27311
+            ],
+            [
+              72.870383,
+              19.27243
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "BLDG-129",
+      "properties": {
+        "id": "BLDG-129",
+        "name": "Silver Park Substation Office",
+        "height": 43.5,
+        "min_height": 0.0,
+        "levels": 13,
+        "building_type": "commercial",
+        "height_source": "measured",
+        "sector": "Silver Park, Hatkesh & Highway Corridor",
+        "address": "Silver Park Substation Office, Silver Park, Hatkesh & Highway Corridor, Mira Road (East), Mumbai MMR",
+        "glow_color": "#0284c7"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.869892,
+              19.269242
+            ],
+            [
+              72.870407,
+              19.269242
+            ],
+            [
+              72.870407,
+              19.269805
+            ],
+            [
+              72.869892,
+              19.269805
+            ],
+            [
+              72.869892,
+              19.269242
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "BLDG-130",
+      "properties": {
+        "id": "BLDG-130",
+        "name": "Municipal Water Booster Pumping Station",
+        "height": 51.3,
+        "min_height": 0.0,
+        "levels": 16,
+        "building_type": "civic",
+        "height_source": "measured",
+        "sector": "Silver Park, Hatkesh & Highway Corridor",
+        "address": "Municipal Water Booster Pumping Station, Silver Park, Hatkesh & Highway Corridor, Mira Road (East), Mumbai MMR",
+        "glow_color": "#0284c7"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              72.871356,
+              19.272925
+            ],
+            [
+              72.871829,
+              19.272925
+            ],
+            [
+              72.871829,
+              19.273459
+            ],
+            [
+              72.871356,
+              19.273459
+            ],
+            [
+              72.871356,
+              19.272925
             ]
           ]
         ]
