@@ -419,3 +419,40 @@ INSERT INTO project_history (id, project_id, old_status, new_status, changed_by,
 ('HIST-003', 'PROJ-007', 'Ongoing', 'Completed', 'USR-ROADS', 'Pavement works finalized and quality certificate issued.'),
 ('HIST-004', 'PROJ-009', 'Approved', 'Ongoing', 'USR-ROADS', 'Foundation pole civil work started on central divider.')
 ON CONFLICT (id) DO NOTHING;
+
+-- ============================================================================
+-- 11. GENCITY 3D ASSETS (AI 3D Urban Twin GLB Models)
+-- ============================================================================
+CREATE TABLE IF NOT EXISTS gencity_assets (
+    id VARCHAR(64) PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    category VARCHAR(64) NOT NULL,
+    poly_count INTEGER NOT NULL,
+    file_size_kb INTEGER NOT NULL,
+    model_url VARCHAR(255) NOT NULL,
+    format VARCHAR(64) NOT NULL,
+    created_via VARCHAR(255) NOT NULL,
+    latitude DOUBLE PRECISION,
+    longitude DOUBLE PRECISION,
+    road_name VARCHAR(255),
+    depth_m DOUBLE PRECISION DEFAULT 0.0,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+);
+
+INSERT INTO gencity_assets (id, name, category, poly_count, file_size_kb, model_url, format, created_via, latitude, longitude, road_name, depth_m) VALUES
+('asset-001', 'Mira Commercial Skyscraper', 'Building', 480, 16, '/models/mira_commercial_tower.glb', 'glTF 2.0 Binary (GLB)', 'TRELLIS / Hugging Face (@indresh404)', 19.2825, 72.8590, 'Kanakia Road', 0.0),
+('asset-002', '600mm Subsurface Water Pipeline & Trench', 'Subsurface Utility', 820, 30, '/models/water_pipeline_trench.glb', 'glTF 2.0 Binary (GLB)', 'Stable Fast 3D / Hugging Face (@indresh404)', 19.2812, 72.8561, 'Mira Bhayandar Road', -2.4),
+('asset-003', 'Active Road Excavation & Milling Zone', 'Construction Scene', 760, 30, '/models/road_excavation_site.glb', 'glTF 2.0 Binary (GLB)', 'TRELLIS / Hugging Face (@indresh404)', 19.2845, 72.8630, 'Mira Bhayandar Road', 0.0),
+('asset-004', 'Municipal Hydraulic Tracked Excavator', 'Heavy Machinery', 640, 14, '/models/heavy_excavator.glb', 'glTF 2.0 Binary (GLB)', 'Stable Fast 3D / Hugging Face (@indresh404)', 19.2785, 72.8540, 'Shanti Nagar Sector 2', 0.0)
+ON CONFLICT (id) DO UPDATE SET
+    name = EXCLUDED.name,
+    category = EXCLUDED.category,
+    poly_count = EXCLUDED.poly_count,
+    file_size_kb = EXCLUDED.file_size_kb,
+    model_url = EXCLUDED.model_url,
+    format = EXCLUDED.format,
+    created_via = EXCLUDED.created_via,
+    latitude = EXCLUDED.latitude,
+    longitude = EXCLUDED.longitude,
+    road_name = EXCLUDED.road_name,
+    depth_m = EXCLUDED.depth_m;

@@ -71,6 +71,65 @@ const MIRA_ROAD_HOTSPOTS = [
   { name: "🏭 Silver Park - Hatkesh", lng: 72.8710, lat: 19.2885, zoom: 15.8, pitch: 50, bearing: 45 },
 ];
 
+export const MIRA_ROAD_3D_ASSETS = [
+  {
+    id: "asset-001",
+    name: "Mira Commercial Skyscraper",
+    category: "Building",
+    stats: "16 KB • 480 polys",
+    modelUrl: "/models/mira_commercial_tower.glb",
+    lng: 72.8590,
+    lat: 19.2825,
+    road_name: "Kanakia Road",
+    tag: "3D TOWER",
+    badgeColor: "#0284c7",
+    icon: "🏢",
+    depth: "Superstructure (+45m)"
+  },
+  {
+    id: "asset-002",
+    name: "600mm Subsurface Water Pipeline & Trench",
+    category: "Subsurface Utility",
+    stats: "30 KB • 820 polys",
+    modelUrl: "/models/water_pipeline_trench.glb",
+    lng: 72.8561,
+    lat: 19.2812,
+    road_name: "Mira Bhayandar Road",
+    tag: "3D PIPE TRENCH",
+    badgeColor: "#06b6d4",
+    icon: "💧",
+    depth: "Subsurface (-2.4m)"
+  },
+  {
+    id: "asset-003",
+    name: "Active Road Excavation & Milling Zone",
+    category: "Construction Scene",
+    stats: "30 KB • 760 polys",
+    modelUrl: "/models/road_excavation_site.glb",
+    lng: 72.8630,
+    lat: 19.2845,
+    road_name: "Mira Bhayandar Road East",
+    tag: "3D MILLING SITE",
+    badgeColor: "#2563eb",
+    icon: "🚧",
+    depth: "Surface (0.0m)"
+  },
+  {
+    id: "asset-004",
+    name: "Municipal Hydraulic Tracked Excavator",
+    category: "Heavy Machinery",
+    stats: "14 KB • 640 polys",
+    modelUrl: "/models/heavy_excavator.glb",
+    lng: 72.8540,
+    lat: 19.2785,
+    road_name: "Shanti Nagar Sector 2",
+    tag: "3D EXCAVATOR",
+    badgeColor: "#eab308",
+    icon: "🚜",
+    depth: "Heavy Machinery"
+  }
+];
+
 const STYLE_OPTIONS = [
   { id: "liberty", label: "OpenFreeMap Liberty (3D Buildings)", url: "https://tiles.openfreemap.org/styles/liberty" },
   { id: "dark", label: "Dark Matter 3D (Command Center)", url: "https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json" },
@@ -442,6 +501,7 @@ export default function MapComponent({
   const hoverPopupRef = useRef<any>(null);
   const selectionMarkerRef = useRef<any>(null);
   const orbitAnimRef = useRef<number | null>(null);
+  const assetMarkersRef = useRef<any[]>([]);
 
   const [mapLoaded, setMapLoaded] = useState(false);
   const [conflictOnly, setConflictOnly] = useState(false);
@@ -785,6 +845,35 @@ export default function MapComponent({
 
           if (!startLat || !startLng || isNaN(startLat) || isNaN(startLng)) return;
 
+          // Compute 4D Timeline Phase for the current simulated date
+          const start = proj.start_date || "2026-11-01";
+          const end = proj.end_date || "2026-11-30";
+          let timelinePhase = "active";
+          let phaseColor = deptColor;
+          let phaseOpacity = 0.95;
+          let lineWidth = 7;
+          let circleRadius = 11;
+
+          if (activeDateStr < start) {
+            timelinePhase = "planned";
+            phaseColor = "#64748b"; // Blueprint slate
+            phaseOpacity = 0.40;
+            lineWidth = 3;
+            circleRadius = 6;
+          } else if (activeDateStr > end) {
+            timelinePhase = "completed";
+            phaseColor = "#475569"; // Restored road asphalt
+            phaseOpacity = 0.65;
+            lineWidth = 5;
+            circleRadius = 7;
+          } else {
+            timelinePhase = "active"; // Currently active construction
+            phaseColor = deptColor;
+            phaseOpacity = 1.0;
+            lineWidth = 8;
+            circleRadius = 12;
+          }
+
           // Line feature if both start and end exist
           if (endLat && endLng && !isNaN(endLat) && !isNaN(endLng)) {
             features.push({
@@ -805,8 +894,12 @@ export default function MapComponent({
                 road_name: proj.road_name,
                 start_date: proj.start_date,
                 end_date: proj.end_date,
-                color: deptColor,
-                has_conflict: hasConflict,
+                color: phaseColor,
+                has_conflict: hasConflict && timelinePhase === "active",
+                timeline_phase: timelinePhase,
+                phase_opacity: phaseOpacity,
+                line_width: lineWidth,
+                circle_radius: circleRadius
               },
             });
           }
@@ -827,13 +920,17 @@ export default function MapComponent({
               road_name: proj.road_name,
               start_date: proj.start_date,
               end_date: proj.end_date,
-              color: deptColor,
-              has_conflict: hasConflict,
+              color: phaseColor,
+              has_conflict: hasConflict && timelinePhase === "active",
+              timeline_phase: timelinePhase,
+              phase_opacity: phaseOpacity,
+              line_width: lineWidth,
+              circle_radius: circleRadius
             },
           });
         });
 
-        // Build Conflict Connection Lines between clashes
+        // Build Conflict Connection Lines between clashes (filtered by active timeline window)
         conflicts.forEach((c) => {
           const pA = projects.find((p) => p.id === c.project_a_id);
           const pB = projects.find((p) => p.id === c.project_b_id);
@@ -841,6 +938,8 @@ export default function MapComponent({
           const lngA = pA?.lng ?? pA?.longitude;
           const latB = pB?.lat ?? pB?.latitude;
           const lngB = pB?.lng ?? pB?.longitude;
+
+          const isOverlapActive = !c.overlap_start || (activeDateStr >= c.overlap_start && activeDateStr <= c.overlap_end);
 
           if (latA && lngA && latB && lngB) {
             conflictLines.push({
@@ -856,6 +955,8 @@ export default function MapComponent({
                 id: c.id,
                 severity: c.severity_level,
                 color: c.severity_level === "High" ? "#dc2626" : c.severity_level === "Medium" ? "#ea580c" : "#f59e0b",
+                is_active: isOverlapActive,
+                line_opacity: isOverlapActive ? 0.95 : 0.20,
               },
             });
           }
@@ -889,7 +990,7 @@ export default function MapComponent({
             paint: {
               "line-width": 14,
               "line-color": ["get", "color"],
-              "line-opacity": 0.35,
+              "line-opacity": ["case", ["==", ["get", "timeline_phase"], "active"], 0.45, 0.15],
               "line-blur": 4,
             },
           });
@@ -905,9 +1006,9 @@ export default function MapComponent({
               "line-cap": "round",
             },
             paint: {
-              "line-width": 6,
+              "line-width": ["get", "line_width"],
               "line-color": ["get", "color"],
-              "line-opacity": 0.95,
+              "line-opacity": ["get", "phase_opacity"],
             },
           });
 
@@ -932,9 +1033,10 @@ export default function MapComponent({
             source: "projects",
             filter: ["==", "$type", "Point"],
             paint: {
-              "circle-radius": 10,
+              "circle-radius": ["get", "circle_radius"],
               "circle-color": ["get", "color"],
-              "circle-stroke-width": 3,
+              "circle-opacity": ["get", "phase_opacity"],
+              "circle-stroke-width": 2.5,
               "circle-stroke-color": "#ffffff",
             },
           });
@@ -1000,7 +1102,68 @@ export default function MapComponent({
     } else {
       map.once("styledata", renderProjectLayers);
     }
-  }, [filteredProjects, mapLoaded, conflictingProjectIds, conflicts]);
+  }, [filteredProjects, mapLoaded, conflictingProjectIds, conflicts, activeDateStr]);
+
+  // 3. Anchor 4 Real 3D Digital Twin Construction Markers directly onto the Map
+  useEffect(() => {
+    if (!mapInstanceRef.current || !mapLoaded) return;
+    const map = mapInstanceRef.current;
+
+    assetMarkersRef.current.forEach((m) => m.remove());
+    assetMarkersRef.current = [];
+
+    import("maplibre-gl").then(({ default: maplibregl }) => {
+      MIRA_ROAD_3D_ASSETS.forEach((asset) => {
+        const el = document.createElement("div");
+        el.className = "gencity-3d-pin cursor-pointer";
+        el.style.transform = "translate(-50%, -100%)";
+        el.innerHTML = `
+          <div style="transform: perspective(600px) rotateX(15deg); transition: transform 0.2s ease; display: inline-flex; flex-direction: column; align-items: center;" class="hover:scale-110">
+            <div style="background: rgba(15, 23, 42, 0.95); backdrop-filter: blur(8px); border: 1.5px solid ${asset.badgeColor}; border-radius: 10px; padding: 4px 8px; box-shadow: 0 8px 25px rgba(0,0,0,0.7), 0 0 14px ${asset.badgeColor}50; display: flex; align-items: center; gap: 6px; white-space: nowrap; pointer-events: auto;">
+              <span style="font-size: 15px;">${asset.icon}</span>
+              <div>
+                <div style="font-weight: 800; font-size: 11px; color: #ffffff;">${asset.name}</div>
+                <div style="font-size: 9px; color: ${asset.badgeColor}; font-family: monospace; font-weight: 700;">${asset.stats} &bull; ${asset.depth}</div>
+              </div>
+              <div style="background: ${asset.badgeColor}30; border: 1px solid ${asset.badgeColor}; border-radius: 5px; padding: 1px 5px; font-size: 9px; font-weight: 800; color: #ffffff;">3D GLB</div>
+            </div>
+            <div style="width: 2px; height: 12px; background: ${asset.badgeColor}; box-shadow: 0 0 8px ${asset.badgeColor};"></div>
+            <div style="width: 7px; height: 7px; border-radius: 50%; background: ${asset.badgeColor}; box-shadow: 0 0 10px ${asset.badgeColor};"></div>
+          </div>
+        `;
+
+        el.addEventListener("click", () => {
+          const matched = projects.find((p) => p.road_name === asset.road_name) || {
+            id: asset.id,
+            name: asset.name,
+            title: asset.name,
+            department: asset.category,
+            project_type: asset.category,
+            road_name: asset.road_name,
+            start_date: "2026-11-01",
+            end_date: "2026-11-30",
+            lat: asset.lat,
+            lng: asset.lng,
+            latitude: asset.lat,
+            longitude: asset.lng,
+            status: "Ongoing",
+          };
+          setInspected3DProject(matched as any);
+        });
+
+        const marker = new maplibregl.Marker({ element: el })
+          .setLngLat([asset.lng, asset.lat])
+          .addTo(map);
+
+        assetMarkersRef.current.push(marker);
+      });
+    });
+
+    return () => {
+      assetMarkersRef.current.forEach((m) => m.remove());
+      assetMarkersRef.current = [];
+    };
+  }, [mapLoaded, projects]);
 
   // Dynamic Subsurface 3D Cutaway Mode: Translucent buildings & vivid subterranean conduits
   useEffect(() => {
@@ -1330,22 +1493,37 @@ export default function MapComponent({
         </div>
       </div>
 
-      {/* Quick Mira Road Hotspots Corridor Bar */}
-      <div className="bg-slate-900/60 border-b border-slate-800/80 px-4 py-1.5 flex items-center gap-2 overflow-x-auto text-[11px] z-10 text-white">
-        <span className="font-bold text-cyan-400 shrink-0 flex items-center gap-1">
-          <Navigation className="w-3 h-3 text-cyan-400" /> Mira Road 3D Hotspots:
-        </span>
-        {MIRA_ROAD_HOTSPOTS.map((spot) => (
+        {/* Quick Mira Road Hotspots Corridor Bar */}
+        <div className="bg-slate-900/60 border-b border-slate-800/80 px-4 py-1.5 flex items-center gap-2 overflow-x-auto text-[11px] z-10 text-white">
+          <span className="font-bold text-cyan-400 shrink-0 flex items-center gap-1">
+            <Navigation className="w-3 h-3 text-cyan-400" /> Mira Road 3D Hotspots:
+          </span>
           <button
-            key={spot.name}
             type="button"
-            onClick={() => flyToHotspot(spot)}
-            className="px-2.5 py-0.5 rounded-md bg-slate-800/80 border border-slate-700 hover:border-cyan-400 text-slate-300 hover:text-cyan-300 font-medium shrink-0 transition"
+            onClick={() => {
+              if (!mapInstanceRef.current) return;
+              import("maplibre-gl").then(({ default: maplibregl }) => {
+                const bounds = new maplibregl.LngLatBounds();
+                MIRA_ROAD_3D_ASSETS.forEach((a) => bounds.extend([a.lng, a.lat]));
+                mapInstanceRef.current.fitBounds(bounds, { padding: 90, pitch: 58, bearing: -20 });
+              });
+            }}
+            className="px-2.5 py-0.5 rounded-md bg-cyan-950/80 border border-cyan-500 text-cyan-300 font-bold shrink-0 transition flex items-center gap-1 hover:bg-cyan-900 shadow-sm shadow-cyan-950"
           >
-            {spot.name}
+            <Box className="w-3 h-3 text-cyan-400" />
+            4 3D Digital Twin Sites
           </button>
-        ))}
-      </div>
+          {MIRA_ROAD_HOTSPOTS.map((spot) => (
+            <button
+              key={spot.name}
+              type="button"
+              onClick={() => flyToHotspot(spot)}
+              className="px-2.5 py-0.5 rounded-md bg-slate-800/80 border border-slate-700 hover:border-cyan-400 text-slate-300 hover:text-cyan-300 font-medium shrink-0 transition"
+            >
+              {spot.name}
+            </button>
+          ))}
+        </div>
 
       {/* Map View Canvas */}
       <div className="relative flex-1 w-full h-full min-h-[420px]">
@@ -1488,55 +1666,101 @@ export default function MapComponent({
         )}
 
         {/* Docked Time-Travel 4D Scrubber Bar */}
-        <div className="absolute bottom-5 left-4 right-4 z-20 bg-slate-900/95 backdrop-blur-xl p-3.5 rounded-2xl border border-cyan-500/30 shadow-2xl max-w-2xl mx-auto flex flex-col gap-2.5 text-white pointer-events-auto">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <button
-                type="button"
-                onClick={() => setIsPlaying(!isPlaying)}
-                className={`p-2 rounded-xl text-white font-bold transition flex items-center gap-1.5 text-xs shadow-md ${
-                  isPlaying
-                    ? "bg-amber-600 hover:bg-amber-500"
-                    : "bg-cyan-600 hover:bg-cyan-500 shadow-cyan-600/25"
-                }`}
-              >
-                {isPlaying ? <Pause className="w-3.5 h-3.5" /> : <Play className="w-3.5 h-3.5" />}
-                {isPlaying ? "Pause 4D Twin" : "Play 4D Timeline"}
-              </button>
-              <button
-                type="button"
-                onClick={() => setCurrentDayOffset(0)}
-                className="p-2 rounded-xl border border-slate-700 text-slate-300 hover:bg-slate-800 transition"
-                title="Reset Timeline"
-              >
-                <RotateCcw className="w-3.5 h-3.5" />
-              </button>
-            </div>
+        {(() => {
+          let activeCount = 0;
+          let plannedCount = 0;
+          let completedCount = 0;
+          let collisionCountToday = 0;
 
-            <div className="flex items-center gap-2">
-              <span className="text-xs font-semibold text-slate-300 flex items-center gap-1">
-                <Calendar className="w-3.5 h-3.5 text-cyan-400" />
-                Simulated Municipal Date:
-              </span>
-              <span className="font-mono font-extrabold text-cyan-300 bg-cyan-950 border border-cyan-800 px-2.5 py-0.5 rounded-lg text-xs">
-                {formatDate(activeDateStr)}
-              </span>
-            </div>
-          </div>
+          filteredProjects.forEach((p) => {
+            const s = p.start_date || "2026-11-01";
+            const e = p.end_date || "2026-11-30";
+            if (activeDateStr < s) plannedCount++;
+            else if (activeDateStr > e) completedCount++;
+            else activeCount++;
+          });
 
-          <div className="flex items-center gap-3">
-            <span className="text-[10px] text-slate-400 font-mono font-semibold">1 Nov 2026</span>
-            <input
-              type="range"
-              min="0"
-              max="45"
-              value={currentDayOffset}
-              onChange={(e) => setCurrentDayOffset(Number(e.target.value))}
-              className="flex-1 accent-cyan-400 h-2 bg-slate-800 rounded-lg cursor-pointer"
-            />
-            <span className="text-[10px] text-slate-400 font-mono font-semibold">15 Dec 2026</span>
-          </div>
-        </div>
+          conflicts.forEach((c) => {
+            if (!c.overlap_start || (activeDateStr >= c.overlap_start && activeDateStr <= c.overlap_end)) {
+              if (c.resolution !== "Overridden" && c.status !== "Closed") {
+                collisionCountToday++;
+              }
+            }
+          });
+
+          return (
+            <div className="absolute bottom-5 left-4 right-4 z-20 bg-slate-900/95 backdrop-blur-xl p-3.5 rounded-2xl border border-cyan-500/30 shadow-2xl max-w-2xl mx-auto flex flex-col gap-2.5 text-white pointer-events-auto">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <button
+                    type="button"
+                    onClick={() => setIsPlaying(!isPlaying)}
+                    className={`p-2 rounded-xl text-white font-bold transition flex items-center gap-1.5 text-xs shadow-md ${
+                      isPlaying
+                        ? "bg-amber-600 hover:bg-amber-500"
+                        : "bg-cyan-600 hover:bg-cyan-500 shadow-cyan-600/25"
+                    }`}
+                  >
+                    {isPlaying ? <Pause className="w-3.5 h-3.5" /> : <Play className="w-3.5 h-3.5" />}
+                    {isPlaying ? "Pause 4D Twin" : "Play 4D Timeline"}
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setCurrentDayOffset(0)}
+                    className="p-2 rounded-xl border border-slate-700 text-slate-300 hover:bg-slate-800 transition"
+                    title="Reset Timeline"
+                  >
+                    <RotateCcw className="w-3.5 h-3.5" />
+                  </button>
+                </div>
+
+                <div className="flex items-center gap-2">
+                  <span className="text-xs font-semibold text-slate-300 flex items-center gap-1">
+                    <Calendar className="w-3.5 h-3.5 text-cyan-400" />
+                    Simulated Municipal Date:
+                  </span>
+                  <span className="font-mono font-extrabold text-cyan-300 bg-cyan-950 border border-cyan-800 px-2.5 py-0.5 rounded-lg text-xs">
+                    {formatDate(activeDateStr)}
+                  </span>
+                </div>
+              </div>
+
+              <div className="flex items-center gap-3">
+                <span className="text-[10px] text-slate-400 font-mono font-semibold">1 Nov 2026</span>
+                <input
+                  type="range"
+                  min="0"
+                  max="45"
+                  value={currentDayOffset}
+                  onChange={(e) => setCurrentDayOffset(Number(e.target.value))}
+                  className="flex-1 accent-cyan-400 h-2 bg-slate-800 rounded-lg cursor-pointer"
+                />
+                <span className="text-[10px] text-slate-400 font-mono font-semibold">15 Dec 2026</span>
+              </div>
+
+              {/* Dynamic 4D Construction Status Strip */}
+              <div className="flex items-center justify-between text-[11px] pt-1.5 border-t border-slate-800/80 font-mono">
+                <span className="flex items-center gap-1.5">
+                  <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+                  <strong className="text-emerald-400">{activeCount} Sites Active Today</strong>
+                </span>
+                <span className="text-slate-400">{plannedCount} Upcoming</span>
+                <span className="text-slate-500">{completedCount} Restored Roadways</span>
+                {collisionCountToday > 0 ? (
+                  <span className="text-red-400 font-bold flex items-center gap-1">
+                    <AlertTriangle className="w-3.5 h-3.5 text-red-400" />
+                    {collisionCountToday} Conflict Active
+                  </span>
+                ) : (
+                  <span className="text-cyan-400 font-semibold flex items-center gap-1">
+                    <ShieldCheck className="w-3.5 h-3.5 text-cyan-400" />
+                    Clear Flow
+                  </span>
+                )}
+              </div>
+            </div>
+          );
+        })()}
       </div>
     </div>
   );

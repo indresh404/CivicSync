@@ -101,11 +101,42 @@ def verify_hf_connection() -> Dict[str, Any]:
         return {"status": "error", "error": str(e)}
 
 def list_gencity_assets() -> List[Dict[str, Any]]:
-    """Return all available 3D assets in library."""
+    """Return all available 3D assets in library from Supabase PostgreSQL."""
+    try:
+        from backend.database import SessionLocal
+        from backend.models import GenCityAsset
+        db = SessionLocal()
+        rows = db.query(GenCityAsset).all()
+        if rows:
+            res = [
+                {
+                    "id": r.id,
+                    "name": r.name,
+                    "category": r.category,
+                    "poly_count": r.poly_count,
+                    "file_size_kb": r.file_size_kb,
+                    "model_url": r.model_url,
+                    "format": r.format,
+                    "created_via": r.created_via,
+                    "latitude": r.latitude,
+                    "longitude": r.longitude,
+                    "road_name": r.road_name,
+                    "depth_m": r.depth_m,
+                    "scale": [1, 1, 1],
+                    "created_at": r.created_at.isoformat() if r.created_at else "2026-11-16T10:00:00Z"
+                }
+                for r in rows
+            ]
+            db.close()
+            return res
+        db.close()
+    except Exception as e:
+        print("[GenCity] Supabase asset query notice:", e)
     return PRESET_3D_ASSETS
 
 def get_gencity_asset(asset_id: str) -> Optional[Dict[str, Any]]:
-    for a in PRESET_3D_ASSETS:
+    catalog = list_gencity_assets()
+    for a in catalog:
         if a["id"] == asset_id:
             return a
     return None

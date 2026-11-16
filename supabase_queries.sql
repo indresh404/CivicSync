@@ -105,3 +105,31 @@ SELECT
 FROM utility_assets
 WHERE road_name = 'Mira Bhayandar Road'
 ORDER BY depth_m ASC;
+
+-- 9. GENCITY 3D DIGITAL TWIN: Inspect Registered 3D Construction & Urban Mesh Assets
+SELECT 
+    id,
+    name,
+    category,
+    glb_url,
+    poly_count,
+    file_size_kb,
+    lat,
+    lng,
+    road_name,
+    depth_m,
+    is_active
+FROM gencity_assets
+ORDER BY created_at ASC;
+
+-- 10. 3D ASSET METRICS & POLYGON BUDGET ANALYSIS
+SELECT 
+    category,
+    COUNT(*) AS asset_count,
+    SUM(poly_count) AS total_polygons,
+    ROUND(AVG(poly_count), 0) AS avg_polygons_per_model,
+    SUM(file_size_kb) || ' KB' AS total_mesh_payload,
+    STRING_AGG(name, ', ') AS registered_models
+FROM gencity_assets
+GROUP BY category;
+

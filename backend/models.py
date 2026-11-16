@@ -189,3 +189,20 @@ class RoadSegment(Base):
     length_meters = Column(Float, default=500.0)
     created_at = Column(DateTime, default=datetime.datetime.utcnow)
 
+class GenCityAsset(Base):
+    __tablename__ = "gencity_assets"
+
+    id = Column(String(64), primary_key=True, index=True)
+    name = Column(String(255), nullable=False)
+    category = Column(String(64), nullable=False)
+    poly_count = Column(Integer, nullable=False)
+    file_size_kb = Column(Integer, nullable=False)
+    model_url = Column(String(255), nullable=False)
+    format = Column(String(64), nullable=False)
+    created_via = Column(String(255), nullable=False)
+    latitude = Column(Float, nullable=True)
+    longitude = Column(Float, nullable=True)
+    road_name = Column(String(255), nullable=True)
+    depth_m = Column(Float, default=0.0)
+    created_at = Column(DateTime, default=datetime.datetime.utcnow)
+
