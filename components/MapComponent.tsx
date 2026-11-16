@@ -128,7 +128,10 @@ export const MIRA_ROAD_3D_ASSETS = [
     badgeColor: "#0284c7",
     icon: "🏢",
     depth: "Superstructure (+45m)",
-    scale: 45
+    scale: 1.0,
+    bearing: 0,
+    start_date: "2026-11-01",
+    end_date: "2026-12-15"
   },
   {
     id: "asset-002",
@@ -143,7 +146,10 @@ export const MIRA_ROAD_3D_ASSETS = [
     badgeColor: "#06b6d4",
     icon: "💧",
     depth: "Subsurface (-2.4m)",
-    scale: 35
+    scale: 1.2,
+    bearing: Math.PI / 6,
+    start_date: "2026-11-06",
+    end_date: "2026-11-24"
   },
   {
     id: "asset-003",
@@ -158,7 +164,10 @@ export const MIRA_ROAD_3D_ASSETS = [
     badgeColor: "#2563eb",
     icon: "🚧",
     depth: "Surface (0.0m)",
-    scale: 35
+    scale: 1.2,
+    bearing: Math.PI / 4,
+    start_date: "2026-11-10",
+    end_date: "2026-11-30"
   },
   {
     id: "asset-004",
@@ -173,7 +182,10 @@ export const MIRA_ROAD_3D_ASSETS = [
     badgeColor: "#eab308",
     icon: "🚜",
     depth: "Heavy Machinery",
-    scale: 30
+    scale: 1.5,
+    bearing: -Math.PI / 3,
+    start_date: "2026-11-01",
+    end_date: "2026-11-20"
   }
 ];
 
@@ -323,9 +335,8 @@ export default function MapComponent({
     }
   });
 
-  // Calculate active timeline date (Base: 1 Nov 2026)
-  const baseSimDate = new Date(2026, 10, 1);
-  const activeSimDate = new Date(baseSimDate.getTime() + currentDayOffset * 24 * 60 * 60 * 1000);
+  // Calculate active timeline date in UTC (Base: 1 Nov 2026, avoiding local timezone drift)
+  const activeSimDate = new Date(Date.UTC(2026, 10, 1 + currentDayOffset));
   const activeDateStr = activeSimDate.toISOString().split("T")[0];
 
   // Play/pause time scrubber animation
@@ -533,42 +544,54 @@ export default function MapComponent({
               })
               .catch((err) => console.warn("Custom 3D buildings load error:", err));
 
-            // Render real 3D glTF/GLB models directly into the 3D Map canvas
+            // Render real 3D glTF/GLB models directly into the 3D Map canvas with high-precision matrices
             const glbCustom3DLayer: any = {
               id: "miraroad-3d-glb-models",
               type: "custom",
               renderingMode: "3d",
+              items: [] as Array<{ scene: THREE.Scene; matrix: THREE.Matrix4 }>,
               onAdd: function (m: any, gl: WebGLRenderingContext) {
                 this.camera = new THREE.Camera();
-                this.scene = new THREE.Scene();
-
-                const ambientLight = new THREE.AmbientLight(0xffffff, 1.4);
-                this.scene.add(ambientLight);
-
-                const dirLight1 = new THREE.DirectionalLight(0xffffff, 2.2);
-                dirLight1.position.set(200, 400, 300);
-                this.scene.add(dirLight1);
-
-                const dirLight2 = new THREE.DirectionalLight(0x38bdf8, 1.0);
-                dirLight2.position.set(-200, -200, 150);
-                this.scene.add(dirLight2);
+                this.items = [];
 
                 const loader = new GLTFLoader();
                 MIRA_ROAD_3D_ASSETS.forEach((asset) => {
+                  const itemScene = new THREE.Scene();
+
+                  const ambientLight = new THREE.AmbientLight(0xffffff, 2.0);
+                  itemScene.add(ambientLight);
+
+                  const dirLight1 = new THREE.DirectionalLight(0xffffff, 2.8);
+                  dirLight1.position.set(50, 100, 80);
+                  itemScene.add(dirLight1);
+
+                  const dirLight2 = new THREE.DirectionalLight(0x38bdf8, 1.4);
+                  dirLight2.position.set(-50, -80, 50);
+                  itemScene.add(dirLight2);
+
+                  const coord = maplibregl.MercatorCoordinate.fromLngLat(
+                    [asset.lng, asset.lat],
+                    0
+                  );
+                  const meter = coord.meterInMercatorCoordinateUnits();
+                  const s = asset.scale || 1.0;
+
+                  // High-precision model transform matrix:
+                  // Translates directly in Mercator space and scales to metric coordinates
+                  const rotX = new THREE.Matrix4().makeRotationAxis(new THREE.Vector3(1, 0, 0), Math.PI / 2);
+                  const rotZ = new THREE.Matrix4().makeRotationAxis(new THREE.Vector3(0, 0, 1), asset.bearing || 0);
+
+                  const transformMatrix = new THREE.Matrix4()
+                    .makeTranslation(coord.x, coord.y, coord.z)
+                    .scale(new THREE.Vector3(meter * s, -meter * s, meter * s))
+                    .multiply(rotX)
+                    .multiply(rotZ);
+
                   loader.load(
                     asset.modelUrl,
                     (gltf) => {
                       const model = gltf.scene;
-                      const coord = maplibregl.MercatorCoordinate.fromLngLat(
-                        [asset.lng, asset.lat],
-                        0
-                      );
-                      const meter = coord.meterInMercatorCoordinateUnits();
-                      const scaleMultiplier = (asset.scale || 30) * meter;
-
-                      model.position.set(coord.x, coord.y, coord.z);
-                      model.scale.set(scaleMultiplier, -scaleMultiplier, scaleMultiplier);
-                      model.rotation.set(Math.PI / 2, 0, 0);
+                      model.position.set(0, 0, 0);
 
                       model.traverse((child: any) => {
                         if (child.isMesh) {
@@ -576,11 +599,13 @@ export default function MapComponent({
                           child.receiveShadow = true;
                           if (child.material) {
                             child.material.depthWrite = true;
+                            child.material.depthTest = true;
                           }
                         }
                       });
 
-                      this.scene.add(model);
+                      itemScene.add(model);
+                      this.items.push({ scene: itemScene, matrix: transformMatrix });
                       m.triggerRepaint();
                     },
                     undefined,
@@ -596,11 +621,16 @@ export default function MapComponent({
                 this.renderer.autoClear = false;
               },
               render: function (gl: WebGLRenderingContext, matrix: number[]) {
-                const m = new THREE.Matrix4().fromArray(matrix);
-                this.camera.projectionMatrix = m;
-                this.renderer.resetState();
-                this.renderer.render(this.scene, this.camera);
-                map.triggerRepaint();
+                if (!this.renderer || !this.items || this.items.length === 0) return;
+
+                const baseMatrix = new THREE.Matrix4().fromArray(matrix);
+
+                for (let i = 0; i < this.items.length; i++) {
+                  const item = this.items[i];
+                  this.camera.projectionMatrix = baseMatrix.clone().multiply(item.matrix);
+                  this.renderer.resetState();
+                  this.renderer.render(item.scene, this.camera);
+                }
               },
             };
 
@@ -944,7 +974,7 @@ export default function MapComponent({
             paint: {
               "line-width": 8,
               "line-color": "#dc2626",
-              "line-opacity": 0.4,
+              "line-opacity": ["case", ["==", ["get", "is_active"], true], 0.65, 0.0],
               "line-blur": 3,
             },
           });
@@ -957,7 +987,7 @@ export default function MapComponent({
               "line-width": 3,
               "line-color": "#dc2626",
               "line-dasharray": [3, 2],
-              "line-opacity": 0.9,
+              "line-opacity": ["case", ["==", ["get", "is_active"], true], 0.95, 0.0],
             },
           });
         }
@@ -981,6 +1011,11 @@ export default function MapComponent({
 
     import("maplibre-gl").then(({ default: maplibregl }) => {
       MIRA_ROAD_3D_ASSETS.forEach((asset) => {
+        const isActive = activeDateStr >= asset.start_date && activeDateStr <= asset.end_date;
+        const isUpcoming = activeDateStr < asset.start_date;
+        const statusText = isActive ? "ACTIVE SITE" : isUpcoming ? "PLANNED" : "RESTORED";
+        const statusColor = isActive ? "#10b981" : isUpcoming ? "#38bdf8" : "#94a3b8";
+
         const el = document.createElement("div");
         el.className = "gencity-3d-pin cursor-pointer";
         el.style.transform = "translate(-50%, -100%)";
@@ -992,7 +1027,10 @@ export default function MapComponent({
                 <div style="font-weight: 800; font-size: 11px; color: #ffffff;">${asset.name}</div>
                 <div style="font-size: 9px; color: ${asset.badgeColor}; font-family: monospace; font-weight: 700;">${asset.stats} &bull; ${asset.depth}</div>
               </div>
-              <div style="background: ${asset.badgeColor}30; border: 1px solid ${asset.badgeColor}; border-radius: 5px; padding: 1px 5px; font-size: 9px; font-weight: 800; color: #ffffff;">3D GLB</div>
+              <div style="background: ${statusColor}25; border: 1px solid ${statusColor}; border-radius: 5px; padding: 1.5px 5px; font-size: 8.5px; font-weight: 800; color: ${statusColor}; display: flex; align-items: center; gap: 3px;">
+                ${isActive ? '<span style="width: 5px; height: 5px; border-radius: 50%; background: #10b981;"></span>' : ''}
+                ${statusText}
+              </div>
             </div>
             <div style="width: 2px; height: 12px; background: ${asset.badgeColor}; box-shadow: 0 0 8px ${asset.badgeColor};"></div>
             <div style="width: 7px; height: 7px; border-radius: 50%; background: ${asset.badgeColor}; box-shadow: 0 0 10px ${asset.badgeColor};"></div>
@@ -1014,13 +1052,13 @@ export default function MapComponent({
             department: asset.category,
             project_type: asset.category,
             road_name: asset.road_name,
-            start_date: "2026-11-01",
-            end_date: "2026-11-30",
+            start_date: asset.start_date,
+            end_date: asset.end_date,
             lat: asset.lat,
             lng: asset.lng,
             latitude: asset.lat,
             longitude: asset.lng,
-            status: "Ongoing",
+            status: isActive ? "Ongoing" : isUpcoming ? "Planned" : "Completed",
           };
           if (onSelectProject) {
             onSelectProject(matched as any);
@@ -1039,7 +1077,7 @@ export default function MapComponent({
       assetMarkersRef.current.forEach((m) => m.remove());
       assetMarkersRef.current = [];
     };
-  }, [mapLoaded, projects]);
+  }, [mapLoaded, projects, activeDateStr]);
 
   // Dynamic Subsurface 3D Cutaway Mode: Translucent buildings & vivid subterranean conduits
   useEffect(() => {
