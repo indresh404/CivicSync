@@ -56,4 +56,12 @@ CORS_ORIGINS = [
     "http://127.0.0.1:5000",
     "http://localhost:8000",
     "http://127.0.0.1:8000",
+    "https://civic-sync-pied.vercel.app",
 ]
+
+env_cors = os.getenv("CORS_ORIGINS")
+if env_cors:
+    for origin in env_cors.split(","):
+        clean_origin = origin.strip()
+        if clean_origin and clean_origin not in CORS_ORIGINS:
+            CORS_ORIGINS.append(clean_origin)
