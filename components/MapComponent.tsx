@@ -127,7 +127,8 @@ export const MIRA_ROAD_3D_ASSETS = [
     tag: "3D TOWER",
     badgeColor: "#0284c7",
     icon: "🏢",
-    depth: "Superstructure (+45m)"
+    depth: "Superstructure (+45m)",
+    scale: 45
   },
   {
     id: "asset-002",
@@ -141,7 +142,8 @@ export const MIRA_ROAD_3D_ASSETS = [
     tag: "3D PIPE TRENCH",
     badgeColor: "#06b6d4",
     icon: "💧",
-    depth: "Subsurface (-2.4m)"
+    depth: "Subsurface (-2.4m)",
+    scale: 35
   },
   {
     id: "asset-003",
@@ -155,7 +157,8 @@ export const MIRA_ROAD_3D_ASSETS = [
     tag: "3D MILLING SITE",
     badgeColor: "#2563eb",
     icon: "🚧",
-    depth: "Surface (0.0m)"
+    depth: "Surface (0.0m)",
+    scale: 35
   },
   {
     id: "asset-004",
@@ -169,7 +172,8 @@ export const MIRA_ROAD_3D_ASSETS = [
     tag: "3D EXCAVATOR",
     badgeColor: "#eab308",
     icon: "🚜",
-    depth: "Heavy Machinery"
+    depth: "Heavy Machinery",
+    scale: 30
   }
 ];
 
@@ -248,280 +252,6 @@ function getProject3DModelInfo(project: Project) {
   }
 }
 
-interface InMap3DViewerProps {
-  project: Project;
-  onClose: () => void;
-  onFlyToSite?: () => void;
-}
-
-function InMap3DViewer({ project, onClose, onFlyToSite }: InMap3DViewerProps) {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const [wireframe, setWireframe] = useState(false);
-  const [autoRotate, setAutoRotate] = useState(true);
-  const autoRotateRef = useRef(autoRotate);
-  autoRotateRef.current = autoRotate;
-  const [lightingPreset, setLightingPreset] = useState<"cyberpunk" | "daylight">("cyberpunk");
-  const modelInfo = getProject3DModelInfo(project);
-
-  useEffect(() => {
-    const container = containerRef.current;
-    if (!container) return;
-    const width = container.clientWidth || 500;
-    const height = container.clientHeight || 360;
-
-    const scene = new THREE.Scene();
-    scene.background = new THREE.Color(lightingPreset === "daylight" ? 0x0f172a : 0x070b14);
-    scene.fog = new THREE.FogExp2(lightingPreset === "daylight" ? 0x0f172a : 0x070b14, 0.03);
-
-    const camera = new THREE.PerspectiveCamera(45, width / height, 0.1, 1000);
-    camera.position.set(10, 8, 12);
-
-    const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, powerPreference: "high-performance" });
-    renderer.setSize(width, height);
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-    renderer.shadowMap.enabled = true;
-    renderer.shadowMap.type = THREE.PCFSoftShadowMap;
-    renderer.toneMapping = THREE.ACESFilmicToneMapping;
-    renderer.toneMappingExposure = 1.15;
-
-    container.innerHTML = "";
-    container.appendChild(renderer.domElement);
-
-    const controls = new OrbitControls(camera, renderer.domElement);
-    controls.enableDamping = true;
-    controls.dampingFactor = 0.05;
-    controls.maxPolarAngle = Math.PI / 2 - 0.02;
-    controls.minDistance = 3;
-    controls.maxDistance = 35;
-    controls.target.set(0, 1.4, 0);
-
-    // 3D Grid & ground
-    const grid = new THREE.GridHelper(20, 20, 0x06b6d4, 0x1e293b);
-    grid.position.y = -0.01;
-    scene.add(grid);
-
-    const ground = new THREE.Mesh(
-      new THREE.CircleGeometry(10, 32),
-      new THREE.MeshStandardMaterial({ color: 0x0b1120, roughness: 0.85 })
-    );
-    ground.rotation.x = -Math.PI / 2;
-    ground.receiveShadow = true;
-    scene.add(ground);
-
-    // Lighting
-    const ambient = new THREE.AmbientLight(0xffffff, lightingPreset === "daylight" ? 0.9 : 0.6);
-    scene.add(ambient);
-
-    const dirLight = new THREE.DirectionalLight(
-      lightingPreset === "daylight" ? 0xfffbeb : 0x38bdf8,
-      lightingPreset === "daylight" ? 2.0 : 1.5
-    );
-    dirLight.position.set(10, 20, 12);
-    dirLight.castShadow = true;
-    scene.add(dirLight);
-
-    const rimLight = new THREE.DirectionalLight(0xa855f7, 0.9);
-    rimLight.position.set(-10, 8, -10);
-    scene.add(rimLight);
-
-    const modelGroup = new THREE.Group();
-    scene.add(modelGroup);
-
-    // Attempt to load GLTF 2.0 Binary (GLB)
-    const loader = new GLTFLoader();
-    loader.load(
-      modelInfo.modelUrl,
-      (gltf) => {
-        gltf.scene.traverse((child: any) => {
-          if (child.isMesh) {
-            child.castShadow = true;
-            child.receiveShadow = true;
-            if (wireframe && child.material) {
-              if (Array.isArray(child.material)) child.material.forEach((m: any) => (m.wireframe = true));
-              else child.material.wireframe = true;
-            }
-          }
-        });
-        const box = new THREE.Box3().setFromObject(gltf.scene);
-        const size = box.getSize(new THREE.Vector3());
-        const maxDim = Math.max(size.x, size.y, size.z);
-        const scale = 6.0 / (maxDim || 1);
-        gltf.scene.scale.setScalar(scale);
-        const center = box.getCenter(new THREE.Vector3());
-        gltf.scene.position.x = -center.x * scale;
-        gltf.scene.position.z = -center.z * scale;
-        gltf.scene.position.y = -box.min.y * scale;
-        modelGroup.add(gltf.scene);
-      },
-      undefined,
-      () => {
-        // Fallback procedural model
-        const geo = new THREE.CylinderGeometry(0.8, 0.8, 6, 32);
-        const mat = new THREE.MeshStandardMaterial({ color: 0x06b6d4, roughness: 0.3, metalness: 0.7 });
-        const mesh = new THREE.Mesh(geo, mat);
-        mesh.rotation.x = Math.PI / 2;
-        mesh.position.y = 1;
-        modelGroup.add(mesh);
-      }
-    );
-
-    let animId: number;
-    const animate = () => {
-      animId = requestAnimationFrame(animate);
-      if (autoRotateRef.current) {
-        modelGroup.rotation.y += 0.007;
-      }
-      controls.update();
-      renderer.render(scene, camera);
-    };
-    animate();
-
-    const handleResize = () => {
-      if (!container || !renderer || !camera) return;
-      const w = container.clientWidth;
-      const h = container.clientHeight;
-      camera.aspect = w / h;
-      camera.updateProjectionMatrix();
-      renderer.setSize(w, h);
-    };
-    const observer = new ResizeObserver(handleResize);
-    observer.observe(container);
-
-    return () => {
-      observer.disconnect();
-      cancelAnimationFrame(animId);
-      renderer.dispose();
-      container.innerHTML = "";
-    };
-  }, [modelInfo.modelUrl, lightingPreset]);
-
-  // Handle wireframe dynamic update
-  const toggleWireframe = () => {
-    setWireframe((prev) => !prev);
-  };
-
-  return (
-    <div className="absolute inset-2 sm:inset-6 z-40 bg-slate-950/95 backdrop-blur-2xl border border-cyan-500/60 rounded-3xl shadow-2xl overflow-hidden flex flex-col pointer-events-auto text-white animate-in zoom-in-95 duration-200">
-      {/* Top Header */}
-      <div className="p-3.5 sm:p-4 bg-slate-900/90 border-b border-slate-800 flex items-center justify-between gap-3 flex-wrap">
-        <div className="flex items-center gap-2.5">
-          <span className="p-1.5 rounded-lg bg-gradient-to-tr from-cyan-600 to-blue-600 text-white shadow-md shadow-cyan-500/20">
-            <Box className="w-5 h-5 text-cyan-200" />
-          </span>
-          <div>
-            <div className="flex items-center gap-2">
-              <h3 className="font-extrabold text-sm sm:text-base text-white leading-tight">
-                {project.title || project.name}
-              </h3>
-              <span className="text-[10px] font-mono px-2 py-0.5 rounded-md bg-cyan-950 text-cyan-300 border border-cyan-700 font-bold uppercase">
-                {modelInfo.tag}
-              </span>
-            </div>
-            <div className="text-[11px] text-slate-400 mt-0.5 flex items-center gap-2">
-              <span className="text-cyan-400 font-semibold">{project.road_name}</span>
-              <span>&bull;</span>
-              <span>{project.department}</span>
-              <span>&bull;</span>
-              <span className="font-mono text-emerald-400 font-bold">{modelInfo.depth}</span>
-            </div>
-          </div>
-        </div>
-
-        {/* Viewport Action Controls */}
-        <div className="flex items-center gap-2">
-          <button
-            onClick={() => setLightingPreset((l) => (l === "cyberpunk" ? "daylight" : "cyberpunk"))}
-            className="px-2.5 py-1 rounded-lg text-xs font-semibold bg-slate-800 border border-slate-700 text-slate-300 hover:text-white transition"
-          >
-            {lightingPreset === "cyberpunk" ? "Daylight Mode" : "Cyberpunk Mode"}
-          </button>
-          <button
-            onClick={() => setAutoRotate((r) => !r)}
-            className={`px-2.5 py-1 rounded-lg text-xs font-semibold border transition ${
-              autoRotate ? "bg-amber-950 border-amber-600 text-amber-300" : "bg-slate-800 border-slate-700 text-slate-300"
-            }`}
-          >
-            {autoRotate ? "Pause Spin" : "Auto-Rotate"}
-          </button>
-          <button
-            onClick={toggleWireframe}
-            className={`px-2.5 py-1 rounded-lg text-xs font-semibold border transition ${
-              wireframe ? "bg-cyan-950 border-cyan-500 text-cyan-300" : "bg-slate-800 border-slate-700 text-slate-300"
-            }`}
-          >
-            Wireframe
-          </button>
-          <button
-            onClick={onClose}
-            className="p-1.5 rounded-lg bg-slate-800 hover:bg-red-950 text-slate-400 hover:text-red-300 border border-slate-700 hover:border-red-700 transition"
-            title="Close 3D View"
-          >
-            <X className="w-4 h-4" />
-          </button>
-        </div>
-      </div>
-
-      {/* Main Content: 3D Canvas + Technical Civil Engineering Specs */}
-      <div className="flex-1 flex flex-col lg:flex-row overflow-hidden relative">
-        {/* Three.js Interactive WebGL Viewport */}
-        <div className="flex-1 h-full min-h-[300px] relative bg-slate-950">
-          <div ref={containerRef} className="w-full h-full cursor-grab active:cursor-grabbing outline-none" />
-          <div className="absolute bottom-3 left-3 text-[10px] text-slate-500 font-mono pointer-events-none bg-slate-950/80 px-2.5 py-1 rounded-md backdrop-blur-xs border border-slate-800">
-            Three.js WebGL &bull; glTF 2.0 Binary Mesh &bull; Orbit: Left Click & Drag | Pan: Right Click
-          </div>
-        </div>
-
-        {/* Technical Civil Engineering Specifications Sidebar */}
-        <div className="w-full lg:w-80 p-4 bg-slate-900/95 border-t lg:border-t-0 lg:border-l border-slate-800 flex flex-col justify-between space-y-4 overflow-y-auto text-xs">
-          <div className="space-y-3">
-            <div className="font-bold text-white uppercase text-[11px] tracking-wider flex items-center gap-1.5 border-b border-slate-800 pb-2">
-              <ShieldCheck className="w-4 h-4 text-cyan-400" />
-              Subsurface Twin Specifications
-            </div>
-
-            <div className="space-y-2 text-xs">
-              <div className="p-2.5 rounded-xl bg-slate-950 border border-slate-800">
-                <span className="text-[10px] text-slate-400 uppercase block font-mono">Excavation Depth Profile</span>
-                <span className="font-bold text-cyan-300 font-mono text-sm">{modelInfo.depth}</span>
-              </div>
-
-              <div className="p-2.5 rounded-xl bg-slate-950 border border-slate-800">
-                <span className="text-[10px] text-slate-400 uppercase block font-mono">Conduit & Asset Grade</span>
-                <p className="text-slate-200 text-[11px] mt-0.5 leading-snug">{modelInfo.specs}</p>
-              </div>
-
-              <div className="p-2.5 rounded-xl bg-slate-950 border border-slate-800">
-                <span className="text-[10px] text-slate-400 uppercase block font-mono">MBMC Regulatory Cooldown</span>
-                <span className="font-semibold text-emerald-400 text-[11px] block mt-0.5">{modelInfo.cooldown}</span>
-              </div>
-
-              <div className="p-2.5 rounded-xl bg-slate-950 border border-slate-800">
-                <span className="text-[10px] text-slate-400 uppercase block font-mono">Sequencing Protocol</span>
-                <span className="text-amber-300 text-[11px] font-semibold block mt-0.5">
-                  Rule #1: Underground utilities precede surface road restoration
-                </span>
-              </div>
-            </div>
-          </div>
-
-          <div className="pt-2 border-t border-slate-800">
-            {onFlyToSite && (
-              <button
-                type="button"
-                onClick={onFlyToSite}
-                className="w-full py-2 px-3 rounded-xl bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 text-white font-bold transition flex items-center justify-center gap-1.5 shadow-md shadow-cyan-600/30 text-xs"
-              >
-                <Compass className="w-4 h-4" />
-                Fly Map Camera to Site
-              </button>
-            )}
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-}
-
 export default function MapComponent({
   projects,
   conflicts,
@@ -551,7 +281,6 @@ export default function MapComponent({
   const [showBuildings3D, setShowBuildings3D] = useState(true);
   const [isLegendCollapsed, setIsLegendCollapsed] = useState(true);
   const [subsurfaceXRay, setSubsurfaceXRay] = useState(false);
-  const [inspected3DProject, setInspected3DProject] = useState<Project | null>(null);
 
   // 3D Construction Coordination Mesh Network States
   const [meshNetworkActive, setMeshNetworkActive] = useState(true);
@@ -803,6 +532,85 @@ export default function MapComponent({
                 }
               })
               .catch((err) => console.warn("Custom 3D buildings load error:", err));
+
+            // Render real 3D glTF/GLB models directly into the 3D Map canvas
+            const glbCustom3DLayer: any = {
+              id: "miraroad-3d-glb-models",
+              type: "custom",
+              renderingMode: "3d",
+              onAdd: function (m: any, gl: WebGLRenderingContext) {
+                this.camera = new THREE.Camera();
+                this.scene = new THREE.Scene();
+
+                const ambientLight = new THREE.AmbientLight(0xffffff, 1.4);
+                this.scene.add(ambientLight);
+
+                const dirLight1 = new THREE.DirectionalLight(0xffffff, 2.2);
+                dirLight1.position.set(200, 400, 300);
+                this.scene.add(dirLight1);
+
+                const dirLight2 = new THREE.DirectionalLight(0x38bdf8, 1.0);
+                dirLight2.position.set(-200, -200, 150);
+                this.scene.add(dirLight2);
+
+                const loader = new GLTFLoader();
+                MIRA_ROAD_3D_ASSETS.forEach((asset) => {
+                  loader.load(
+                    asset.modelUrl,
+                    (gltf) => {
+                      const model = gltf.scene;
+                      const coord = maplibregl.MercatorCoordinate.fromLngLat(
+                        [asset.lng, asset.lat],
+                        0
+                      );
+                      const meter = coord.meterInMercatorCoordinateUnits();
+                      const scaleMultiplier = (asset.scale || 30) * meter;
+
+                      model.position.set(coord.x, coord.y, coord.z);
+                      model.scale.set(scaleMultiplier, -scaleMultiplier, scaleMultiplier);
+                      model.rotation.set(Math.PI / 2, 0, 0);
+
+                      model.traverse((child: any) => {
+                        if (child.isMesh) {
+                          child.castShadow = true;
+                          child.receiveShadow = true;
+                          if (child.material) {
+                            child.material.depthWrite = true;
+                          }
+                        }
+                      });
+
+                      this.scene.add(model);
+                      m.triggerRepaint();
+                    },
+                    undefined,
+                    (err) => console.warn("Notice loading GLB into map:", asset.name, err)
+                  );
+                });
+
+                this.renderer = new THREE.WebGLRenderer({
+                  canvas: m.getCanvas(),
+                  context: gl,
+                  antialias: true,
+                });
+                this.renderer.autoClear = false;
+              },
+              render: function (gl: WebGLRenderingContext, matrix: number[]) {
+                const m = new THREE.Matrix4().fromArray(matrix);
+                this.camera.projectionMatrix = m;
+                this.renderer.resetState();
+                this.renderer.render(this.scene, this.camera);
+                map.triggerRepaint();
+              },
+            };
+
+            try {
+              if (!map.getLayer("miraroad-3d-glb-models")) {
+                map.addLayer(glbCustom3DLayer, labelLayerId);
+              }
+            } catch (e) {
+              console.warn("Notice adding 3D GLB layer to map:", e);
+            }
 
           } catch (layerErr) {
             console.warn("3D Building layer setup notice:", layerErr);
@@ -1192,6 +1000,13 @@ export default function MapComponent({
         `;
 
         el.addEventListener("click", () => {
+          map.flyTo({
+            center: [asset.lng, asset.lat],
+            zoom: 17.5,
+            pitch: 62,
+            bearing: 25,
+            duration: 1200,
+          });
           const matched = projects.find((p) => p.road_name === asset.road_name) || {
             id: asset.id,
             name: asset.name,
@@ -1207,7 +1022,9 @@ export default function MapComponent({
             longitude: asset.lng,
             status: "Ongoing",
           };
-          setInspected3DProject(matched as any);
+          if (onSelectProject) {
+            onSelectProject(matched as any);
+          }
         });
 
         const marker = new maplibregl.Marker({ element: el })
@@ -2304,11 +2121,23 @@ export default function MapComponent({
 
                 <button
                   type="button"
-                  onClick={() => setInspected3DProject(activeProj)}
+                  onClick={() => {
+                    const lat = activeProj.lat ?? activeProj.latitude;
+                    const lng = activeProj.lng ?? activeProj.longitude;
+                    if (lat && lng && mapInstanceRef.current) {
+                      mapInstanceRef.current.flyTo({
+                        center: [lng, lat],
+                        zoom: 17.5,
+                        pitch: 62,
+                        bearing: 25,
+                        duration: 1200,
+                      });
+                    }
+                  }}
                   className="w-full mt-1.5 py-1.5 px-3 bg-gradient-to-r from-cyan-600 via-blue-600 to-indigo-600 hover:from-cyan-500 hover:to-indigo-500 text-white font-bold rounded-xl transition flex items-center justify-center gap-1.5 text-xs shadow-md shadow-cyan-600/25"
                 >
                   <Box className="w-3.5 h-3.5 text-cyan-200" />
-                  <span>Inspect 3D Civil Asset</span>
+                  <span>Fly to 3D Model On Map</span>
                 </button>
               </div>
             );
@@ -2316,28 +2145,6 @@ export default function MapComponent({
 
           return null;
         })()}
-
-        {/* Interactive In-Map 3D Digital Twin Viewer Modal */}
-        {inspected3DProject && (
-          <InMap3DViewer
-            project={inspected3DProject}
-            onClose={() => setInspected3DProject(null)}
-            onFlyToSite={() => {
-              const lat = inspected3DProject.lat ?? inspected3DProject.latitude;
-              const lng = inspected3DProject.lng ?? inspected3DProject.longitude;
-              if (lat && lng && mapInstanceRef.current) {
-                mapInstanceRef.current.flyTo({
-                  center: [lng, lat],
-                  zoom: 17,
-                  pitch: 62,
-                  bearing: -15,
-                  duration: 1200,
-                });
-              }
-              setInspected3DProject(null);
-            }}
-          />
-        )}
 
         {/* Docked Time-Travel 4D Scrubber Bar */}
         {(() => {
