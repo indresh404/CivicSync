@@ -163,20 +163,6 @@ export default function AdminSidebar({
               </button>
             );
           })}
-
-          {/* Direct Link to 3D Infrastructure Network Graph */}
-          <Link
-            href="/graph"
-            className="w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-semibold bg-cyan-950/40 hover:bg-cyan-900/60 text-cyan-300 border border-cyan-500/30 transition shadow-xs mt-2"
-          >
-            <div className="flex items-center gap-3">
-              <Network className="w-4 h-4 text-cyan-400 animate-pulse" />
-              <span>3D Network Graph</span>
-            </div>
-            <span className="text-[9px] font-mono font-bold px-1.5 py-0.5 rounded bg-cyan-900 border border-cyan-700 text-cyan-200">
-              NEW
-            </span>
-          </Link>
         </nav>
       </div>
 

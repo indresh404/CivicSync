@@ -32,7 +32,6 @@ import {
   Droplets,
   Construction,
   Building2,
-  Download,
   CheckCircle2,
   ShieldCheck,
   RotateCw,
@@ -50,7 +49,6 @@ import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 import { formatDate } from "@/lib/utils";
 import { buildConstructionMesh, MeshGraph, MeshNode, MeshLink } from "@/lib/meshNetwork";
-import MeshGraphModal from "./MeshGraphModal";
 import {
   simulateTrafficConditions,
   TrafficSegment,
@@ -58,6 +56,34 @@ import {
   PEAK_PERIOD_PRESETS,
   CityTrafficSnapshot,
 } from "@/lib/trafficData";
+
+// Generates smooth curved 3D Bézier arc coordinates between 2 spatial points on the map
+function generateCurveCoordinates(
+  p0: [number, number],
+  p1: [number, number],
+  arcOffset = 0.0016
+): [number, number][] {
+  const dx = p1[0] - p0[0];
+  const dy = p1[1] - p0[1];
+  const len = Math.sqrt(dx * dx + dy * dy);
+  if (len < 0.0001) return [p0, p1];
+
+  const nx = -dy / len;
+  const ny = dx / len;
+
+  const cx = (p0[0] + p1[0]) / 2 + nx * arcOffset;
+  const cy = (p0[1] + p1[1]) / 2 + ny * arcOffset;
+
+  const points: [number, number][] = [];
+  const steps = 16;
+  for (let i = 0; i <= steps; i++) {
+    const t = i / steps;
+    const x = (1 - t) * (1 - t) * p0[0] + 2 * (1 - t) * t * cx + t * t * p1[0];
+    const y = (1 - t) * (1 - t) * p0[1] + 2 * (1 - t) * t * cy + t * t * p1[1];
+    points.push([x, y]);
+  }
+  return points;
+}
 
 interface MapComponentProps {
   projects: Project[];
@@ -478,7 +504,7 @@ function InMap3DViewer({ project, onClose, onFlyToSite }: InMap3DViewerProps) {
             </div>
           </div>
 
-          <div className="space-y-2 pt-2 border-t border-slate-800">
+          <div className="pt-2 border-t border-slate-800">
             {onFlyToSite && (
               <button
                 type="button"
@@ -489,14 +515,6 @@ function InMap3DViewer({ project, onClose, onFlyToSite }: InMap3DViewerProps) {
                 Fly Map Camera to Site
               </button>
             )}
-            <a
-              href={modelInfo.modelUrl}
-              download={modelInfo.modelUrl.split("/").pop()}
-              className="w-full py-2 px-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 font-semibold border border-slate-700 transition flex items-center justify-center gap-1.5 text-xs"
-            >
-              <Download className="w-4 h-4 text-cyan-400" />
-              Download Binary glTF (.glb)
-            </a>
           </div>
         </div>
       </div>
@@ -531,7 +549,7 @@ export default function MapComponent({
   const [isOrbiting, setIsOrbiting] = useState(false);
   const [showUtilities, setShowUtilities] = useState(true);
   const [showBuildings3D, setShowBuildings3D] = useState(true);
-  const [isLegendCollapsed, setIsLegendCollapsed] = useState(false);
+  const [isLegendCollapsed, setIsLegendCollapsed] = useState(true);
   const [subsurfaceXRay, setSubsurfaceXRay] = useState(false);
   const [inspected3DProject, setInspected3DProject] = useState<Project | null>(null);
 
@@ -540,7 +558,6 @@ export default function MapComponent({
   const [meshFilter, setMeshFilter] = useState<"ALL" | "CONFLICTS" | "CORRIDORS" | "JOINT_TRENCH">("ALL");
   const [selectedMeshNodeId, setSelectedMeshNodeId] = useState<string | null>(null);
   const [selectedMeshLink, setSelectedMeshLink] = useState<MeshLink | null>(null);
-  const [meshGraphModalOpen, setMeshGraphModalOpen] = useState(false);
 
   const meshGraph = React.useMemo(
     () => buildConstructionMesh(projects, conflicts, MIRA_ROAD_3D_ASSETS),
@@ -548,10 +565,10 @@ export default function MapComponent({
   );
 
   // Live Urban Traffic & Peak Hours Engine States
-  const [showTraffic, setShowTraffic] = useState(true);
+  const [showTraffic, setShowTraffic] = useState(false);
   const [trafficHour, setTrafficHour] = useState<number>(8.5); // Default: Morning Peak (08:30 AM)
   const [selectedTrafficSegment, setSelectedTrafficSegment] = useState<TrafficSegment | null>(null);
-  const [trafficHudCollapsed, setTrafficHudCollapsed] = useState(false);
+  const [trafficHudCollapsed, setTrafficHudCollapsed] = useState(true);
 
   const trafficSnapshot = React.useMemo(
     () => simulateTrafficConditions(trafficHour, projects, conflicts),
@@ -1277,7 +1294,7 @@ export default function MapComponent({
         type: "Feature",
         geometry: {
           type: "LineString",
-          coordinates: [link.source_coords, link.target_coords],
+          coordinates: generateCurveCoordinates(link.source_coords, link.target_coords),
         },
         properties: {
           id: link.id,
@@ -1718,55 +1735,43 @@ export default function MapComponent({
 
   return (
     <div className="relative w-full h-full min-h-[560px] rounded-2xl overflow-hidden border border-slate-800 bg-slate-950 flex flex-col shadow-2xl">
-      {/* Top Map Command Toolbar */}
-      <div className="bg-slate-900/90 backdrop-blur-md border-b border-slate-800 px-4 py-2.5 flex flex-wrap items-center justify-between gap-2.5 z-20 text-white">
-        {/* Title & Place Search Box */}
-        <div className="flex items-center gap-3 flex-1 min-w-[280px]">
+      {/* Sleek Minimal Map Command Toolbar */}
+      <div className="bg-slate-900/90 backdrop-blur-md border-b border-slate-800/80 px-4 py-2.5 flex flex-wrap items-center justify-between gap-3 z-20 text-white">
+        {/* Brand & Place Search Box */}
+        <div className="flex items-center gap-3 flex-1 min-w-[260px]">
           <div className="flex items-center gap-2">
-            <div className="p-1.5 rounded-lg bg-gradient-to-tr from-cyan-600 to-blue-600 text-white shadow-lg shadow-cyan-500/20">
-              <Box className="w-4 h-4" />
-            </div>
-            <div>
-              <span className="font-bold text-xs text-white block leading-tight flex items-center gap-1.5">
-                Mira Road 3D Digital Twin
-                <span className="bg-cyan-950 text-cyan-400 text-[10px] px-1.5 py-0.2 rounded border border-cyan-800/60 font-semibold uppercase">
-                  3D Extrusions Active
-                </span>
-              </span>
-              <span className="text-[10px] text-slate-400">
-                {filteredProjects.length} of {projects.length} municipal projects visible
-              </span>
-            </div>
+            <div className="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse" />
+            <span className="font-bold text-xs text-white tracking-wide">
+              Mira Road 3D Map & Infrastructure Graph
+            </span>
           </div>
 
           {/* Place Search Input */}
           <div className="relative flex-1 max-w-xs">
-            <div className="relative">
-              <Search className="w-3.5 h-3.5 text-slate-400 absolute left-2.5 top-1/2 -translate-y-1/2" />
-              <input
-                type="text"
-                placeholder="Search Mira Road street or landmark..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                onFocus={() => searchResults.length > 0 && setSearchOpen(true)}
-                className="w-full pl-8 pr-7 py-1 text-xs rounded-lg border border-slate-700 focus:outline-none focus:ring-1 focus:ring-cyan-500 bg-slate-950/80 text-white placeholder-slate-400 transition"
-              />
-              {isSearching ? (
-                <Loader2 className="w-3.5 h-3.5 text-cyan-400 animate-spin absolute right-2.5 top-1/2 -translate-y-1/2" />
-              ) : searchQuery ? (
-                <button
-                  type="button"
-                  onClick={() => {
-                    setSearchQuery("");
-                    setSearchResults([]);
-                    setSearchOpen(false);
-                  }}
-                  className="text-slate-400 hover:text-white absolute right-2.5 top-1/2 -translate-y-1/2"
-                >
-                  <X className="w-3.5 h-3.5" />
-                </button>
-              ) : null}
-            </div>
+            <Search className="w-3.5 h-3.5 text-slate-400 absolute left-2.5 top-1/2 -translate-y-1/2" />
+            <input
+              type="text"
+              placeholder="Search Mira Road street or landmark..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              onFocus={() => searchResults.length > 0 && setSearchOpen(true)}
+              className="w-full pl-8 pr-7 py-1 text-xs rounded-lg border border-slate-700/80 focus:outline-none focus:ring-1 focus:ring-cyan-500 bg-slate-950/80 text-white placeholder-slate-400 transition"
+            />
+            {isSearching ? (
+              <Loader2 className="w-3.5 h-3.5 text-cyan-400 animate-spin absolute right-2.5 top-1/2 -translate-y-1/2" />
+            ) : searchQuery ? (
+              <button
+                type="button"
+                onClick={() => {
+                  setSearchQuery("");
+                  setSearchResults([]);
+                  setSearchOpen(false);
+                }}
+                className="text-slate-400 hover:text-white absolute right-2.5 top-1/2 -translate-y-1/2"
+              >
+                <X className="w-3.5 h-3.5" />
+              </button>
+            ) : null}
 
             {/* Place Autocomplete Results */}
             {searchOpen && searchResults.length > 0 && (
@@ -1786,13 +1791,13 @@ export default function MapComponent({
           </div>
         </div>
 
-        {/* 3D Controls, Filters, & Style Selector */}
-        <div className="flex flex-wrap items-center gap-2 text-xs">
+        {/* Minimal Controls */}
+        <div className="flex items-center gap-1.5 text-xs">
           {/* 3D / 2D Tilt Toggle Button */}
           <button
             type="button"
             onClick={toggle3DMode}
-            className={`inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg border font-bold transition text-xs shadow-xs ${
+            className={`inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg border font-semibold transition text-xs shadow-xs ${
               is3DMode
                 ? "bg-cyan-950 border-cyan-500/60 text-cyan-300"
                 : "bg-slate-800 border-slate-700 text-slate-300 hover:bg-slate-700"
@@ -1800,112 +1805,44 @@ export default function MapComponent({
             title="Toggle 3D Extruded Perspective View"
           >
             <Box className="w-3.5 h-3.5 text-cyan-400" />
-            {is3DMode ? "3D Pitch: 58°" : "2D Plan"}
+            {is3DMode ? "3D View" : "2D"}
           </button>
 
-          {/* 3D Orbit Button */}
-          <button
-            type="button"
-            onClick={toggleOrbitAnimation}
-            className={`inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg border font-semibold transition text-xs shadow-xs ${
-              isOrbiting
-                ? "bg-amber-950 border-amber-500/60 text-amber-300 animate-pulse"
-                : "bg-slate-800 border-slate-700 text-slate-300 hover:bg-slate-700"
-            }`}
-            title="Slow 3D Orbit Camera Rotation"
-          >
-            <Orbit className="w-3.5 h-3.5 text-amber-400" />
-            {isOrbiting ? "Orbiting..." : "3D Orbit"}
-          </button>
-
-          {/* Subsurface 3D Cutaway (X-Ray) Mode */}
-          <button
-            type="button"
-            onClick={() => setSubsurfaceXRay(!subsurfaceXRay)}
-            className={`inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg border font-bold transition text-xs shadow-xs ${
-              subsurfaceXRay
-                ? "bg-purple-950 border-purple-500 text-purple-300 ring-1 ring-purple-500 shadow-md shadow-purple-950"
-                : "bg-slate-800 border-slate-700 text-slate-300 hover:bg-slate-700"
-            }`}
-            title="Toggle Subsurface 3D Cutaway (X-Ray view of underground utilities)"
-          >
-            <Layers3 className="w-3.5 h-3.5 text-purple-400" />
-            {subsurfaceXRay ? "Subsurface: X-Ray ON" : "Subsurface Cutaway"}
-          </button>
-
-          {/* 3D Construction Mesh Network Toggle */}
+          {/* 3D Construction Mesh Network Toggle (In Map Only) */}
           <button
             type="button"
             onClick={() => setMeshNetworkActive(!meshNetworkActive)}
-            className={`inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg border font-bold transition text-xs shadow-xs ${
+            className={`inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg border font-semibold transition text-xs shadow-xs ${
               meshNetworkActive
-                ? "bg-emerald-950 border-emerald-500 text-emerald-300 ring-1 ring-emerald-500 shadow-md shadow-emerald-950"
+                ? "bg-emerald-950 border-emerald-500 text-emerald-300 ring-1 ring-emerald-500/50 shadow-sm shadow-emerald-950"
                 : "bg-slate-800 border-slate-700 text-slate-300 hover:bg-slate-700"
             }`}
-            title="Toggle 3D Construction Coordination Mesh Network (Node-to-Node Interconnects & Conflict Arcs)"
+            title="Toggle 3D Infrastructure Network Graph directly on Map"
           >
             <Network className="w-3.5 h-3.5 text-emerald-400" />
-            {meshNetworkActive ? "3D Mesh: ON" : "3D Mesh Network"}
+            3D Graph
           </button>
 
-          {/* Live Urban Traffic & Peak Hours Engine Toggle */}
+          {/* Live Urban Traffic Toggle */}
           <button
             type="button"
             onClick={() => setShowTraffic(!showTraffic)}
-            className={`inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg border font-bold transition text-xs shadow-xs ${
+            className={`inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg border font-semibold transition text-xs shadow-xs ${
               showTraffic
-                ? "bg-amber-950 border-amber-500 text-amber-300 ring-1 ring-amber-500 shadow-md shadow-amber-950"
+                ? "bg-amber-950 border-amber-500 text-amber-300 ring-1 ring-amber-500/50"
                 : "bg-slate-800 border-slate-700 text-slate-300 hover:bg-slate-700"
             }`}
-            title="Toggle Live Urban Traffic Flow, Peak Hours Simulation, & Alternate Detour Navigation"
+            title="Toggle Live Urban Traffic Flow"
           >
             <Car className="w-3.5 h-3.5 text-amber-400" />
-            {showTraffic ? "Traffic: ON" : "Traffic Flow"}
+            Traffic
           </button>
-
-          {/* Interactive Topology Graph Modal Button */}
-          {meshNetworkActive && (
-            <button
-              type="button"
-              onClick={() => setMeshGraphModalOpen(true)}
-              className="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 border border-emerald-500/50 text-emerald-300 font-bold transition text-xs shadow-md shadow-emerald-950"
-              title="Open Node-to-Node Topological Flow Graph"
-            >
-              <Share2 className="w-3.5 h-3.5 text-emerald-400" />
-              <span>Topology Graph</span>
-            </button>
-          )}
-
-          {/* GenCity 3D Studio Button */}
-          {onOpenGenCityStudio && (
-            <button
-              type="button"
-              onClick={onOpenGenCityStudio}
-              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 border border-cyan-500/50 text-cyan-300 font-bold transition text-xs shadow-md shadow-cyan-950"
-              title="Open GenCity 3D AI Studio"
-            >
-              <Box className="w-3.5 h-3.5 text-cyan-400" />
-              <span>GenCity 3D Studio</span>
-            </button>
-          )}
-
-          {/* Ask AI Copilot Button */}
-          {onOpenAICopilot && (
-            <button
-              type="button"
-              onClick={onOpenAICopilot}
-              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 text-white font-bold transition text-xs shadow-md shadow-cyan-600/25"
-            >
-              <Sparkles className="w-3.5 h-3.5 text-cyan-200" />
-              Ask AI Copilot
-            </button>
-          )}
 
           {/* Conflict Filter */}
           <button
             type="button"
             onClick={() => setConflictOnly(!conflictOnly)}
-            className={`inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg border font-bold transition text-xs ${
+            className={`inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg border font-semibold transition text-xs ${
               conflictOnly
                 ? "bg-red-950 text-red-300 border-red-700 shadow-xs"
                 : "bg-slate-800 text-slate-300 border-slate-700 hover:bg-slate-700"
@@ -1919,28 +1856,15 @@ export default function MapComponent({
           <select
             value={filterDepartment}
             onChange={(e) => setFilterDepartment(e.target.value)}
-            className="px-2.5 py-1.5 rounded-lg border border-slate-700 bg-slate-800 text-slate-200 font-semibold focus:outline-none focus:ring-1 focus:ring-cyan-500 text-xs"
+            className="px-2.5 py-1.5 rounded-lg border border-slate-700 bg-slate-800 text-slate-200 font-medium focus:outline-none focus:ring-1 focus:ring-cyan-500 text-xs"
           >
             <option value="ALL">All Departments</option>
-            <option value="Roads Department">Roads Dept (Blue)</option>
-            <option value="Water Department">Water Dept (Cyan)</option>
-            <option value="Electricity Department">Electricity Dept (Amber)</option>
-            <option value="Telecom Department">Telecom Dept (Purple)</option>
-            <option value="Gas Department">Gas Dept (Pink)</option>
-            <option value="Sewerage Department">Sewerage Dept (Emerald)</option>
-          </select>
-
-          {/* Vector Style Selector */}
-          <select
-            value={selectedStyleId}
-            onChange={(e) => setSelectedStyleId(e.target.value)}
-            className="px-2.5 py-1.5 rounded-lg border border-slate-700 bg-slate-800 text-slate-200 font-semibold text-xs"
-          >
-            {STYLE_OPTIONS.map((style) => (
-              <option key={style.id} value={style.id}>
-                {style.label}
-              </option>
-            ))}
+            <option value="Roads Department">Roads Dept</option>
+            <option value="Water Department">Water Dept</option>
+            <option value="Electricity Department">Electricity</option>
+            <option value="Telecom Department">Telecom</option>
+            <option value="Gas Department">Gas Dept</option>
+            <option value="Sewerage Department">Sewerage</option>
           </select>
 
           {/* Fit Bounds */}
@@ -1954,38 +1878,6 @@ export default function MapComponent({
           </button>
         </div>
       </div>
-
-        {/* Quick Mira Road Hotspots Corridor Bar */}
-        <div className="bg-slate-900/60 border-b border-slate-800/80 px-4 py-1.5 flex items-center gap-2 overflow-x-auto text-[11px] z-10 text-white">
-          <span className="font-bold text-cyan-400 shrink-0 flex items-center gap-1">
-            <Navigation className="w-3 h-3 text-cyan-400" /> Mira Road 3D Hotspots:
-          </span>
-          <button
-            type="button"
-            onClick={() => {
-              if (!mapInstanceRef.current) return;
-              import("maplibre-gl").then(({ default: maplibregl }) => {
-                const bounds = new maplibregl.LngLatBounds();
-                MIRA_ROAD_3D_ASSETS.forEach((a) => bounds.extend([a.lng, a.lat]));
-                mapInstanceRef.current.fitBounds(bounds, { padding: 90, pitch: 58, bearing: -20 });
-              });
-            }}
-            className="px-2.5 py-0.5 rounded-md bg-cyan-950/80 border border-cyan-500 text-cyan-300 font-bold shrink-0 transition flex items-center gap-1 hover:bg-cyan-900 shadow-sm shadow-cyan-950"
-          >
-            <Box className="w-3 h-3 text-cyan-400" />
-            4 3D Digital Twin Sites
-          </button>
-          {MIRA_ROAD_HOTSPOTS.map((spot) => (
-            <button
-              key={spot.name}
-              type="button"
-              onClick={() => flyToHotspot(spot)}
-              className="px-2.5 py-0.5 rounded-md bg-slate-800/80 border border-slate-700 hover:border-cyan-400 text-slate-300 hover:text-cyan-300 font-medium shrink-0 transition"
-            >
-              {spot.name}
-            </button>
-          ))}
-        </div>
 
       {/* Map View Canvas */}
       <div className="relative flex-1 w-full h-full min-h-[420px]">
@@ -2242,253 +2134,187 @@ export default function MapComponent({
           )}
         </div>
 
-        {/* 3D Coordination Mesh Telemetry Bar */}
-        {meshNetworkActive && (
-          <div className="absolute top-3 right-3 sm:right-16 z-20 bg-slate-900/90 backdrop-blur-md px-3 py-2 rounded-2xl border border-emerald-500/40 shadow-xl text-xs flex flex-wrap items-center gap-2 pointer-events-auto text-white">
-            <div className="flex items-center gap-1.5 font-bold text-emerald-400">
-              <Network className="w-4 h-4 animate-pulse text-emerald-400" />
-              <span className="hidden sm:inline">3D Mesh:</span>
-              <span className="font-mono text-white text-[11px]">
-                {meshGraph.stats.total_nodes} Nodes &bull; {meshGraph.stats.total_links} Links
-              </span>
-            </div>
-
-            <div className="h-4 w-px bg-slate-700 hidden sm:block" />
-
-            {/* Filter Chips */}
-            <div className="flex items-center gap-1 text-[10px]">
-              <button
-                type="button"
-                onClick={() => setMeshFilter("ALL")}
-                className={`px-2 py-0.5 rounded-md font-semibold transition ${
-                  meshFilter === "ALL"
-                    ? "bg-emerald-600 text-white shadow-xs"
-                    : "bg-slate-800 text-slate-300 hover:bg-slate-700"
-                }`}
-              >
-                All
-              </button>
-              <button
-                type="button"
-                onClick={() => setMeshFilter("CONFLICTS")}
-                className={`px-2 py-0.5 rounded-md font-semibold transition flex items-center gap-1 ${
-                  meshFilter === "CONFLICTS"
-                    ? "bg-red-600 text-white shadow-xs"
-                    : "bg-slate-800 text-red-300 hover:bg-slate-700"
-                }`}
-              >
-                <AlertTriangle className="w-2.5 h-2.5" />
-                Clashes ({meshGraph.stats.conflict_links})
-              </button>
-              <button
-                type="button"
-                onClick={() => setMeshFilter("CORRIDORS")}
-                className={`px-2 py-0.5 rounded-md font-semibold transition flex items-center gap-1 ${
-                  meshFilter === "CORRIDORS"
-                    ? "bg-cyan-600 text-white shadow-xs"
-                    : "bg-slate-800 text-cyan-300 hover:bg-slate-700"
-                }`}
-              >
-                <Layers className="w-2.5 h-2.5" />
-                Corridors ({meshGraph.stats.corridor_links})
-              </button>
-              <button
-                type="button"
-                onClick={() => setMeshFilter("JOINT_TRENCH")}
-                className={`px-2 py-0.5 rounded-md font-semibold transition flex items-center gap-1 ${
-                  meshFilter === "JOINT_TRENCH"
-                    ? "bg-emerald-600 text-white shadow-xs"
-                    : "bg-slate-800 text-emerald-300 hover:bg-slate-700"
-                }`}
-              >
-                <Zap className="w-2.5 h-2.5" />
-                Joint Dig ({meshGraph.stats.joint_trench_links})
-              </button>
-            </div>
-
-            <button
-              type="button"
-              onClick={() => setMeshGraphModalOpen(true)}
-              className="px-2.5 py-1 rounded-lg bg-emerald-950 hover:bg-emerald-900 border border-emerald-500 text-emerald-300 font-bold transition flex items-center gap-1 text-[11px] shadow-xs"
-              title="View Full Topological Flow Graph"
-            >
-              <Share2 className="w-3 h-3 text-emerald-400" />
-              <span className="hidden md:inline">Graph View</span>
-            </button>
+        {/* Minimal 3D Network Telemetry Pill */}
+        {meshNetworkActive && !selectedMeshLink && !selectedMeshNodeId && !selectedProjectId && (
+          <div className="absolute top-3 right-3 z-10 bg-slate-900/85 backdrop-blur-md px-3 py-1.5 rounded-xl border border-emerald-500/30 text-xs flex items-center gap-2 pointer-events-auto text-white shadow-lg shadow-black/40">
+            <Network className="w-3.5 h-3.5 text-emerald-400 animate-pulse" />
+            <span className="font-mono text-emerald-300 text-[11px] font-semibold">
+              3D Graph: {meshGraph.stats.total_nodes} Nodes &bull; {meshGraph.stats.total_links} Coordination Arcs
+            </span>
           </div>
         )}
 
-        {/* Selected Mesh Node Floating Details Card */}
-        {meshNetworkActive && selectedMeshNodeId && (() => {
-          const node = meshGraph.nodes.find((n) => n.id === selectedMeshNodeId);
-          if (!node) return null;
-          const incidentLinks = meshGraph.links.filter(
-            (l) => l.source_id === node.id || l.target_id === node.id
-          );
-          return (
-            <div className="absolute top-16 right-3 sm:right-6 z-20 max-w-xs sm:max-w-sm bg-slate-900/95 backdrop-blur-md p-3.5 rounded-2xl border border-emerald-500/50 shadow-2xl text-xs space-y-2 animate-in fade-in slide-in-from-right-2 pointer-events-auto text-white">
-              <div className="flex items-center justify-between border-b border-slate-800 pb-2">
-                <div className="flex items-center gap-2">
-                  <span className="w-3 h-3 rounded-full" style={{ backgroundColor: node.dept_color }} />
-                  <span className="font-bold text-white uppercase text-[11px] tracking-wider truncate max-w-[170px]">
-                    {node.department}
+        {/* Unified Minimal Inspector Card (Top Right) */}
+        {(() => {
+          if (meshNetworkActive && selectedMeshLink) {
+            return (
+              <div className="absolute top-3 right-3 z-20 max-w-xs sm:max-w-sm bg-slate-900/95 backdrop-blur-md p-3.5 rounded-2xl border border-cyan-500/50 shadow-2xl text-xs space-y-2 animate-in fade-in slide-in-from-right-2 pointer-events-auto text-white">
+                <div className="flex items-center justify-between border-b border-slate-800 pb-2">
+                  <span className="font-bold text-white text-xs flex items-center gap-1.5">
+                    <Zap className="w-3.5 h-3.5 text-cyan-400" />
+                    {selectedMeshLink.label}
                   </span>
+                  <button
+                    onClick={() => setSelectedMeshLink(null)}
+                    className="text-slate-400 hover:text-white p-1 rounded-md hover:bg-slate-800"
+                  >
+                    <X className="w-3.5 h-3.5" />
+                  </button>
                 </div>
-                <button
-                  onClick={() => setSelectedMeshNodeId(null)}
-                  className="text-slate-400 hover:text-white p-1 rounded-md hover:bg-slate-800"
-                  title="Clear selection"
-                >
-                  <X className="w-3.5 h-3.5" />
-                </button>
+                <p className="text-[11px] text-slate-300 leading-snug">{selectedMeshLink.description}</p>
+                {selectedMeshLink.suggested_sequence && (
+                  <div className="p-2 rounded-xl bg-amber-950/40 border border-amber-800/60 text-[10px] text-amber-200">
+                    <strong>Recommended Sequence:</strong> {selectedMeshLink.suggested_sequence}
+                  </div>
+                )}
+                <div className="flex items-center justify-between text-[10px] font-mono text-emerald-400 pt-1 border-t border-slate-800">
+                  <span>Municipal Avoidance:</span>
+                  <span className="font-bold">₹{selectedMeshLink.cost_avoided_inr.toLocaleString()} INR</span>
+                </div>
               </div>
-              <div>
-                <h4 className="font-bold text-white text-xs">{node.name}</h4>
-                <p className="text-[10px] text-slate-400 font-mono mt-0.5">
-                  {node.road_name} &bull; {node.start_date} to {node.end_date}
-                </p>
+            );
+          }
+
+          if (meshNetworkActive && selectedMeshNodeId) {
+            const node = meshGraph.nodes.find((n) => n.id === selectedMeshNodeId);
+            if (!node) return null;
+            const incidentLinks = meshGraph.links.filter(
+              (l) => l.source_id === node.id || l.target_id === node.id
+            );
+            return (
+              <div className="absolute top-3 right-3 z-20 max-w-xs sm:max-w-sm bg-slate-900/95 backdrop-blur-md p-3.5 rounded-2xl border border-emerald-500/50 shadow-2xl text-xs space-y-2 animate-in fade-in slide-in-from-right-2 pointer-events-auto text-white">
+                <div className="flex items-center justify-between border-b border-slate-800 pb-2">
+                  <div className="flex items-center gap-2">
+                    <span className="w-3 h-3 rounded-full" style={{ backgroundColor: node.dept_color }} />
+                    <span className="font-bold text-white uppercase text-[11px] tracking-wider truncate max-w-[170px]">
+                      {node.department}
+                    </span>
+                  </div>
+                  <button
+                    onClick={() => setSelectedMeshNodeId(null)}
+                    className="text-slate-400 hover:text-white p-1 rounded-md hover:bg-slate-800"
+                    title="Clear selection"
+                  >
+                    <X className="w-3.5 h-3.5" />
+                  </button>
+                </div>
+                <div>
+                  <h4 className="font-bold text-white text-xs">{node.name}</h4>
+                  <p className="text-[10px] text-slate-400 font-mono mt-0.5">
+                    {node.road_name} &bull; {node.start_date} to {node.end_date}
+                  </p>
+                </div>
+                <div>
+                  <span className="text-[10px] uppercase font-mono text-slate-400 font-bold block mb-1">
+                    3D Graph Connections ({incidentLinks.length})
+                  </span>
+                  <div className="space-y-1 max-h-32 overflow-y-auto pr-1">
+                    {incidentLinks.map((l) => (
+                      <div
+                        key={l.id}
+                        className={`p-1.5 rounded-lg border text-[10px] ${
+                          l.type === "CONFLICT"
+                            ? "bg-red-950/40 border-red-800/60 text-red-200"
+                            : l.type === "JOINT_TRENCH"
+                            ? "bg-emerald-950/40 border-emerald-800/60 text-emerald-200"
+                            : "bg-cyan-950/40 border-cyan-800/60 text-cyan-200"
+                        }`}
+                      >
+                        <div className="flex items-center justify-between font-bold">
+                          <span>{l.label}</span>
+                          <span>{l.distance_m}m</span>
+                        </div>
+                        <p className="text-[9px] text-slate-300 mt-0.5 line-clamp-1">{l.description}</p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+                <div className="flex items-center gap-2 pt-1 border-t border-slate-800">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      if (mapInstanceRef.current) {
+                        mapInstanceRef.current.flyTo({ center: [node.lng, node.lat], zoom: 17, pitch: 62, duration: 1000 });
+                      }
+                    }}
+                    className="flex-1 py-1.5 px-2 bg-gradient-to-r from-emerald-600 to-cyan-600 hover:from-emerald-500 hover:to-cyan-500 text-white font-bold rounded-lg text-[10px] transition flex items-center justify-center gap-1 shadow-xs"
+                  >
+                    <Compass className="w-3 h-3" /> Focus Node
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setSelectedMeshNodeId(null)}
+                    className="py-1.5 px-2 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-lg text-[10px] border border-slate-700"
+                  >
+                    Clear
+                  </button>
+                </div>
               </div>
-              <div>
-                <span className="text-[10px] uppercase font-mono text-slate-400 font-bold block mb-1">
-                  Active Coordination Links ({incidentLinks.length})
-                </span>
-                <div className="space-y-1 max-h-36 overflow-y-auto pr-1">
-                  {incidentLinks.map((l) => (
-                    <div
-                      key={l.id}
-                      className={`p-1.5 rounded-lg border text-[10px] ${
-                        l.type === "CONFLICT"
-                          ? "bg-red-950/40 border-red-800/60 text-red-200"
-                          : l.type === "JOINT_TRENCH"
-                          ? "bg-emerald-950/40 border-emerald-800/60 text-emerald-200"
-                          : "bg-cyan-950/40 border-cyan-800/60 text-cyan-200"
+            );
+          }
+
+          if (selectedProjectId) {
+            const activeProj = projects.find((p) => p.id === selectedProjectId);
+            if (!activeProj) return null;
+            const isClashing = conflictingProjectIds.has(activeProj.id);
+            return (
+              <div className="absolute top-3 right-3 z-20 max-w-xs sm:max-w-sm bg-slate-900/95 backdrop-blur-md p-4 rounded-2xl border border-cyan-500/40 shadow-2xl text-xs space-y-2.5 animate-in fade-in slide-in-from-top-2 pointer-events-auto text-white">
+                <div className="flex items-start justify-between gap-2">
+                  <span className="font-mono font-bold text-cyan-300 bg-cyan-950/80 border border-cyan-700/60 px-2 py-0.5 rounded text-[11px]">
+                    {activeProj.id}
+                  </span>
+                  <div className="flex items-center gap-1.5">
+                    <span
+                      className={`text-[10px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider ${
+                        isClashing
+                          ? "bg-red-950 text-red-300 border border-red-700"
+                          : "bg-emerald-950 text-emerald-300 border border-emerald-700"
                       }`}
                     >
-                      <div className="flex items-center justify-between font-bold">
-                        <span>{l.label}</span>
-                        <span>{l.distance_m}m</span>
-                      </div>
-                      <p className="text-[9px] text-slate-300 mt-0.5 line-clamp-1">{l.description}</p>
-                    </div>
-                  ))}
+                      {isClashing ? "Conflict Flagged" : activeProj.status}
+                    </span>
+                    <button
+                      onClick={() => onSelectProject && onSelectProject(null as any)}
+                      className="text-slate-400 hover:text-white p-0.5"
+                    >
+                      <X className="w-3.5 h-3.5" />
+                    </button>
+                  </div>
                 </div>
-              </div>
-              <div className="flex items-center gap-2 pt-1 border-t border-slate-800">
-                <button
-                  type="button"
-                  onClick={() => {
-                    if (mapInstanceRef.current) {
-                      mapInstanceRef.current.flyTo({ center: [node.lng, node.lat], zoom: 17, pitch: 62, duration: 1000 });
-                    }
-                  }}
-                  className="flex-1 py-1.5 px-2 bg-gradient-to-r from-emerald-600 to-cyan-600 hover:from-emerald-500 hover:to-cyan-500 text-white font-bold rounded-lg text-[10px] transition flex items-center justify-center gap-1 shadow-xs"
-                >
-                  <Compass className="w-3 h-3" /> Focus Site
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setSelectedMeshNodeId(null)}
-                  className="py-1.5 px-2 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-lg text-[10px] border border-slate-700"
-                >
-                  Clear
-                </button>
-              </div>
-            </div>
-          );
-        })()}
 
-        {/* Selected Mesh Link Details Card */}
-        {meshNetworkActive && selectedMeshLink && !selectedMeshNodeId && (
-          <div className="absolute top-16 right-3 sm:right-6 z-20 max-w-xs sm:max-w-sm bg-slate-900/95 backdrop-blur-md p-3.5 rounded-2xl border border-cyan-500/50 shadow-2xl text-xs space-y-2 animate-in fade-in slide-in-from-right-2 pointer-events-auto text-white">
-            <div className="flex items-center justify-between border-b border-slate-800 pb-2">
-              <span className="font-bold text-white text-xs flex items-center gap-1.5">
-                <Zap className="w-3.5 h-3.5 text-cyan-400" />
-                {selectedMeshLink.label}
-              </span>
-              <button
-                onClick={() => setSelectedMeshLink(null)}
-                className="text-slate-400 hover:text-white p-1 rounded-md hover:bg-slate-800"
-              >
-                <X className="w-3.5 h-3.5" />
-              </button>
-            </div>
-            <p className="text-[11px] text-slate-300 leading-snug">{selectedMeshLink.description}</p>
-            {selectedMeshLink.suggested_sequence && (
-              <div className="p-2 rounded-xl bg-amber-950/40 border border-amber-800/60 text-[10px] text-amber-200">
-                <strong>Recommended Sequence:</strong> {selectedMeshLink.suggested_sequence}
-              </div>
-            )}
-            <div className="flex items-center justify-between text-[10px] font-mono text-emerald-400 pt-1 border-t border-slate-800">
-              <span>Municipal Rework Avoidance:</span>
-              <span className="font-bold">₹{selectedMeshLink.cost_avoided_inr.toLocaleString()} INR</span>
-            </div>
-          </div>
-        )}
-
-        {/* Selected Project Floating Inspection Card */}
-        {selectedProjectId && (() => {
-          const activeProj = projects.find((p) => p.id === selectedProjectId);
-          if (!activeProj) return null;
-          const isClashing = conflictingProjectIds.has(activeProj.id);
-          return (
-            <div className="absolute top-3 right-3 z-20 max-w-xs sm:max-w-sm bg-slate-900/95 backdrop-blur-md p-4 rounded-2xl border border-cyan-500/40 shadow-2xl text-xs space-y-2.5 animate-in fade-in slide-in-from-top-2 pointer-events-auto text-white">
-              <div className="flex items-start justify-between gap-2">
-                <span className="font-mono font-bold text-cyan-300 bg-cyan-950/80 border border-cyan-700/60 px-2 py-0.5 rounded text-[11px]">
-                  {activeProj.id}
-                </span>
-                <span
-                  className={`text-[10px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider ${
-                    isClashing
-                      ? "bg-red-950 text-red-300 border border-red-700"
-                      : "bg-emerald-950 text-emerald-300 border border-emerald-700"
-                  }`}
-                >
-                  {isClashing ? "Conflict Collision Flagged" : activeProj.status}
-                </span>
-              </div>
-
-              <div>
-                <h4 className="font-bold text-white text-xs sm:text-sm leading-snug">
-                  {activeProj.title || activeProj.name}
-                </h4>
-                <div className="flex items-center gap-1.5 text-slate-300 mt-1">
-                  <MapPin className="w-3.5 h-3.5 text-cyan-400 shrink-0" />
-                  <span className="font-semibold text-white">{activeProj.road_name}</span>
-                  <span>•</span>
-                  <span>{activeProj.department}</span>
+                <div>
+                  <h4 className="font-bold text-white text-xs sm:text-sm leading-snug">
+                    {activeProj.title || activeProj.name}
+                  </h4>
+                  <div className="flex items-center gap-1.5 text-slate-300 mt-1">
+                    <MapPin className="w-3.5 h-3.5 text-cyan-400 shrink-0" />
+                    <span className="font-semibold text-white">{activeProj.road_name}</span>
+                    <span>&bull;</span>
+                    <span>{activeProj.department}</span>
+                  </div>
                 </div>
-              </div>
 
-              <div className="flex items-center justify-between text-[11px] text-slate-400 pt-1.5 border-t border-slate-800">
-                <span className="flex items-center gap-1">
-                  <Calendar className="w-3 h-3 text-cyan-400" />
-                  {formatDate(activeProj.start_date)} – {formatDate(activeProj.end_date)}
-                </span>
-                <span className="font-semibold text-cyan-300">{activeProj.project_type}</span>
-              </div>
+                <div className="flex items-center justify-between text-[11px] text-slate-400 pt-1.5 border-t border-slate-800">
+                  <span className="flex items-center gap-1">
+                    <Calendar className="w-3 h-3 text-cyan-400" />
+                    {formatDate(activeProj.start_date)} – {formatDate(activeProj.end_date)}
+                  </span>
+                  <span className="font-semibold text-cyan-300">{activeProj.project_type}</span>
+                </div>
 
-              {/* Direct In-Map 3D Digital Twin Viewer Button */}
-              <button
-                type="button"
-                onClick={() => setInspected3DProject(activeProj)}
-                className="w-full mt-2 py-2 px-3 bg-gradient-to-r from-cyan-600 via-blue-600 to-indigo-600 hover:from-cyan-500 hover:to-indigo-500 text-white font-bold rounded-xl transition flex items-center justify-center gap-2 text-xs shadow-lg shadow-cyan-600/30"
-              >
-                <Box className="w-4 h-4 text-cyan-200 animate-pulse" />
-                <span>View 3D Digital Twin Model</span>
-              </button>
-
-              {onSelectProject && (
                 <button
                   type="button"
-                  onClick={() => onSelectProject(activeProj)}
-                  className="w-full mt-1.5 py-1.5 px-3 bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white font-semibold rounded-xl border border-slate-700 transition flex items-center justify-center gap-1.5 text-xs"
+                  onClick={() => setInspected3DProject(activeProj)}
+                  className="w-full mt-1.5 py-1.5 px-3 bg-gradient-to-r from-cyan-600 via-blue-600 to-indigo-600 hover:from-cyan-500 hover:to-indigo-500 text-white font-bold rounded-xl transition flex items-center justify-center gap-1.5 text-xs shadow-md shadow-cyan-600/25"
                 >
-                  <span>Open Full Specifications</span>
-                  <ArrowRight className="w-3.5 h-3.5" />
+                  <Box className="w-3.5 h-3.5 text-cyan-200" />
+                  <span>Inspect 3D Civil Asset</span>
                 </button>
-              )}
-            </div>
-          );
+              </div>
+            );
+          }
+
+          return null;
         })()}
 
         {/* Interactive In-Map 3D Digital Twin Viewer Modal */}
@@ -2609,25 +2435,6 @@ export default function MapComponent({
             </div>
           );
         })()}
-
-        {/* 3D Construction Mesh Network Topology Modal */}
-        <MeshGraphModal
-          graph={meshGraph}
-          isOpen={meshGraphModalOpen}
-          onClose={() => setMeshGraphModalOpen(false)}
-          onSelectNode={(node) => {
-            setSelectedMeshNodeId(node.id);
-            if (mapInstanceRef.current) {
-              mapInstanceRef.current.flyTo({
-                center: [node.lng, node.lat],
-                zoom: 16.8,
-                pitch: 58,
-                bearing: -20,
-                duration: 1200,
-              });
-            }
-          }}
-        />
       </div>
     </div>
   );
