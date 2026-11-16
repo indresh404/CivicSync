@@ -58,6 +58,13 @@ export default function Navbar() {
           >
             Citizen Works Map
           </Link>
+          <Link
+            href="/graph"
+            className="text-sm font-medium text-cyan-600 hover:text-cyan-700 transition flex items-center gap-1 font-semibold"
+          >
+            <span className="w-2 h-2 rounded-full bg-cyan-500 animate-pulse" />
+            3D Infrastructure Graph
+          </Link>
           <a
             href="#how-it-works"
             className="text-sm font-medium text-slate-600 hover:text-blue-600 transition"

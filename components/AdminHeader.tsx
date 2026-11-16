@@ -15,6 +15,7 @@ import {
   RefreshCw,
   Activity,
   Sparkles,
+  Network,
 } from "lucide-react";
 import { DepartmentRole, SimulatedRole } from "@/lib/types";
 
@@ -141,6 +142,16 @@ export default function AdminHeader({
             <span>{activeConflictCount} Active</span>
           </div>
         )}
+
+        {/* 3D Network Graph Link */}
+        <Link
+          href="/graph"
+          className="hidden lg:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-900 border border-cyan-500/50 text-cyan-300 hover:text-white hover:bg-slate-800 text-xs font-bold transition shadow-xs"
+          title="Open 3D Infrastructure Network Graph"
+        >
+          <Network className="w-3.5 h-3.5 text-cyan-400 animate-pulse" />
+          <span>3D Graph</span>
+        </Link>
 
         {/* Citizen Portal Link */}
         <Link
