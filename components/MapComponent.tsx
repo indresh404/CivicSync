@@ -114,78 +114,262 @@ const MIRA_ROAD_HOTSPOTS = [
   { name: "🏭 Silver Park - Hatkesh", lng: 72.8710, lat: 19.2885, zoom: 15.8, pitch: 50, bearing: 45 },
 ];
 
-export const MIRA_ROAD_3D_ASSETS = [
+export interface ConstructionSiteAsset {
+  id: string;
+  name: string;
+  site_code: string;
+  category: string;
+  project_id: string;
+  department: string;
+  stats: string;
+  modelUrl: string;
+  lng: number;
+  lat: number;
+  road_name: string;
+  tag: string;
+  badgeColor: string;
+  icon: string;
+  depth: string;
+  scale: number;
+  bearing: number;
+  start_date: string;
+  end_date: string;
+  stage_name: string;
+  description: string;
+  active_machinery: string[];
+  animate_type?: "tower_crane" | "road_roller" | "excavator" | "concrete_mixer" | "utility";
+  companion_models?: Array<{
+    url: string;
+    lng: number;
+    lat: number;
+    scale: number;
+    bearing: number;
+    animate_type?: string;
+  }>;
+}
+
+export const MIRA_ROAD_3D_ASSETS: ConstructionSiteAsset[] = [
   {
-    id: "asset-001",
-    name: "Mira Commercial Skyscraper",
-    category: "Building",
-    stats: "16 KB • 480 polys",
-    modelUrl: "/models/mira_commercial_tower.glb",
+    id: "site-001",
+    site_code: "SITE-A",
+    name: "Kanakia High-Rise Tower (Level 5 Framing)",
+    category: "Building Construction",
+    project_id: "PRJ-001",
+    department: "Urban Development / Buildings",
+    stats: "Lvl 5 Slab • Rebar • Tower Crane",
+    modelUrl: "/models/highrise_under_construction.glb",
     lng: 72.8590,
     lat: 19.2825,
-    road_name: "Kanakia Road",
-    tag: "3D TOWER",
-    badgeColor: "#0284c7",
-    icon: "🏢",
-    depth: "Superstructure (+45m)",
+    road_name: "Kanakia Road, Mira Road East",
+    tag: "HIGH-RISE TOWER SITE",
+    badgeColor: "#f59e0b",
+    icon: "🏗️",
+    depth: "Superstructure (+28m)",
     scale: 1.0,
     bearing: 0,
     start_date: "2026-11-01",
-    end_date: "2026-12-15"
+    end_date: "2026-12-15",
+    stage_name: "Mid-Level Structural Framing (Level 5 Formwork)",
+    description: "Partially constructed high-rise building with exposed concrete slabs, structural columns, steel rebar cages, modular exterior scaffolding, and active rotating tower crane.",
+    active_machinery: ["Active Rotating Tower Crane (Slew & Hoist)", "Material Hoist", "Concrete Pump Arm"],
+    animate_type: "tower_crane",
+    companion_models: [
+      { url: "/models/construction_workers.glb", lng: 72.85915, lat: 19.28235, scale: 1.1, bearing: 0 }
+    ]
   },
   {
-    id: "asset-002",
-    name: "600mm Subsurface Water Pipeline & Trench",
-    category: "Subsurface Utility",
-    stats: "30 KB • 820 polys",
+    id: "site-002",
+    site_code: "SITE-B",
+    name: "Mira Bhayandar Arterial Road Reconstruction",
+    category: "Roadwork & Paving",
+    project_id: "PRJ-002",
+    department: "Roads Department",
+    stats: "Milled Subgrade • Hot Bitumen Overlay",
+    modelUrl: "/models/road_construction_site.glb",
+    lng: 72.8635,
+    lat: 19.2842,
+    road_name: "Mira Bhayandar Arterial Corridor",
+    tag: "ROADWORK & PAVING",
+    badgeColor: "#3b82f6",
+    icon: "🛣️",
+    depth: "Surface & Milling (-0.3m)",
+    scale: 1.1,
+    bearing: Math.PI / 4,
+    start_date: "2026-11-05",
+    end_date: "2026-11-28",
+    stage_name: "Bitumen Compaction & Surface Overlay",
+    description: "Full-depth road reconstruction with milled asphalt lane, hot bitumen paving, traffic safety cones, chevron barriers, and solar VMS message signboard.",
+    active_machinery: ["Tandem Vibratory Road Roller", "Heavy Tipper Dump Truck", "Asphalt Paver"],
+    animate_type: "road_roller",
+    companion_models: [
+      { url: "/models/road_roller.glb", lng: 72.86325, lat: 19.28395, scale: 1.3, bearing: Math.PI / 4, animate_type: "road_roller" },
+      { url: "/models/dump_truck.glb", lng: 72.86375, lat: 19.28445, scale: 1.2, bearing: Math.PI / 4, animate_type: "dump_truck" }
+    ]
+  },
+  {
+    id: "site-003",
+    site_code: "SITE-C",
+    name: "Station West 600mm DI Water Main Trench",
+    category: "Underground Utility",
+    project_id: "PRJ-003",
+    department: "Water Department",
+    stats: "600mm DI Pipe • 3.2m Deep Trench",
     modelUrl: "/models/water_pipeline_trench.glb",
     lng: 72.8561,
     lat: 19.2812,
-    road_name: "Mira Bhayandar Road",
-    tag: "3D PIPE TRENCH",
+    road_name: "Station Road West",
+    tag: "WATER MAIN TRENCH",
     badgeColor: "#06b6d4",
     icon: "💧",
-    depth: "Subsurface (-2.4m)",
-    scale: 1.2,
+    depth: "Deep Subsurface (-3.2m)",
+    scale: 1.15,
     bearing: Math.PI / 6,
-    start_date: "2026-11-06",
-    end_date: "2026-11-24"
+    start_date: "2026-11-03",
+    end_date: "2026-11-25",
+    stage_name: "Deep Trench Shoring & Pipe Installation",
+    description: "Deep excavation for high-capacity 600mm ductile iron potable water supply pipeline with trench box shoring, excavated spoil piles, and staged pipe sections.",
+    active_machinery: ["Hydraulic Tracked Excavator", "Trench Shoring Box", "Municipal Pipe Crew"],
+    animate_type: "excavator",
+    companion_models: [
+      { url: "/models/hydraulic_excavator.glb", lng: 72.85585, lat: 19.28095, scale: 1.35, bearing: -Math.PI / 3, animate_type: "excavator" },
+      { url: "/models/construction_workers.glb", lng: 72.85635, lat: 19.28145, scale: 1.0, bearing: 0 }
+    ]
   },
   {
-    id: "asset-003",
-    name: "Active Road Excavation & Milling Zone",
-    category: "Construction Scene",
-    stats: "30 KB • 760 polys",
-    modelUrl: "/models/road_excavation_site.glb",
-    lng: 72.8630,
-    lat: 19.2845,
-    road_name: "Mira Bhayandar Road East",
-    tag: "3D MILLING SITE",
-    badgeColor: "#2563eb",
-    icon: "🚧",
-    depth: "Surface (0.0m)",
-    scale: 1.2,
-    bearing: Math.PI / 4,
-    start_date: "2026-11-10",
-    end_date: "2026-11-30"
-  },
-  {
-    id: "asset-004",
-    name: "Municipal Hydraulic Tracked Excavator",
-    category: "Heavy Machinery",
-    stats: "14 KB • 640 polys",
-    modelUrl: "/models/heavy_excavator.glb",
+    id: "site-004",
+    site_code: "SITE-D",
+    name: "Shanti Nagar Commercial Plaza & Storm Drain",
+    category: "Commercial Infrastructure",
+    project_id: "PRJ-004",
+    department: "Sewerage Department",
+    stats: "Structural Steel Frame • Precast Decking",
+    modelUrl: "/models/commercial_construction_site.glb",
     lng: 72.8540,
     lat: 19.2785,
-    road_name: "Shanti Nagar Sector 2",
-    tag: "3D EXCAVATOR",
-    badgeColor: "#eab308",
-    icon: "🚜",
-    depth: "Heavy Machinery",
-    scale: 1.5,
+    road_name: "Shanti Nagar Sector 2 Plaza",
+    tag: "COMMERCIAL PLAZA",
+    badgeColor: "#10b981",
+    icon: "🏢",
+    depth: "Ground & Framing (+12m)",
+    scale: 1.1,
     bearing: -Math.PI / 3,
-    start_date: "2026-11-01",
-    end_date: "2026-11-20"
+    start_date: "2026-11-08",
+    end_date: "2026-12-05",
+    stage_name: "Steel Framing & Concrete Pouring",
+    description: "Multi-level commercial structure with red-oxide structural steel I-beams, precast concrete floor decking, and active concrete mixer operations.",
+    active_machinery: ["Heavy Concrete Mixer Truck", "Rebar Cages & Staging Yard", "Concrete Pumping Arm"],
+    animate_type: "concrete_mixer",
+    companion_models: [
+      { url: "/models/concrete_mixer.glb", lng: 72.85365, lat: 19.27825, scale: 1.3, bearing: Math.PI / 3, animate_type: "concrete_mixer" }
+    ]
+  },
+  {
+    id: "site-005",
+    site_code: "SITE-E",
+    name: "Beverly Park 11kV Subsurface Conduit Trench",
+    category: "Power Grid Infrastructure",
+    project_id: "PRJ-005",
+    department: "Electricity Department",
+    stats: "11kV XLPE High-Tension Ducts (-1.2m)",
+    modelUrl: "/models/water_pipeline_trench.glb",
+    lng: 72.8615,
+    lat: 19.2865,
+    road_name: "Beverly Park Arterial",
+    tag: "POWER CONDUIT TRENCH",
+    badgeColor: "#eab308",
+    icon: "⚡",
+    depth: "Subsurface Conduit (-1.2m)",
+    scale: 1.05,
+    bearing: -Math.PI / 4,
+    start_date: "2026-11-02",
+    end_date: "2026-11-18",
+    stage_name: "Cable Trenching & Duct Encasement",
+    description: "Subsurface excavation for reinforced 150mm HDPE power ducts accommodating 11kV transmission feeders with safety shoring and electrical warning barriers.",
+    active_machinery: ["Cable Pulling Winch", "Utility Service Van", "Safety Hazard Barricades"],
+    companion_models: [
+      { url: "/models/construction_workers.glb", lng: 72.86175, lat: 19.28675, scale: 1.0, bearing: 0 }
+    ]
+  },
+  {
+    id: "site-006",
+    site_code: "SITE-F",
+    name: "Hatkesh - Silver Park 5G Optical Fiber Trench",
+    category: "Telecom Infrastructure",
+    project_id: "PRJ-006",
+    department: "Telecom Department",
+    stats: "96-Core Fiber Ducts • Micro-Trench",
+    modelUrl: "/models/road_construction_site.glb",
+    lng: 72.8680,
+    lat: 19.2875,
+    road_name: "Silver Park - Hatkesh Link",
+    tag: "5G FIBER CORRIDOR",
+    badgeColor: "#8b5cf6",
+    icon: "📡",
+    depth: "Micro-Trench (-0.8m)",
+    scale: 1.1,
+    bearing: Math.PI / 3,
+    start_date: "2026-11-12",
+    end_date: "2026-12-02",
+    stage_name: "Micro-Trenching & Fiber Pulling",
+    description: "Rapid micro-trenching along curbside for 96-strand single-mode optical fiber conduits supporting municipal surveillance and 5G base stations.",
+    active_machinery: ["Directional Drilling Rig", "Fiber Reel Trailer", "Traffic Safety Cones"],
+    companion_models: [
+      { url: "/models/hydraulic_excavator.glb", lng: 72.86825, lat: 19.28775, scale: 1.2, bearing: -Math.PI / 6, animate_type: "excavator" }
+    ]
+  },
+  {
+    id: "site-007",
+    site_code: "SITE-G",
+    name: "Station Hub 1200mm Storm Sewer Interceptor",
+    category: "Sewerage Department",
+    project_id: "PRJ-007",
+    department: "Sewerage Department",
+    stats: "1200mm Precast Concrete Culverts",
+    modelUrl: "/models/water_pipeline_trench.glb",
+    lng: 72.8525,
+    lat: 19.2805,
+    road_name: "Station Terminus Plaza",
+    tag: "SEWER CULVERT TRENCH",
+    badgeColor: "#10b981",
+    icon: "🚧",
+    depth: "Deep Subsurface (-3.5m)",
+    scale: 1.2,
+    bearing: 0,
+    start_date: "2026-11-04",
+    end_date: "2026-11-29",
+    stage_name: "Precast Culvert Placement",
+    description: "High-capacity monsoon flood mitigation storm water sewer interceptor using 1200mm precast concrete culvert sections.",
+    active_machinery: ["Mobile Hydraulic Crane", "Trench Shoring Box", "Excavator"],
+    companion_models: [
+      { url: "/models/dump_truck.glb", lng: 72.85225, lat: 19.28025, scale: 1.2, bearing: 0, animate_type: "dump_truck" }
+    ]
+  },
+  {
+    id: "site-008",
+    site_code: "SITE-H",
+    name: "Pleasant Park Median & Road Resurfacing",
+    category: "Roads Department",
+    project_id: "PRJ-008",
+    department: "Roads Department",
+    stats: "Concrete Kerbing • Asphalt Overlay",
+    modelUrl: "/models/road_construction_site.glb",
+    lng: 72.8650,
+    lat: 19.2815,
+    road_name: "Pleasant Park Sector 4",
+    tag: "MEDIAN & KERBING",
+    badgeColor: "#3b82f6",
+    icon: "🛣️",
+    depth: "Surface (0.0m)",
+    scale: 1.1,
+    bearing: -Math.PI / 4,
+    start_date: "2026-11-07",
+    end_date: "2026-11-30",
+    stage_name: "Concrete Kerb Laying & Bitumen Sealing",
+    description: "Urban corridor beautification, median curb casting, and high-traction bitumen seal coat.",
+    active_machinery: ["Concrete Mixer Truck", "Compaction Roller", "Safety Flaggers"],
+    companion_models: [
+      { url: "/models/road_roller.glb", lng: 72.86525, lat: 19.28175, scale: 1.2, bearing: -Math.PI / 4, animate_type: "road_roller" }
+    ]
   }
 ];
 
@@ -365,16 +549,19 @@ export default function MapComponent({
   const [filterStatus, setFilterStatus] = useState<string>("ALL");
   const [selectedStyleId, setSelectedStyleId] = useState<string>("google-streets");
 
-  // 3D Specific States
-  const [is3DMode, setIs3DMode] = useState(false);
+  // 3D Specific States & Construction Simulation
+  const [is3DMode, setIs3DMode] = useState(true);
   const [isOrbiting, setIsOrbiting] = useState(false);
+  const [isAnimationsPlaying, setIsAnimationsPlaying] = useState(true);
+  const [selectedSiteAsset, setSelectedSiteAsset] = useState<ConstructionSiteAsset | null>(null);
   const [showUtilities, setShowUtilities] = useState(true);
-  const [showBuildings3D, setShowBuildings3D] = useState(true);
-  const [isLegendCollapsed, setIsLegendCollapsed] = useState(true);
+  const [showBuildings3D, setShowBuildings3D] = useState(false);
+  const [showMachinery, setShowMachinery] = useState(true);
+  const [isLegendCollapsed, setIsLegendCollapsed] = useState(false);
   const [subsurfaceXRay, setSubsurfaceXRay] = useState(false);
 
-  // 3D Construction Coordination Mesh Network States
-  const [meshNetworkActive, setMeshNetworkActive] = useState(true);
+  // 3D Construction Coordination Mesh Network States (Disabled by default to keep map clean)
+  const [meshNetworkActive, setMeshNetworkActive] = useState(false);
   const [meshFilter, setMeshFilter] = useState<"ALL" | "CONFLICTS" | "CORRIDORS" | "JOINT_TRENCH">("ALL");
   const [selectedMeshNodeId, setSelectedMeshNodeId] = useState<string | null>(null);
   const [selectedMeshLink, setSelectedMeshLink] = useState<MeshLink | null>(null);
@@ -518,7 +705,7 @@ export default function MapComponent({
               }
             }
 
-            // Check if openmaptiles building source exists
+            // Check if openmaptiles building source exists (neutral stone/slate palette - NO BLUE EXTRUSIONS)
             if (map.getSource("openmaptiles") && !map.getLayer("osm-3d-buildings")) {
               map.addLayer(
                 {
@@ -526,7 +713,10 @@ export default function MapComponent({
                   source: "openmaptiles",
                   "source-layer": "building",
                   type: "fill-extrusion",
-                  minzoom: 13,
+                  minzoom: 14,
+                  layout: {
+                    visibility: showBuildings3D ? "visible" : "none"
+                  },
                   paint: {
                     "fill-extrusion-color": [
                       "interpolate",
@@ -534,8 +724,8 @@ export default function MapComponent({
                       ["coalesce", ["get", "render_height"], 15],
                       0, "#1e293b",
                       20, "#334155",
-                      45, "#0284c7",
-                      80, "#38bdf8"
+                      45, "#475569",
+                      80, "#64748b"
                     ],
                     "fill-extrusion-height": [
                       "interpolate",
@@ -551,7 +741,7 @@ export default function MapComponent({
                       13, 0,
                       14, ["coalesce", ["get", "render_min_height"], 0]
                     ],
-                    "fill-extrusion-opacity": 0.85,
+                    "fill-extrusion-opacity": 0.65,
                     "fill-extrusion-vertical-gradient": true
                   }
                 },
@@ -559,7 +749,7 @@ export default function MapComponent({
               );
             }
 
-            // In addition, load custom Mira Road 3D Landmark Buildings GeoJSON
+            // In addition, load custom Mira Road 3D Landmark Buildings GeoJSON (neutral slate/concrete - NO BLUE EXTRUSIONS)
             fetch("/data/miraroad_3d_buildings.json")
               .then((res) => (res.ok ? res.json() : null))
               .then((data) => {
@@ -575,21 +765,24 @@ export default function MapComponent({
                       id: "miraroad-3d-landmarks",
                       type: "fill-extrusion",
                       source: "miraroad-3d-buildings",
+                      layout: {
+                        visibility: showBuildings3D ? "visible" : "none"
+                      },
                       paint: {
                         "fill-extrusion-color": [
                           "interpolate",
                           ["linear"],
                           ["get", "height"],
-                          14, "#0f172a",
-                          25, "#0369a1",
-                          45, "#0284c7",
-                          65, "#06b6d4",
-                          85, "#38bdf8",
-                          105, "#818cf8"
+                          14, "#1e293b",
+                          25, "#334155",
+                          45, "#475569",
+                          65, "#64748b",
+                          85, "#475569",
+                          105, "#334155"
                         ],
                         "fill-extrusion-height": ["get", "height"],
                         "fill-extrusion-base": ["get", "min_height"],
-                        "fill-extrusion-opacity": 0.92,
+                        "fill-extrusion-opacity": 0.70,
                         "fill-extrusion-vertical-gradient": true
                       }
                     },
@@ -625,42 +818,55 @@ export default function MapComponent({
               })
               .catch((err) => console.warn("Custom 3D buildings load error:", err));
 
-            // Render real 3D glTF/GLB models directly into the 3D Map canvas with high-precision matrices
+            // Render real 3D glTF/GLB models directly into the 3D Map canvas with high-precision matrices & 60FPS animation loop
             const glbCustom3DLayer: any = {
               id: "miraroad-3d-glb-models",
               type: "custom",
               renderingMode: "3d",
-              items: [] as Array<{ scene: THREE.Scene; matrix: THREE.Matrix4 }>,
+              items: [] as Array<{
+                scene: THREE.Scene;
+                matrix: THREE.Matrix4;
+                animate_type?: string;
+                animatedNodes: any[];
+                basePosition?: { x: number; y: number; z: number };
+                modelRoot?: THREE.Object3D;
+              }>,
+              map: map,
+              startTime: Date.now(),
               onAdd: function (m: any, gl: WebGLRenderingContext) {
                 this.camera = new THREE.Camera();
                 this.items = [];
+                this.map = m;
 
                 const loader = new GLTFLoader();
-                MIRA_ROAD_3D_ASSETS.forEach((asset) => {
+
+                const loadModelAsset = (
+                  url: string,
+                  lng: number,
+                  lat: number,
+                  scale: number,
+                  bearing: number,
+                  animateType?: string
+                ) => {
                   const itemScene = new THREE.Scene();
 
-                  const ambientLight = new THREE.AmbientLight(0xffffff, 2.0);
+                  const ambientLight = new THREE.AmbientLight(0xffffff, 2.2);
                   itemScene.add(ambientLight);
 
                   const dirLight1 = new THREE.DirectionalLight(0xffffff, 2.8);
                   dirLight1.position.set(50, 100, 80);
                   itemScene.add(dirLight1);
 
-                  const dirLight2 = new THREE.DirectionalLight(0x38bdf8, 1.4);
+                  const dirLight2 = new THREE.DirectionalLight(0xfef08a, 1.2);
                   dirLight2.position.set(-50, -80, 50);
                   itemScene.add(dirLight2);
 
-                  const coord = maplibregl.MercatorCoordinate.fromLngLat(
-                    [asset.lng, asset.lat],
-                    0
-                  );
+                  const coord = maplibregl.MercatorCoordinate.fromLngLat([lng, lat], 0);
                   const meter = coord.meterInMercatorCoordinateUnits();
-                  const s = asset.scale || 1.0;
+                  const s = scale || 1.0;
 
-                  // High-precision model transform matrix:
-                  // Translates directly in Mercator space and scales to metric coordinates
                   const rotX = new THREE.Matrix4().makeRotationAxis(new THREE.Vector3(1, 0, 0), Math.PI / 2);
-                  const rotZ = new THREE.Matrix4().makeRotationAxis(new THREE.Vector3(0, 0, 1), asset.bearing || 0);
+                  const rotZ = new THREE.Matrix4().makeRotationAxis(new THREE.Vector3(0, 0, 1), bearing || 0);
 
                   const transformMatrix = new THREE.Matrix4()
                     .makeTranslation(coord.x, coord.y, coord.z)
@@ -669,11 +875,12 @@ export default function MapComponent({
                     .multiply(rotZ);
 
                   loader.load(
-                    asset.modelUrl,
+                    url,
                     (gltf) => {
                       const model = gltf.scene;
                       model.position.set(0, 0, 0);
 
+                      const animatedNodes: any[] = [];
                       model.traverse((child: any) => {
                         if (child.isMesh) {
                           child.castShadow = true;
@@ -683,15 +890,58 @@ export default function MapComponent({
                             child.material.depthTest = true;
                           }
                         }
+                        if (
+                          child.name &&
+                          (child.name.includes("CraneJib") ||
+                            child.name.includes("FrontDrum") ||
+                            child.name.includes("RearDrum") ||
+                            child.name.includes("ExcavatorDeck") ||
+                            child.name.includes("ExcavatorBoom") ||
+                            child.name.includes("MixerDrum") ||
+                            child.name.includes("DumpBed"))
+                        ) {
+                          animatedNodes.push(child);
+                        }
                       });
 
                       itemScene.add(model);
-                      this.items.push({ scene: itemScene, matrix: transformMatrix });
+                      this.items.push({
+                        scene: itemScene,
+                        matrix: transformMatrix,
+                        animate_type: animateType,
+                        animatedNodes: animatedNodes,
+                        modelRoot: model,
+                      });
                       m.triggerRepaint();
                     },
                     undefined,
-                    (err) => console.warn("Notice loading GLB into map:", asset.name, err)
+                    (err) => console.warn("Notice loading GLB into map:", url, err)
                   );
+                };
+
+                // Load all 8 main construction site assets and their companion equipment
+                MIRA_ROAD_3D_ASSETS.forEach((asset) => {
+                  loadModelAsset(
+                    asset.modelUrl,
+                    asset.lng,
+                    asset.lat,
+                    asset.scale,
+                    asset.bearing,
+                    asset.animate_type
+                  );
+
+                  if (asset.companion_models) {
+                    asset.companion_models.forEach((companion) => {
+                      loadModelAsset(
+                        companion.url,
+                        companion.lng,
+                        companion.lat,
+                        companion.scale,
+                        companion.bearing,
+                        companion.animate_type
+                      );
+                    });
+                  }
                 });
 
                 this.renderer = new THREE.WebGLRenderer({
@@ -705,12 +955,48 @@ export default function MapComponent({
                 if (!this.renderer || !this.items || this.items.length === 0) return;
 
                 const baseMatrix = new THREE.Matrix4().fromArray(matrix);
+                const elapsedSec = (Date.now() - this.startTime) * 0.001;
 
+                // Animate machinery nodes
                 for (let i = 0; i < this.items.length; i++) {
                   const item = this.items[i];
+                  const atype = item.animate_type;
+
+                  if (atype === "tower_crane") {
+                    const jib = item.animatedNodes.find((n: any) => n.name === "CraneJib");
+                    if (jib) {
+                      jib.rotation.y = Math.sin(elapsedSec * 0.45) * 0.85;
+                    }
+                  } else if (atype === "road_roller") {
+                    if (item.modelRoot) {
+                      item.modelRoot.position.z = Math.sin(elapsedSec * 1.1) * 3.2;
+                    }
+                    const frontDrum = item.animatedNodes.find((n: any) => n.name === "FrontDrum");
+                    const rearDrum = item.animatedNodes.find((n: any) => n.name === "RearDrum");
+                    if (frontDrum) frontDrum.rotation.x += 0.06;
+                    if (rearDrum) rearDrum.rotation.x += 0.06;
+                  } else if (atype === "excavator") {
+                    const deck = item.animatedNodes.find((n: any) => n.name === "ExcavatorDeck");
+                    const boom = item.animatedNodes.find((n: any) => n.name === "ExcavatorBoom");
+                    if (deck) deck.rotation.y = Math.sin(elapsedSec * 0.6) * 0.55;
+                    if (boom) boom.rotation.x = -0.3 + Math.sin(elapsedSec * 0.9) * 0.22;
+                  } else if (atype === "concrete_mixer") {
+                    const drum = item.animatedNodes.find((n: any) => n.name === "MixerDrum");
+                    if (drum) drum.rotation.z += 0.08;
+                  } else if (atype === "dump_truck") {
+                    if (item.modelRoot) {
+                      item.modelRoot.position.z = Math.sin(elapsedSec * 0.4) * 1.8;
+                    }
+                  }
+
                   this.camera.projectionMatrix = baseMatrix.clone().multiply(item.matrix);
                   this.renderer.resetState();
                   this.renderer.render(item.scene, this.camera);
+                }
+
+                // Request next frame to maintain continuous smooth 60 FPS animation loop
+                if (this.map) {
+                  this.map.triggerRepaint();
                 }
               },
             };
@@ -1119,18 +1405,19 @@ export default function MapComponent({
         `;
 
         el.addEventListener("click", () => {
+          setSelectedSiteAsset(asset);
           map.flyTo({
             center: [asset.lng, asset.lat],
             zoom: 17.5,
             pitch: 62,
-            bearing: 25,
+            bearing: asset.bearing ? (asset.bearing * 180) / Math.PI + 25 : 25,
             duration: 1200,
           });
-          const matched = projects.find((p) => p.road_name === asset.road_name) || {
-            id: asset.id,
+          const matched = projects.find((p) => p.road_name === asset.road_name || p.id === asset.project_id) || {
+            id: asset.project_id || asset.id,
             name: asset.name,
             title: asset.name,
-            department: asset.category,
+            department: asset.department || asset.category,
             project_type: asset.category,
             road_name: asset.road_name,
             start_date: asset.start_date,
@@ -1160,27 +1447,23 @@ export default function MapComponent({
     };
   }, [mapLoaded, projects, activeDateStr]);
 
-  // Dynamic Subsurface 3D Cutaway Mode: Translucent buildings & vivid subterranean conduits
+  // Toggle building 3D visibility dynamically
   useEffect(() => {
     if (!mapInstanceRef.current || !mapLoaded) return;
     const map = mapInstanceRef.current;
     if (!map.isStyleLoaded()) return;
 
     try {
-      if (map.getLayer("miraroad-3d-landmarks")) {
-        map.setPaintProperty("miraroad-3d-landmarks", "fill-extrusion-opacity", subsurfaceXRay ? 0.22 : 0.9);
-      }
       if (map.getLayer("osm-3d-buildings")) {
-        map.setPaintProperty("osm-3d-buildings", "fill-extrusion-opacity", subsurfaceXRay ? 0.18 : 0.85);
+        map.setLayoutProperty("osm-3d-buildings", "visibility", showBuildings3D ? "visible" : "none");
       }
-      if (map.getLayer("proj-line-glow")) {
-        map.setPaintProperty("proj-line-glow", "line-width", subsurfaceXRay ? 24 : 14);
-        map.setPaintProperty("proj-line-glow", "line-opacity", subsurfaceXRay ? 0.7 : 0.35);
+      if (map.getLayer("miraroad-3d-landmarks")) {
+        map.setLayoutProperty("miraroad-3d-landmarks", "visibility", showBuildings3D ? "visible" : "none");
       }
     } catch (e) {
-      console.warn("Subsurface X-Ray style change notice:", e);
+      console.warn("Building 3D visibility toggle notice:", e);
     }
-  }, [subsurfaceXRay, mapLoaded]);
+  }, [showBuildings3D, mapLoaded]);
 
   // 3D Construction Mesh Network Layer Management
   useEffect(() => {
@@ -1744,6 +2027,38 @@ export default function MapComponent({
             {is3DMode ? "3D View" : "2D"}
           </button>
 
+          {/* Construction Sites Quick Jump Dropdown */}
+          <select
+            value={selectedSiteAsset?.id || ""}
+            onChange={(e) => {
+              const siteId = e.target.value;
+              if (!siteId) {
+                setSelectedSiteAsset(null);
+                return;
+              }
+              const asset = MIRA_ROAD_3D_ASSETS.find((a) => a.id === siteId);
+              if (asset && mapInstanceRef.current) {
+                setSelectedSiteAsset(asset);
+                mapInstanceRef.current.flyTo({
+                  center: [asset.lng, asset.lat],
+                  zoom: 17.5,
+                  pitch: 62,
+                  bearing: asset.bearing ? (asset.bearing * 180) / Math.PI + 25 : 25,
+                  duration: 1200,
+                });
+              }
+            }}
+            className="px-2 py-1.5 rounded-lg border border-amber-600/60 bg-amber-950/60 text-amber-200 font-semibold focus:outline-none focus:ring-1 focus:ring-amber-500 text-xs"
+            title="Quick Focus Construction Site"
+          >
+            <option value="">🏗️ 8 Construction Sites...</option>
+            {MIRA_ROAD_3D_ASSETS.map((site) => (
+              <option key={site.id} value={site.id}>
+                {site.site_code}: {site.name}
+              </option>
+            ))}
+          </select>
+
           {/* 3D Construction Mesh Network Toggle (In Map Only) */}
           <button
             type="button"
@@ -1860,8 +2175,8 @@ export default function MapComponent({
                   <span className="text-red-400 font-bold">Red Pulse: Spatial Collision</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <span className="w-3.5 h-3.5 rounded-md bg-cyan-500 border border-cyan-300 shrink-0" />
-                  <span className="text-slate-200">3D Extruded Buildings (Levels x 3m)</span>
+                  <span className="text-sm">🏗️</span>
+                  <span className="text-amber-300 font-semibold">3D Construction Models & Machinery</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <span className="w-3.5 h-3.5 rounded-full bg-blue-500 border border-white shrink-0" />
@@ -2096,6 +2411,127 @@ export default function MapComponent({
 
         {/* Unified Minimal Inspector Card (Top Right) */}
         {(() => {
+          if (selectedSiteAsset) {
+            return (
+              <div className="absolute top-3 right-3 z-30 max-w-xs sm:max-w-sm bg-slate-900/95 backdrop-blur-md p-4 rounded-2xl border border-amber-500/50 shadow-2xl text-xs space-y-2.5 animate-in fade-in slide-in-from-right-2 pointer-events-auto text-white">
+                <div className="flex items-start justify-between gap-2 border-b border-slate-800 pb-2">
+                  <div className="flex items-center gap-2">
+                    <span className="text-xl">{selectedSiteAsset.icon}</span>
+                    <div>
+                      <div className="font-mono font-bold text-amber-300 text-[11px] flex items-center gap-1.5">
+                        <span className="px-1.5 py-0.5 rounded bg-amber-950 border border-amber-700/80">
+                          {selectedSiteAsset.site_code}
+                        </span>
+                        <span className="text-slate-400 font-sans">&bull;</span>
+                        <span className="text-cyan-300">{selectedSiteAsset.project_id}</span>
+                      </div>
+                      <span className="text-[10px] text-slate-400 font-medium">
+                        {selectedSiteAsset.department}
+                      </span>
+                    </div>
+                  </div>
+                  <button
+                    onClick={() => setSelectedSiteAsset(null)}
+                    className="text-slate-400 hover:text-white p-1 rounded-md hover:bg-slate-800"
+                    title="Close Inspector"
+                  >
+                    <X className="w-3.5 h-3.5" />
+                  </button>
+                </div>
+
+                <div>
+                  <h4 className="font-bold text-white text-xs leading-snug">
+                    {selectedSiteAsset.name}
+                  </h4>
+                  <div className="flex items-center gap-1.5 text-slate-300 mt-1">
+                    <MapPin className="w-3.5 h-3.5 text-amber-400 shrink-0" />
+                    <span className="font-semibold text-slate-200">{selectedSiteAsset.road_name}</span>
+                  </div>
+                  <p className="text-[10.5px] text-slate-300 mt-1.5 leading-relaxed">
+                    {selectedSiteAsset.description}
+                  </p>
+                </div>
+
+                {/* Construction Stage & Specs */}
+                <div className="p-2.5 rounded-xl bg-slate-950/80 border border-amber-900/40 space-y-1.5">
+                  <div className="flex items-center justify-between text-[10px]">
+                    <span className="text-slate-400">Current Phase:</span>
+                    <span className="font-bold text-amber-300 font-mono">
+                      {selectedSiteAsset.stage_name}
+                    </span>
+                  </div>
+                  <div className="flex items-center justify-between text-[10px]">
+                    <span className="text-slate-400">Vertical Datum:</span>
+                    <span className="font-mono text-cyan-300">{selectedSiteAsset.depth}</span>
+                  </div>
+                  <div className="flex items-center justify-between text-[10px]">
+                    <span className="text-slate-400">Execution Window:</span>
+                    <span className="font-mono text-slate-300">
+                      {formatDate(selectedSiteAsset.start_date)} – {formatDate(selectedSiteAsset.end_date)}
+                    </span>
+                  </div>
+                </div>
+
+                {/* Active Machinery Fleet */}
+                <div>
+                  <span className="text-[10px] font-mono uppercase text-slate-400 font-bold block mb-1">
+                    🚜 Active Machinery & Personnel ({selectedSiteAsset.active_machinery.length}):
+                  </span>
+                  <div className="flex flex-wrap gap-1">
+                    {selectedSiteAsset.active_machinery.map((mach, idx) => (
+                      <span
+                        key={idx}
+                        className="text-[9.5px] px-2 py-0.5 rounded-md bg-slate-800 border border-slate-700 text-slate-200 font-medium"
+                      >
+                        {mach}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Action Buttons */}
+                <div className="flex items-center gap-2 pt-1 border-t border-slate-800">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      if (mapInstanceRef.current) {
+                        mapInstanceRef.current.flyTo({
+                          center: [selectedSiteAsset.lng, selectedSiteAsset.lat],
+                          zoom: 18,
+                          pitch: 65,
+                          bearing: selectedSiteAsset.bearing ? (selectedSiteAsset.bearing * 180) / Math.PI + 35 : 35,
+                          duration: 1200,
+                        });
+                      }
+                    }}
+                    className="flex-1 py-1.5 px-3 bg-gradient-to-r from-amber-600 to-orange-600 hover:from-amber-500 hover:to-orange-500 text-white font-bold rounded-xl transition flex items-center justify-center gap-1.5 text-xs shadow-md shadow-amber-600/25"
+                  >
+                    <Box className="w-3.5 h-3.5 text-amber-200" />
+                    <span>Focus 3D View</span>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setSelectedSiteAsset(null);
+                      if (mapInstanceRef.current) {
+                        mapInstanceRef.current.flyTo({
+                          center: [72.8590, 19.2825],
+                          zoom: 15.5,
+                          pitch: 55,
+                          bearing: -15,
+                          duration: 1000,
+                        });
+                      }
+                    }}
+                    className="py-1.5 px-2.5 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-xl text-xs border border-slate-700 transition"
+                  >
+                    Overview
+                  </button>
+                </div>
+              </div>
+            );
+          }
+
           if (meshNetworkActive && selectedMeshLink) {
             return (
               <div className="absolute top-3 right-3 z-20 max-w-xs sm:max-w-sm bg-slate-900/95 backdrop-blur-md p-3.5 rounded-2xl border border-cyan-500/50 shadow-2xl text-xs space-y-2 animate-in fade-in slide-in-from-right-2 pointer-events-auto text-white">
