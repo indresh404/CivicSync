@@ -262,7 +262,208 @@ const MIRA_ROAD_NETWORK_GEOMETRIES: {
       [72.8600, 19.2850],
     ],
   },
+  {
+    id: "TRF-CORR-009",
+    road_name: "Poonam Sagar Road",
+    road_type: "Residential",
+    lanes: 2,
+    base_speed: 28,
+    coords: [
+      [72.8540, 19.2875],
+      [72.8550, 19.2890],
+      [72.8560, 19.2900],
+      [72.8570, 19.2908],
+    ],
+    detour_name: "Divert via Shanti Park North Link",
+    detour_coords: [
+      [72.8540, 19.2875],
+      [72.8525, 19.2885],
+      [72.8545, 19.2915],
+      [72.8570, 19.2908],
+    ],
+  },
+  {
+    id: "TRF-CORR-010",
+    road_name: "Pleasant Park Link Road",
+    road_type: "Residential",
+    lanes: 3,
+    base_speed: 32,
+    coords: [
+      [72.8640, 19.2700],
+      [72.8680, 19.2695],
+      [72.8720, 19.2692],
+      [72.8745, 19.2690],
+    ],
+    detour_name: "Divert via Srishti South Parallel Avenue",
+    detour_coords: [
+      [72.8640, 19.2700],
+      [72.8660, 19.2720],
+      [72.8710, 19.2715],
+      [72.8745, 19.2690],
+    ],
+  },
+  {
+    id: "TRF-CORR-011",
+    road_name: "Hatkesh Main Road",
+    road_type: "Arterial",
+    lanes: 4,
+    base_speed: 36,
+    coords: [
+      [72.8660, 19.2715],
+      [72.8680, 19.2710],
+      [72.8700, 19.2705],
+      [72.8725, 19.2700],
+    ],
+    detour_name: "Divert via Hatkesh Industrial Ring Road",
+    detour_coords: [
+      [72.8660, 19.2715],
+      [72.8670, 19.2735],
+      [72.8715, 19.2725],
+      [72.8725, 19.2700],
+    ],
+  },
+  {
+    id: "TRF-CORR-012",
+    road_name: "GCC Club Road",
+    road_type: "Residential",
+    lanes: 2,
+    base_speed: 30,
+    coords: [
+      [72.8710, 19.2870],
+      [72.8730, 19.2873],
+      [72.8750, 19.2878],
+      [72.8770, 19.2885],
+    ],
+    detour_name: "Divert via Western Greens Approach Lane",
+    detour_coords: [
+      [72.8710, 19.2870],
+      [72.8720, 19.2890],
+      [72.8760, 19.2895],
+      [72.8770, 19.2885],
+    ],
+  },
+  {
+    id: "TRF-CORR-013",
+    road_name: "Jangid Complex Internal Road",
+    road_type: "Residential",
+    lanes: 2,
+    base_speed: 25,
+    coords: [
+      [72.8600, 19.2855],
+      [72.8615, 19.2858],
+      [72.8630, 19.2862],
+      [72.8645, 19.2868],
+    ],
+    detour_name: "Divert via Beverly Park Connector",
+    detour_coords: [
+      [72.8600, 19.2855],
+      [72.8610, 19.2840],
+      [72.8635, 19.2845],
+      [72.8645, 19.2868],
+    ],
+  },
+  {
+    id: "TRF-CORR-014",
+    road_name: "Srishti Main Road",
+    road_type: "Residential",
+    lanes: 2,
+    base_speed: 28,
+    coords: [
+      [72.8760, 19.2735],
+      [72.8780, 19.2732],
+      [72.8800, 19.2728],
+    ],
+    detour_name: "Divert via Kashimira Sector 1 Lane",
+    detour_coords: [
+      [72.8760, 19.2735],
+      [72.8770, 19.2750],
+      [72.8795, 19.2745],
+      [72.8800, 19.2728],
+    ],
+  },
 ];
+
+export function getRoadPolyline(roadName: string): [number, number][] | null {
+  if (!roadName) return null;
+  const cleanName = roadName.toLowerCase().replace(/[^a-z0-9]/g, "");
+  const match = MIRA_ROAD_NETWORK_GEOMETRIES.find((g) => {
+    const gClean = g.road_name.toLowerCase().replace(/[^a-z0-9]/g, "");
+    return gClean.includes(cleanName) || cleanName.includes(gClean);
+  });
+  return match ? match.coords : null;
+}
+
+export function getProjectRoadGeometry(
+  roadName: string,
+  startLng: number,
+  startLat: number,
+  endLng?: number | null,
+  endLat?: number | null
+): [number, number][] {
+  const roadCoords = getRoadPolyline(roadName);
+
+  if (!roadCoords || roadCoords.length < 2) {
+    if (endLng != null && endLat != null && (!isNaN(endLng) && !isNaN(endLat))) {
+      const midLng = (startLng + endLng) / 2;
+      const midLat = (startLat + endLat) / 2;
+      return [[startLng, startLat], [midLng, midLat], [endLng, endLat]];
+    }
+    return [
+      [startLng - 0.0002, startLat - 0.0001],
+      [startLng, startLat],
+      [startLng + 0.0002, startLat + 0.0001],
+    ];
+  }
+
+  let startIdx = 0;
+  let minStartDist = Infinity;
+  for (let i = 0; i < roadCoords.length; i++) {
+    const d = Math.hypot(roadCoords[i][0] - startLng, roadCoords[i][1] - startLat);
+    if (d < minStartDist) {
+      minStartDist = d;
+      startIdx = i;
+    }
+  }
+
+  if (endLng == null || endLat == null || isNaN(endLng) || isNaN(endLat)) {
+    const prev = roadCoords[Math.max(0, startIdx - 1)];
+    const curr: [number, number] = [startLng, startLat];
+    const next = roadCoords[Math.min(roadCoords.length - 1, startIdx + 1)];
+    return [prev, curr, next];
+  }
+
+  let endIdx = roadCoords.length - 1;
+  let minEndDist = Infinity;
+  for (let i = 0; i < roadCoords.length; i++) {
+    const d = Math.hypot(roadCoords[i][0] - endLng, roadCoords[i][1] - endLat);
+    if (d < minEndDist) {
+      minEndDist = d;
+      endIdx = i;
+    }
+  }
+
+  const fromIdx = Math.min(startIdx, endIdx);
+  const toIdx = Math.max(startIdx, endIdx);
+
+  const roadSlice = roadCoords.slice(fromIdx, toIdx + 1);
+  if (startIdx > endIdx) {
+    roadSlice.reverse();
+  }
+
+  const result: [number, number][] = [[startLng, startLat]];
+  for (const pt of roadSlice) {
+    const last = result[result.length - 1];
+    if (Math.hypot(last[0] - pt[0], last[1] - pt[1]) > 0.00005) {
+      result.push(pt);
+    }
+  }
+  const last = result[result.length - 1];
+  if (Math.hypot(last[0] - endLng, last[1] - endLat) > 0.00005) {
+    result.push([endLng, endLat]);
+  }
+
+  return result.length >= 2 ? result : [[startLng, startLat], [endLng, endLat]];
+}
 
 export function simulateTrafficConditions(
   hour: number,

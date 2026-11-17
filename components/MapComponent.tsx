@@ -55,6 +55,7 @@ import {
   PeakPeriodPreset,
   PEAK_PERIOD_PRESETS,
   CityTrafficSnapshot,
+  getProjectRoadGeometry,
 } from "@/lib/trafficData";
 
 // Generates smooth curved 3D Bézier arc coordinates between 2 spatial points on the map
@@ -174,7 +175,8 @@ export const MIRA_ROAD_3D_ASSETS: ConstructionSiteAsset[] = [
     active_machinery: ["Active Rotating Tower Crane (Slew & Hoist)", "Material Hoist", "Concrete Pump Arm"],
     animate_type: "tower_crane",
     companion_models: [
-      { url: "/models/construction_workers.glb", lng: 72.85915, lat: 19.28235, scale: 1.1, bearing: 0 }
+      { url: "/models/construction_workers.glb", lng: 72.85938, lat: 19.28242, scale: 1.1, bearing: 0 },
+      { url: "/models/concrete_mixer.glb", lng: 72.85860, lat: 19.28260, scale: 1.25, bearing: Math.PI / 4, animate_type: "concrete_mixer" }
     ]
   },
   {
@@ -202,8 +204,9 @@ export const MIRA_ROAD_3D_ASSETS: ConstructionSiteAsset[] = [
     active_machinery: ["Tandem Vibratory Road Roller", "Heavy Tipper Dump Truck", "Asphalt Paver"],
     animate_type: "road_roller",
     companion_models: [
-      { url: "/models/road_roller.glb", lng: 72.86325, lat: 19.28395, scale: 1.3, bearing: Math.PI / 4, animate_type: "road_roller" },
-      { url: "/models/dump_truck.glb", lng: 72.86375, lat: 19.28445, scale: 1.2, bearing: Math.PI / 4, animate_type: "dump_truck" }
+      { url: "/models/road_roller.glb", lng: 72.86308, lat: 19.28380, scale: 1.3, bearing: Math.PI / 4, animate_type: "road_roller" },
+      { url: "/models/dump_truck.glb", lng: 72.86392, lat: 19.28462, scale: 1.2, bearing: Math.PI / 4, animate_type: "dump_truck" },
+      { url: "/models/construction_workers.glb", lng: 72.86362, lat: 19.28402, scale: 1.0, bearing: 0 }
     ]
   },
   {
@@ -231,8 +234,8 @@ export const MIRA_ROAD_3D_ASSETS: ConstructionSiteAsset[] = [
     active_machinery: ["Hydraulic Tracked Excavator", "Trench Shoring Box", "Municipal Pipe Crew"],
     animate_type: "excavator",
     companion_models: [
-      { url: "/models/hydraulic_excavator.glb", lng: 72.85585, lat: 19.28095, scale: 1.35, bearing: -Math.PI / 3, animate_type: "excavator" },
-      { url: "/models/construction_workers.glb", lng: 72.85635, lat: 19.28145, scale: 1.0, bearing: 0 }
+      { url: "/models/hydraulic_excavator.glb", lng: 72.85568, lat: 19.28088, scale: 1.35, bearing: -Math.PI / 3, animate_type: "excavator" },
+      { url: "/models/construction_workers.glb", lng: 72.85652, lat: 19.28152, scale: 1.0, bearing: 0 }
     ]
   },
   {
@@ -260,7 +263,8 @@ export const MIRA_ROAD_3D_ASSETS: ConstructionSiteAsset[] = [
     active_machinery: ["Heavy Concrete Mixer Truck", "Rebar Cages & Staging Yard", "Concrete Pumping Arm"],
     animate_type: "concrete_mixer",
     companion_models: [
-      { url: "/models/concrete_mixer.glb", lng: 72.85365, lat: 19.27825, scale: 1.3, bearing: Math.PI / 3, animate_type: "concrete_mixer" }
+      { url: "/models/concrete_mixer.glb", lng: 72.85348, lat: 19.27818, scale: 1.3, bearing: Math.PI / 3, animate_type: "concrete_mixer" },
+      { url: "/models/construction_workers.glb", lng: 72.85445, lat: 19.27882, scale: 1.05, bearing: 0 }
     ]
   },
   {
@@ -287,7 +291,8 @@ export const MIRA_ROAD_3D_ASSETS: ConstructionSiteAsset[] = [
     description: "Subsurface excavation for reinforced 150mm HDPE power ducts accommodating 11kV transmission feeders with safety shoring and electrical warning barriers.",
     active_machinery: ["Cable Pulling Winch", "Utility Service Van", "Safety Hazard Barricades"],
     companion_models: [
-      { url: "/models/construction_workers.glb", lng: 72.86175, lat: 19.28675, scale: 1.0, bearing: 0 }
+      { url: "/models/hydraulic_excavator.glb", lng: 72.86108, lat: 19.28618, scale: 1.25, bearing: -Math.PI / 4, animate_type: "excavator" },
+      { url: "/models/construction_workers.glb", lng: 72.86192, lat: 19.28682, scale: 1.0, bearing: 0 }
     ]
   },
   {
@@ -314,7 +319,8 @@ export const MIRA_ROAD_3D_ASSETS: ConstructionSiteAsset[] = [
     description: "Rapid micro-trenching along curbside for 96-strand single-mode optical fiber conduits supporting municipal surveillance and 5G base stations.",
     active_machinery: ["Directional Drilling Rig", "Fiber Reel Trailer", "Traffic Safety Cones"],
     companion_models: [
-      { url: "/models/hydraulic_excavator.glb", lng: 72.86825, lat: 19.28775, scale: 1.2, bearing: -Math.PI / 6, animate_type: "excavator" }
+      { url: "/models/hydraulic_excavator.glb", lng: 72.86752, lat: 19.28722, scale: 1.2, bearing: -Math.PI / 6, animate_type: "excavator" },
+      { url: "/models/construction_workers.glb", lng: 72.86848, lat: 19.28778, scale: 1.0, bearing: 0 }
     ]
   },
   {
@@ -341,7 +347,8 @@ export const MIRA_ROAD_3D_ASSETS: ConstructionSiteAsset[] = [
     description: "High-capacity monsoon flood mitigation storm water sewer interceptor using 1200mm precast concrete culvert sections.",
     active_machinery: ["Mobile Hydraulic Crane", "Trench Shoring Box", "Excavator"],
     companion_models: [
-      { url: "/models/dump_truck.glb", lng: 72.85225, lat: 19.28025, scale: 1.2, bearing: 0, animate_type: "dump_truck" }
+      { url: "/models/dump_truck.glb", lng: 72.85202, lat: 19.28018, scale: 1.2, bearing: 0, animate_type: "dump_truck" },
+      { url: "/models/construction_workers.glb", lng: 72.85298, lat: 19.28082, scale: 1.0, bearing: 0 }
     ]
   },
   {
@@ -368,7 +375,242 @@ export const MIRA_ROAD_3D_ASSETS: ConstructionSiteAsset[] = [
     description: "Urban corridor beautification, median curb casting, and high-traction bitumen seal coat.",
     active_machinery: ["Concrete Mixer Truck", "Compaction Roller", "Safety Flaggers"],
     companion_models: [
-      { url: "/models/road_roller.glb", lng: 72.86525, lat: 19.28175, scale: 1.2, bearing: -Math.PI / 4, animate_type: "road_roller" }
+      { url: "/models/road_roller.glb", lng: 72.86452, lat: 19.28118, scale: 1.2, bearing: -Math.PI / 4, animate_type: "road_roller" },
+      { url: "/models/dump_truck.glb", lng: 72.86548, lat: 19.28182, scale: 1.2, bearing: -Math.PI / 4, animate_type: "dump_truck" }
+    ]
+  },
+  {
+    id: "site-009",
+    site_code: "SITE-I",
+    name: "Metro Line 9 Elevated Viaduct Pier 142",
+    category: "Transit Infrastructure",
+    project_id: "PRJ-009",
+    department: "Urban Development / Buildings",
+    stats: "Elevated Pier • Precast Girder Launcher",
+    modelUrl: "/models/highrise_under_construction.glb",
+    lng: 72.8710,
+    lat: 19.2865,
+    road_name: "Mira Bhayandar Road Link",
+    tag: "METRO VIADUCT PIER",
+    badgeColor: "#f59e0b",
+    icon: "🚝",
+    depth: "Superstructure (+24m)",
+    scale: 1.05,
+    bearing: Math.PI / 6,
+    start_date: "2026-11-01",
+    end_date: "2026-12-30",
+    stage_name: "Pier Cap Reinforcement & Girder Launching",
+    description: "Elevated rapid transit guideway pier casting, reinforced steel rebar cage lifting, and segmental span launcher.",
+    active_machinery: ["Pier Casting Gantry", "Concrete Mixer", "Safety Marshall Crew"],
+    animate_type: "tower_crane",
+    companion_models: [
+      { url: "/models/hydraulic_excavator.glb", lng: 72.87058, lat: 19.28622, scale: 1.3, bearing: -Math.PI / 4, animate_type: "excavator" },
+      { url: "/models/concrete_mixer.glb", lng: 72.87142, lat: 19.28678, scale: 1.25, bearing: Math.PI / 6, animate_type: "concrete_mixer" },
+      { url: "/models/construction_workers.glb", lng: 72.87115, lat: 19.28630, scale: 1.05, bearing: 0 }
+    ]
+  },
+  {
+    id: "site-010",
+    site_code: "SITE-J",
+    name: "WEH Kashimira Grade Separator Flyover",
+    category: "Highway Infrastructure",
+    project_id: "PRJ-010",
+    department: "Roads Department",
+    stats: "Highway Interchange • Embankment Compaction",
+    modelUrl: "/models/road_construction_site.glb",
+    lng: 72.8785,
+    lat: 19.2810,
+    road_name: "Western Express Highway Junction",
+    tag: "WEH FLYOVER INTERCHANGE",
+    badgeColor: "#3b82f6",
+    icon: "🌉",
+    depth: "Grade Separator (+8m)",
+    scale: 1.15,
+    bearing: Math.PI / 3,
+    start_date: "2026-11-04",
+    end_date: "2026-12-10",
+    stage_name: "Flyover Approach Embankment & Bitumen Paving",
+    description: "Heavy flyover approach embankment compaction, sub-base gravel leveling, and high-impact crash barrier erection.",
+    active_machinery: ["Tandem Vibratory Road Roller", "Heavy Tipper Dump Truck", "Paving Crew"],
+    animate_type: "road_roller",
+    companion_models: [
+      { url: "/models/road_roller.glb", lng: 72.87802, lat: 19.28062, scale: 1.3, bearing: Math.PI / 3, animate_type: "road_roller" },
+      { url: "/models/dump_truck.glb", lng: 72.87898, lat: 19.28138, scale: 1.2, bearing: Math.PI / 3, animate_type: "dump_truck" }
+    ]
+  },
+  {
+    id: "site-011",
+    site_code: "SITE-K",
+    name: "150 Feet Road Stormwater Box Drain",
+    category: "Stormwater Drainage",
+    project_id: "PRJ-011",
+    department: "Sewerage Department",
+    stats: "Twin 2.4m RCC Box Culverts",
+    modelUrl: "/models/water_pipeline_trench.glb",
+    lng: 72.8530,
+    lat: 19.2940,
+    road_name: "150 Feet Road Arterial",
+    tag: "STORMWATER BOX DRAIN",
+    badgeColor: "#10b981",
+    icon: "🌧️",
+    depth: "Deep Subsurface (-3.8m)",
+    scale: 1.1,
+    bearing: Math.PI / 2,
+    start_date: "2026-11-06",
+    end_date: "2026-12-04",
+    stage_name: "Trench Excavation & Box Culvert Lowering",
+    description: "Reinforced cement concrete twin-cell box drain installation along the 150 Feet arterial corridor to prevent monsoon waterlogging.",
+    active_machinery: ["Tracked Hydraulic Excavator", "Trench Shoring", "Precast Gantry"],
+    animate_type: "excavator",
+    companion_models: [
+      { url: "/models/hydraulic_excavator.glb", lng: 72.85262, lat: 19.29362, scale: 1.3, bearing: -Math.PI / 4, animate_type: "excavator" },
+      { url: "/models/dump_truck.glb", lng: 72.85338, lat: 19.29438, scale: 1.2, bearing: Math.PI / 2, animate_type: "dump_truck" }
+    ]
+  },
+  {
+    id: "site-012",
+    site_code: "SITE-L",
+    name: "Poonam Sagar 33kV GIS Substation Raft",
+    category: "Power Grid Infrastructure",
+    project_id: "PRJ-012",
+    department: "Electricity Department",
+    stats: "Heavy Foundation Raft • 33kV GIS Bay",
+    modelUrl: "/models/commercial_construction_site.glb",
+    lng: 72.8560,
+    lat: 19.2895,
+    road_name: "Poonam Sagar Road",
+    tag: "33KV GIS SUBSTATION",
+    badgeColor: "#eab308",
+    icon: "⚡",
+    depth: "Substation Raft (+14m)",
+    scale: 1.05,
+    bearing: 0,
+    start_date: "2026-11-09",
+    end_date: "2026-12-18",
+    stage_name: "Foundation Raft Concrete Pouring",
+    description: "Heavy foundation raft concrete pour for indoor 33/11kV gas-insulated substation housing and underground cable duct vault.",
+    active_machinery: ["Concrete Mixer Truck", "Rebar Steel Framework", "Station Safety Crew"],
+    animate_type: "concrete_mixer",
+    companion_models: [
+      { url: "/models/concrete_mixer.glb", lng: 72.85552, lat: 19.28918, scale: 1.3, bearing: Math.PI / 4, animate_type: "concrete_mixer" },
+      { url: "/models/construction_workers.glb", lng: 72.85642, lat: 19.28982, scale: 1.0, bearing: 0 }
+    ]
+  },
+  {
+    id: "site-013",
+    site_code: "SITE-M",
+    name: "GCC Club Road Mastic Asphalt Resurfacing",
+    category: "Roadwork & Paving",
+    project_id: "PRJ-013",
+    department: "Roads Department",
+    stats: "40mm Mastic Overlay • Cold Milling",
+    modelUrl: "/models/road_construction_site.glb",
+    lng: 72.8735,
+    lat: 19.2870,
+    road_name: "GCC Club Road",
+    tag: "MASTIC RESURFACING",
+    badgeColor: "#3b82f6",
+    icon: "🛣️",
+    depth: "Surface (-0.2m)",
+    scale: 1.1,
+    bearing: -Math.PI / 6,
+    start_date: "2026-11-10",
+    end_date: "2026-11-29",
+    stage_name: "Cold Milling & High-Traction Mastic Paving",
+    description: "Cold milling of aged bituminous layer and laying of 40mm polymer-modified mastic asphalt with sensor paver.",
+    active_machinery: ["Tandem Vibratory Road Roller", "Asphalt Tipper", "Safety Cones"],
+    animate_type: "road_roller",
+    companion_models: [
+      { url: "/models/road_roller.glb", lng: 72.87302, lat: 19.28678, scale: 1.25, bearing: -Math.PI / 6, animate_type: "road_roller" },
+      { url: "/models/dump_truck.glb", lng: 72.87398, lat: 19.28722, scale: 1.2, bearing: -Math.PI / 6, animate_type: "dump_truck" }
+    ]
+  },
+  {
+    id: "site-014",
+    site_code: "SITE-N",
+    name: "Hatkesh 400mm High-Pressure Gas Feeder",
+    category: "Underground Energy",
+    project_id: "PRJ-014",
+    department: "Water Department",
+    stats: "400mm Welded Steel Gas Feeder (-2.4m)",
+    modelUrl: "/models/water_pipeline_trench.glb",
+    lng: 72.8685,
+    lat: 19.2740,
+    road_name: "Hatkesh Main Road",
+    tag: "GAS TRUNK FEEDER",
+    badgeColor: "#06b6d4",
+    icon: "🔥",
+    depth: "Deep Subsurface (-2.4m)",
+    scale: 1.1,
+    bearing: Math.PI / 4,
+    start_date: "2026-11-05",
+    end_date: "2026-11-26",
+    stage_name: "HDD Trenching & Gas Pipe Welding",
+    description: "Horizontal directional drilling (HDD) and deep trenching for high-pressure carbon steel natural gas distribution feeder.",
+    active_machinery: ["Hydraulic Tracked Excavator", "Trench Shoring Box", "Certified Welders"],
+    animate_type: "excavator",
+    companion_models: [
+      { url: "/models/hydraulic_excavator.glb", lng: 72.86802, lat: 19.27372, scale: 1.3, bearing: -Math.PI / 4, animate_type: "excavator" },
+      { url: "/models/construction_workers.glb", lng: 72.86898, lat: 19.27428, scale: 1.0, bearing: 0 }
+    ]
+  },
+  {
+    id: "site-015",
+    site_code: "SITE-O",
+    name: "Mira Road Station West Transit Skywalk Pier",
+    category: "Transit Terminal",
+    project_id: "PRJ-015",
+    department: "Urban Development / Buildings",
+    stats: "Elevated Skywalk Pier • Bus Terminus Bay",
+    modelUrl: "/models/commercial_construction_site.glb",
+    lng: 72.8515,
+    lat: 19.2818,
+    road_name: "Station Road West Forecourt",
+    tag: "TRANSIT SKYWALK PIER",
+    badgeColor: "#10b981",
+    icon: "🚶",
+    depth: "Superstructure (+16m)",
+    scale: 1.1,
+    bearing: Math.PI / 2,
+    start_date: "2026-11-03",
+    end_date: "2026-12-22",
+    stage_name: "Elevated Skywalk Pier Concreting",
+    description: "Elevated pedestrian skywalk pier construction and terminal plaza bus bay interlocking concrete paving.",
+    active_machinery: ["Transit Concrete Mixer", "Rebar Cages", "Municipal Transit Crew"],
+    animate_type: "concrete_mixer",
+    companion_models: [
+      { url: "/models/concrete_mixer.glb", lng: 72.85102, lat: 19.28148, scale: 1.25, bearing: Math.PI / 2, animate_type: "concrete_mixer" },
+      { url: "/models/construction_workers.glb", lng: 72.85198, lat: 19.28212, scale: 1.05, bearing: 0 }
+    ]
+  },
+  {
+    id: "site-016",
+    site_code: "SITE-P",
+    name: "Beverly Park Twin Heights Luxury Tower",
+    category: "Building Construction",
+    project_id: "PRJ-016",
+    department: "Urban Development / Buildings",
+    stats: "28-Story RCC Frame • Jump-Form Core",
+    modelUrl: "/models/highrise_under_construction.glb",
+    lng: 72.8655,
+    lat: 19.2885,
+    road_name: "Beverly Park Avenue North",
+    tag: "RESIDENTIAL TWIN TOWER",
+    badgeColor: "#f59e0b",
+    icon: "🏙️",
+    depth: "Superstructure (+34m)",
+    scale: 1.1,
+    bearing: -Math.PI / 6,
+    start_date: "2026-11-01",
+    end_date: "2026-12-31",
+    stage_name: "Tower 2 Jump-Form Core Concreting",
+    description: "28-story residential high-rise core wall jump-form shuttering, concrete pump placement, and dual tower crane operations.",
+    active_machinery: ["Active Rotating Tower Crane", "Concrete Mixer", "Scaffold Crew"],
+    animate_type: "tower_crane",
+    companion_models: [
+      { url: "/models/concrete_mixer.glb", lng: 72.86502, lat: 19.28818, scale: 1.25, bearing: -Math.PI / 6, animate_type: "concrete_mixer" },
+      { url: "/models/dump_truck.glb", lng: 72.86598, lat: 19.28882, scale: 1.2, bearing: -Math.PI / 6, animate_type: "dump_truck" },
+      { url: "/models/construction_workers.glb", lng: 72.86565, lat: 19.28830, scale: 1.0, bearing: 0 }
     ]
   }
 ];
@@ -555,7 +797,7 @@ export default function MapComponent({
   const [isAnimationsPlaying, setIsAnimationsPlaying] = useState(true);
   const [selectedSiteAsset, setSelectedSiteAsset] = useState<ConstructionSiteAsset | null>(null);
   const [showUtilities, setShowUtilities] = useState(true);
-  const [showBuildings3D, setShowBuildings3D] = useState(false);
+  const [showBuildings3D, setShowBuildings3D] = useState(true);
   const [showMachinery, setShowMachinery] = useState(true);
   const [isLegendCollapsed, setIsLegendCollapsed] = useState(false);
   const [subsurfaceXRay, setSubsurfaceXRay] = useState(false);
@@ -861,18 +1103,18 @@ export default function MapComponent({
                   dirLight2.position.set(-50, -80, 50);
                   itemScene.add(dirLight2);
 
-                  const coord = maplibregl.MercatorCoordinate.fromLngLat([lng, lat], 0);
+                  const coord = maplibregl.MercatorCoordinate.fromLngLat([lng, lat], 0.25);
                   const meter = coord.meterInMercatorCoordinateUnits();
                   const s = scale || 1.0;
 
                   const rotX = new THREE.Matrix4().makeRotationAxis(new THREE.Vector3(1, 0, 0), Math.PI / 2);
-                  const rotZ = new THREE.Matrix4().makeRotationAxis(new THREE.Vector3(0, 0, 1), bearing || 0);
+                  const rotHeading = new THREE.Matrix4().makeRotationAxis(new THREE.Vector3(0, 1, 0), bearing || 0);
 
                   const transformMatrix = new THREE.Matrix4()
                     .makeTranslation(coord.x, coord.y, coord.z)
                     .scale(new THREE.Vector3(meter * s, -meter * s, meter * s))
                     .multiply(rotX)
-                    .multiply(rotZ);
+                    .multiply(rotHeading);
 
                   loader.load(
                     url,
@@ -969,23 +1211,20 @@ export default function MapComponent({
                     }
                   } else if (atype === "road_roller") {
                     if (item.modelRoot) {
-                      item.modelRoot.position.z = Math.sin(elapsedSec * 1.1) * 3.2;
+                      item.modelRoot.position.z = Math.sin(elapsedSec * 0.9) * 2.8;
                     }
-                    const frontDrum = item.animatedNodes.find((n: any) => n.name === "FrontDrum");
-                    const rearDrum = item.animatedNodes.find((n: any) => n.name === "RearDrum");
-                    if (frontDrum) frontDrum.rotation.x += 0.06;
-                    if (rearDrum) rearDrum.rotation.x += 0.06;
                   } else if (atype === "excavator") {
                     const deck = item.animatedNodes.find((n: any) => n.name === "ExcavatorDeck");
-                    const boom = item.animatedNodes.find((n: any) => n.name === "ExcavatorBoom");
-                    if (deck) deck.rotation.y = Math.sin(elapsedSec * 0.6) * 0.55;
-                    if (boom) boom.rotation.x = -0.3 + Math.sin(elapsedSec * 0.9) * 0.22;
+                    if (deck) {
+                      deck.rotation.y = Math.sin(elapsedSec * 0.6) * 0.55;
+                    }
                   } else if (atype === "concrete_mixer") {
-                    const drum = item.animatedNodes.find((n: any) => n.name === "MixerDrum");
-                    if (drum) drum.rotation.z += 0.08;
+                    if (item.modelRoot) {
+                      item.modelRoot.position.y = Math.sin(elapsedSec * 14.0) * 0.015;
+                    }
                   } else if (atype === "dump_truck") {
                     if (item.modelRoot) {
-                      item.modelRoot.position.z = Math.sin(elapsedSec * 0.4) * 1.8;
+                      item.modelRoot.position.z = Math.sin(elapsedSec * 0.35) * 1.6;
                     }
                   }
 
@@ -1138,16 +1377,21 @@ export default function MapComponent({
             circleRadius = 12;
           }
 
-          // Line feature if both start and end exist
-          if (endLat && endLng && !isNaN(endLat) && !isNaN(endLng)) {
+          // Line feature following actual surveyed road geometry
+          const lineCoordinates = getProjectRoadGeometry(
+            proj.road_name,
+            startLng,
+            startLat,
+            endLng,
+            endLat
+          );
+
+          if (lineCoordinates && lineCoordinates.length >= 2) {
             features.push({
               type: "Feature",
               geometry: {
                 type: "LineString",
-                coordinates: [
-                  [startLng, startLat],
-                  [endLng, endLat],
-                ],
+                coordinates: lineCoordinates,
               },
               properties: {
                 id: proj.id,
@@ -1206,14 +1450,16 @@ export default function MapComponent({
           const isOverlapActive = !c.overlap_start || (activeDateStr >= c.overlap_start && activeDateStr <= c.overlap_end);
 
           if (latA && lngA && latB && lngB) {
+            const sameRoad = pA?.road_name && pB?.road_name && pA.road_name === pB.road_name;
+            const conflictCoords = sameRoad
+              ? getProjectRoadGeometry(pA.road_name, lngA, latA, lngB, latB)
+              : generateCurveCoordinates([lngA, latA], [lngB, latB], 0.0018);
+
             conflictLines.push({
               type: "Feature",
               geometry: {
                 type: "LineString",
-                coordinates: [
-                  [lngA, latA],
-                  [lngB, latB],
-                ],
+                coordinates: conflictCoords,
               },
               properties: {
                 id: c.id,

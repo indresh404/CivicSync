@@ -3,6 +3,27 @@ import json
 import os
 import math
 
+def merge_mesh_data(mesh_items, combined_name, material_name, color, metallic=0.3, roughness=0.5):
+    all_verts = []
+    all_norms = []
+    all_indices = []
+    for m in mesh_items:
+        base_idx = len(all_verts)
+        all_verts.extend(m['vertices'])
+        all_norms.extend(m['normals'])
+        for idx in m['indices']:
+            all_indices.append(base_idx + idx)
+    return {
+        'name': combined_name,
+        'vertices': all_verts,
+        'normals': all_norms,
+        'indices': all_indices,
+        'material_name': material_name,
+        'base_color': color,
+        'metallic': metallic,
+        'roughness': roughness
+    }
+
 def build_glb(meshes_data):
     bin_buffer = bytearray()
     buffer_views = []
@@ -279,19 +300,19 @@ def generate_highrise_under_construction():
     crane_height = 18.0
     # Vertical lattice mast (yellow)
     meshes.append(make_box(-1.0, crane_base_y, -1.0, 2.0, crane_height, 2.0, "TowerCraneMast", [0.95, 0.75, 0.05, 1.0], 0.5, 0.4))
-    # Operator cabin & slewing unit
+    # Rotating Horizontal Jib & Slew Assembly (unified node "CraneJib" for realistic 360 slew animation)
     cabin_y = crane_base_y + crane_height
-    meshes.append(make_box(-1.4, cabin_y, -1.4, 2.8, 2.2, 2.8, "CraneSlewingUnit", [0.15, 0.15, 0.18, 1.0], 0.7, 0.3))
-    meshes.append(make_box(0.5, cabin_y+0.4, -0.8, 1.6, 1.6, 1.6, "CraneOperatorCab", [0.2, 0.6, 0.9, 0.8], 0.9, 0.1))
-
-    # Rotating Horizontal Jib (named node "CraneJib" for dynamic animation)
     jib_y = cabin_y + 2.4
-    meshes.append(make_box(-2.0, jib_y, -1.0, 28.0, 1.6, 2.0, "CraneJibTruss", [0.95, 0.75, 0.05, 1.0], 0.5, 0.4, name="CraneJib"))
-    meshes.append(make_box(-12.0, jib_y, -1.0, 10.0, 1.6, 2.0, "CraneCounterJib", [0.95, 0.75, 0.05, 1.0], 0.5, 0.4, name="CraneJib"))
-    meshes.append(make_box(-11.5, jib_y+0.2, -1.4, 4.0, 2.2, 2.8, "CounterweightBlocks", [0.5, 0.52, 0.55, 1.0], 0.1, 0.85, name="CraneJib"))
-    # Hoist cable & suspended concrete bucket
-    meshes.append(make_cylinder(14.0, 0, jib_y - 10.0, 0.04, 10.0, 6, "CraneHoistCable", [0.2, 0.2, 0.2, 1.0], axis='y', metallic=0.9, roughness=0.1, name="CraneJib"))
-    meshes.append(make_cylinder(14.0, 0, jib_y - 11.8, 0.9, 1.8, 14, "SuspendedBucket", [0.95, 0.45, 0.05, 1.0], axis='y', metallic=0.6, roughness=0.3, name="CraneJib"))
+    jib_parts = [
+        make_box(-1.4, cabin_y, -1.4, 2.8, 2.2, 2.8, "CraneSlewingUnit", [0.15, 0.15, 0.18, 1.0], 0.7, 0.3),
+        make_box(0.5, cabin_y+0.4, -0.8, 1.6, 1.6, 1.6, "CraneOperatorCab", [0.2, 0.6, 0.9, 0.8], 0.9, 0.1),
+        make_box(-2.0, jib_y, -1.0, 28.0, 1.6, 2.0, "CraneJibTruss", [0.95, 0.75, 0.05, 1.0], 0.5, 0.4),
+        make_box(-12.0, jib_y, -1.0, 10.0, 1.6, 2.0, "CraneCounterJib", [0.95, 0.75, 0.05, 1.0], 0.5, 0.4),
+        make_box(-11.5, jib_y+0.2, -1.4, 4.0, 2.2, 2.8, "CounterweightBlocks", [0.5, 0.52, 0.55, 1.0], 0.1, 0.85),
+        make_cylinder(14.0, 0, jib_y - 10.0, 0.04, 10.0, 6, "CraneHoistCable", [0.2, 0.2, 0.2, 1.0], axis='y', metallic=0.9, roughness=0.1),
+        make_cylinder(14.0, 0, jib_y - 11.8, 0.9, 1.8, 14, "SuspendedBucket", [0.95, 0.45, 0.05, 1.0], axis='y', metallic=0.6, roughness=0.3)
+    ]
+    meshes.append(merge_mesh_data(jib_parts, "CraneJib", "MatCraneJibAssembly", [0.95, 0.75, 0.05, 1.0], metallic=0.5, roughness=0.4))
 
     # Perimeter security barricade around site
     for bx in range(-15, 16, 6):
@@ -431,21 +452,17 @@ def generate_hydraulic_excavator():
     # Center turntable chassis
     meshes.append(make_cylinder(0, 0, 0.6, 1.1, 0.5, 18, "TurntableRing", [0.2, 0.2, 0.22, 1.0], axis='y', metallic=0.8, roughness=0.2))
 
-    # Upper Rotating House/Deck (CAT Industrial Yellow) - Named node "ExcavatorDeck"
-    meshes.append(make_box(-1.6, 1.1, -2.2, 3.2, 1.5, 4.0, "ExcavatorHouse", [0.95, 0.75, 0.05, 1.0], 0.4, 0.4, name="ExcavatorDeck"))
-    # Heavy rear counterweight
-    meshes.append(make_box(-1.6, 1.2, -2.5, 3.2, 1.4, 0.6, "CounterweightBlock", [0.15, 0.16, 0.18, 1.0], 0.5, 0.5, name="ExcavatorDeck"))
-    # Operator Glass Cabin
-    meshes.append(make_box(-1.5, 1.5, 0.2, 1.2, 1.5, 1.6, "OperatorCab", [0.2, 0.7, 0.9, 0.8], 0.9, 0.1, name="ExcavatorDeck"))
-
-    # Two-piece articulated hydraulic boom & arm - Named node "ExcavatorBoom"
-    meshes.append(make_box(-0.35, 1.8, 1.0, 0.7, 3.8, 1.6, "MainBoomArm", [0.95, 0.75, 0.05, 1.0], 0.4, 0.4, name="ExcavatorBoom"))
-    # Dipper stick (arm)
-    meshes.append(make_box(-0.3, 4.8, 2.2, 0.6, 1.1, 3.5, "DipperStick", [0.95, 0.75, 0.05, 1.0], 0.4, 0.4, name="ExcavatorBoom"))
-    # Heavy digging bucket with reinforced teeth
-    meshes.append(make_box(-0.55, 4.2, 5.2, 1.1, 1.1, 1.3, "HeavyBucket", [0.18, 0.19, 0.22, 1.0], 0.8, 0.3, name="ExcavatorBoom"))
-    # Hydraulic cylinder pistons
-    meshes.append(make_cylinder(0, 1.8, 2.2, 0.12, 2.8, 12, "BoomHydraulicCylinder", [0.9, 0.9, 0.92, 1.0], axis='y', metallic=0.95, roughness=0.1, name="ExcavatorBoom"))
+    # Revolving Superstructure Assembly (unified node "ExcavatorDeck" for smooth turntable slewing)
+    upper_assembly = [
+        make_box(-1.6, 1.1, -2.2, 3.2, 1.5, 4.0, "ExcavatorHouse", [0.95, 0.75, 0.05, 1.0], 0.4, 0.4),
+        make_box(-1.6, 1.2, -2.5, 3.2, 1.4, 0.6, "CounterweightBlock", [0.15, 0.16, 0.18, 1.0], 0.5, 0.5),
+        make_box(-1.5, 1.5, 0.2, 1.2, 1.5, 1.6, "OperatorCab", [0.2, 0.7, 0.9, 0.8], 0.9, 0.1),
+        make_box(-0.35, 1.8, 1.0, 0.7, 3.8, 1.6, "MainBoomArm", [0.95, 0.75, 0.05, 1.0], 0.4, 0.4),
+        make_box(-0.3, 4.8, 2.2, 0.6, 1.1, 3.5, "DipperStick", [0.95, 0.75, 0.05, 1.0], 0.4, 0.4),
+        make_box(-0.55, 4.2, 5.2, 1.1, 1.1, 1.3, "HeavyBucket", [0.18, 0.19, 0.22, 1.0], 0.8, 0.3),
+        make_cylinder(0, 1.8, 2.2, 0.12, 2.8, 12, "BoomHydraulicCylinder", [0.9, 0.9, 0.92, 1.0], axis='y', metallic=0.95, roughness=0.1)
+    ]
+    meshes.append(merge_mesh_data(upper_assembly, "ExcavatorDeck", "MatExcavatorDeckAssembly", [0.95, 0.75, 0.05, 1.0], metallic=0.4, roughness=0.4))
 
     return build_glb(meshes)
 
@@ -472,10 +489,10 @@ def generate_concrete_mixer():
     # Rotating Mixing Drum (Named node "MixerDrum" for continuous rotation animation)
     # Angled drum constructed from segmented cylinders
     meshes.append(make_cylinder(0, -1.0, 2.2, 1.4, 4.2, 20, "MixerDrumBody", [0.95, 0.45, 0.05, 1.0], axis='z', metallic=0.4, roughness=0.4, name="MixerDrum"))
-    meshes.append(make_cylinder(0, 0.8, 2.2, 1.25, 2.0, 20, "MixerDrumConeFront", [0.95, 0.45, 0.05, 1.0], axis='z', metallic=0.4, roughness=0.4, name="MixerDrum"))
-    meshes.append(make_cylinder(0, -2.8, 2.5, 0.75, 1.8, 18, "MixerDrumDischargeCone", [0.95, 0.45, 0.05, 1.0], axis='z', metallic=0.4, roughness=0.4, name="MixerDrum"))
+    meshes.append(make_cylinder(0, 0.8, 2.2, 1.25, 2.0, 20, "MixerDrumConeFront", [0.95, 0.45, 0.05, 1.0], axis='z', metallic=0.4, roughness=0.4))
+    meshes.append(make_cylinder(0, -2.8, 2.5, 0.75, 1.8, 18, "MixerDrumDischargeCone", [0.95, 0.45, 0.05, 1.0], axis='z', metallic=0.4, roughness=0.4))
     # Spiral mixing flight blades pattern on exterior
-    meshes.append(make_box(-1.42, 2.1, -1.8, 2.84, 0.12, 1.6, "DrumFlightRib", [0.98, 0.98, 0.98, 1.0], 0.2, 0.4, name="MixerDrum"))
+    meshes.append(make_box(-1.42, 2.1, -1.8, 2.84, 0.12, 1.6, "DrumFlightRib", [0.98, 0.98, 0.98, 1.0], 0.2, 0.4))
 
     # Discharge hopper and swivel chute at rear
     meshes.append(make_box(-0.6, 2.4, -3.2, 1.2, 1.1, 0.9, "DischargeHopper", [0.2, 0.22, 0.25, 1.0], 0.6, 0.4))
