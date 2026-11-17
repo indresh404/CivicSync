@@ -1,5 +1,6 @@
 # Node / Next.js
 node_modules/
+public/cesium/
 .next/
 out/
 build/

@@ -206,3 +206,25 @@ class GenCityAsset(Base):
     depth_m = Column(Float, default=0.0)
     created_at = Column(DateTime, default=datetime.datetime.utcnow)
 
+class ManusConversation(Base):
+    __tablename__ = "manus_conversations"
+
+    id = Column(String(50), primary_key=True, index=True)
+    user_id = Column(String(50), nullable=False, default="admin")
+    task_id = Column(String(100), nullable=True, index=True)
+    task_url = Column(String(255), nullable=True)
+    title = Column(String(255), nullable=False, default="New Municipal Query")
+    status = Column(String(50), nullable=False, default="running")
+    created_at = Column(DateTime, default=datetime.datetime.utcnow)
+    updated_at = Column(DateTime, default=datetime.datetime.utcnow, onupdate=datetime.datetime.utcnow)
+
+class ManusMessageRecord(Base):
+    __tablename__ = "manus_messages"
+
+    id = Column(String(50), primary_key=True, index=True)
+    conversation_id = Column(String(50), ForeignKey("manus_conversations.id"), index=True, nullable=False)
+    role = Column(String(20), nullable=False)  # user | assistant | status
+    content = Column(Text, nullable=False)
+    created_at = Column(DateTime, default=datetime.datetime.utcnow)
+
+

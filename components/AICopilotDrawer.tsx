@@ -20,7 +20,12 @@ import {
   Info,
 } from "lucide-react";
 import { Conflict, Project } from "@/lib/types";
-import { analyzeConflictAI, chatCopilotAI } from "@/lib/api";
+import {
+  analyzeConflictAI,
+  chatCopilotAI,
+  createManusConversation,
+  sendManusMessage,
+} from "@/lib/api";
 
 interface AICopilotDrawerProps {
   isOpen: boolean;
@@ -39,15 +44,20 @@ export default function AICopilotDrawer({
 }: AICopilotDrawerProps) {
   const [activeTab, setActiveTab] = useState<"chat" | "analysis" | "settings">("chat");
 
+  // Manus AI Agent Session State
+  const [conversationId, setConversationId] = useState<string | null>(null);
+  const [manusTaskId, setManusTaskId] = useState<string | null>(null);
+  const [manusTaskUrl, setManusTaskUrl] = useState<string | null>(null);
+
   // Chat State
   const [messages, setMessages] = useState<
     { role: "user" | "copilot"; text: string; time: string; engine?: string }[]
   >([
     {
       role: "copilot",
-      text: "Hello! I am your **CivicSync Municipal Copilot** for Mira Road. I monitor spatial conflicts, verify the mandatory *Underground-before-Surface* sequencing rule, and estimate rework costs. How can I assist you today?",
+      text: "Hello! I am your **CivicSync AI Copilot** powered by Manus AI Agent V2 for Mira Road municipal infrastructure. I monitor cross-department projects, investigate spatial-temporal clashes, enforce the mandatory *Underground-before-Surface* sequencing rule, and estimate rework savings. How can I assist you today?",
       time: "Just now",
-      engine: "CivicSync AI",
+      engine: "Manus AI Agent V2",
     },
   ]);
   const [inputQuery, setInputQuery] = useState("");
@@ -98,24 +108,45 @@ export default function AICopilotDrawer({
     setIsSending(true);
 
     try {
-      const res = await chatCopilotAI(q, geminiKey);
+      let replyText = "";
+      let engineName = "Manus AI Agent V2";
+
+      if (!conversationId) {
+        const session = await createManusConversation(q);
+        if (session && session.conversation_id) {
+          setConversationId(session.conversation_id);
+          if (session.task_id) setManusTaskId(session.task_id);
+          if (session.task_url) setManusTaskUrl(session.task_url);
+          replyText = session.initial_response || "Municipal query registered with Manus AI Agent.";
+        } else {
+          const fallbackRes = await chatCopilotAI(q, geminiKey);
+          replyText = fallbackRes.reply;
+          engineName = fallbackRes.engine || "CivicSync AI Engine";
+        }
+      } else {
+        const res = await sendManusMessage(conversationId, q);
+        replyText = res.content;
+        if (res.task_id) setManusTaskId(res.task_id);
+      }
+
       setMessages((prev) => [
         ...prev,
         {
           role: "copilot",
-          text: res.reply,
+          text: replyText,
           time: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
-          engine: res.engine,
+          engine: engineName,
         },
       ]);
     } catch (err) {
+      const fallbackRes = await chatCopilotAI(q, geminiKey);
       setMessages((prev) => [
         ...prev,
         {
           role: "copilot",
-          text: "I experienced a temporary communication glitch with the coordination engine. The core rule remains: underground works strictly precede surface asphalt.",
+          text: fallbackRes.reply,
           time: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
-          engine: "Safety Fallback",
+          engine: "CivicSync Fallback Engine",
         },
       ]);
     } finally {
@@ -251,15 +282,37 @@ export default function AICopilotDrawer({
               )}
             </div>
 
+            {/* Manus AI Agent Active Telemetry */}
+            {manusTaskId && (
+              <div className="px-3 py-1.5 rounded-lg bg-cyan-950/40 border border-cyan-500/30 flex items-center justify-between text-[11px]">
+                <div className="flex items-center gap-1.5 text-cyan-300">
+                  <span className="w-2 h-2 rounded-full bg-cyan-400 animate-pulse" />
+                  <span>Manus AI Task: <code className="font-mono text-white">{manusTaskId.slice(0, 10)}...</code></span>
+                </div>
+                {manusTaskUrl && (
+                  <a
+                    href={manusTaskUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-cyan-400 hover:text-cyan-200 flex items-center gap-1 font-semibold"
+                  >
+                    View Task <ExternalLink className="w-3 h-3" />
+                  </a>
+                )}
+              </div>
+            )}
+
             {/* Quick Prompt Chips */}
             <div className="space-y-2 pt-2 border-t border-slate-800">
               <p className="text-[11px] text-slate-400 font-medium">Suggested queries:</p>
               <div className="flex flex-wrap gap-1.5">
                 {[
-                  "Explain Water vs Roads conflict on Mira Bhayandar Road",
-                  "How much cost is avoided by catching conflicts?",
+                  "Show all ongoing infrastructure projects in Mira Road",
+                  "Explain critical conflicts and road clashing details",
+                  "Which departments have pending acknowledgments?",
+                  "Summarize this week's construction activities",
+                  "Show the history of Mira Bhayandar Road",
                   "What is the Monsoon digging moratorium period?",
-                  "Suggest joint-trenching for Kanakia Road",
                 ].map((chip, i) => (
                   <button
                     key={i}

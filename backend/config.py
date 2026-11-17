@@ -33,6 +33,11 @@ JWT_SECRET = os.getenv("JWT_SECRET", "mySuperSecretKey")
 JWT_ALGORITHM = "HS256"
 JWT_EXPIRATION_HOURS = 24
 
+# Manus AI Agent API V2 Configuration
+MANUS_API_KEY = os.getenv("MANUS_API_KEY", "")
+MANUS_API_BASE_URL = os.getenv("MANUS_API_BASE_URL", "https://api.manus.ai")
+MANUS_WEBHOOK_SECRET = os.getenv("MANUS_WEBHOOK_SECRET", "")
+
 # Conflict Engine Business Constants
 CONFLICT_DISTANCE_THRESHOLD_METERS = float(os.getenv("CONFLICT_THRESHOLD_METERS", "50.0"))
 ASSUMED_COST_PER_REDIG = float(os.getenv("ASSUMED_COST_PER_REDIG", "350000.0"))  # INR

@@ -28,7 +28,11 @@ from backend.config import (
     PORT,
 )
 from backend.database import engine, Base, get_db
-from backend.models import Department, User, Project, Conflict, Acknowledgment, AuditLog, Config, UtilityAsset, RoadSegment
+from backend.models import (
+    Department, User, Project, Conflict, Acknowledgment, AuditLog, Config, UtilityAsset, RoadSegment,
+    ManusConversation, ManusMessageRecord
+)
+from backend.manus_service import manus_service
 from backend.ai_service import analyze_conflict_ai, chat_copilot_ai
 from backend.gencity_service import (
     verify_hf_connection,
@@ -1322,6 +1326,227 @@ def ai_copilot_chat(
 
     response = chat_copilot_ai(query, context, gemini_key)
     return response
+
+# --- OFFICIAL MANUS AI AGENT API V2 INTEGRATION ---
+
+@app.post("/api/ai/conversations")
+def create_manus_conversation(
+    payload: Dict[str, Any],
+    db: Session = Depends(get_db)
+):
+    """
+    Creates a new conversation session backed by an official Manus AI Agent V2 task.
+    Injects verified CivicSync municipal infrastructure context.
+    """
+    prompt = payload.get("message") or payload.get("prompt") or "Summarize ongoing municipal coordination."
+    user_id = payload.get("user_id", "admin")
+
+    # Controlled context retrieval
+    context = manus_service.build_municipal_context(db)
+    task_res = manus_service.create_task(prompt, context)
+
+    conv_id = f"conv-{uuid.uuid4().hex[:12]}"
+    task_id = task_res.get("task_id")
+    task_url = task_res.get("task_url")
+    title = task_res.get("task_title") or prompt[:50]
+
+    conv = ManusConversation(
+        id=conv_id,
+        user_id=user_id,
+        task_id=task_id,
+        task_url=task_url,
+        title=title,
+        status="running" if task_id else "error"
+    )
+    db.add(conv)
+
+    # Record user message
+    user_msg = ManusMessageRecord(
+        id=f"msg-{uuid.uuid4().hex[:12]}",
+        conversation_id=conv_id,
+        role="user",
+        content=prompt
+    )
+    db.add(user_msg)
+    db.commit()
+
+    # Wait briefly for assistant response
+    assistant_content = ""
+    if task_id:
+        assistant_content = manus_service.wait_for_response(task_id, max_wait_seconds=6)
+        if assistant_content:
+            bot_msg = ManusMessageRecord(
+                id=f"msg-{uuid.uuid4().hex[:12]}",
+                conversation_id=conv_id,
+                role="assistant",
+                content=assistant_content
+            )
+            db.add(bot_msg)
+            conv.status = "completed"
+            db.commit()
+
+    return {
+        "ok": True,
+        "conversation_id": conv_id,
+        "task_id": task_id,
+        "task_url": task_url,
+        "title": title,
+        "status": conv.status,
+        "initial_response": assistant_content or "Manus AI Agent task initiated. Analyzing municipal project dataset..."
+    }
+
+@app.post("/api/ai/conversations/{conversation_id}/messages")
+def send_manus_message(
+    conversation_id: str,
+    payload: Dict[str, Any],
+    db: Session = Depends(get_db)
+):
+    """
+    Sends follow-up message to an existing Manus task in an active conversation.
+    """
+    content = payload.get("message") or payload.get("content") or ""
+    if not content.strip():
+        raise HTTPException(status_code=400, detail="Message content is required")
+
+    conv = db.query(ManusConversation).filter(ManusConversation.id == conversation_id).first()
+    if not conv:
+        raise HTTPException(status_code=404, detail="Conversation not found")
+
+    # Record user message
+    user_msg = ManusMessageRecord(
+        id=f"msg-{uuid.uuid4().hex[:12]}",
+        conversation_id=conversation_id,
+        role="user",
+        content=content
+    )
+    db.add(user_msg)
+    db.commit()
+
+    assistant_content = ""
+    if conv.task_id:
+        manus_service.send_message(conv.task_id, content)
+        assistant_content = manus_service.wait_for_response(conv.task_id, max_wait_seconds=8)
+    else:
+        ctx = manus_service.build_municipal_context(db)
+        task_res = manus_service.create_task(content, ctx)
+        if task_res.get("task_id"):
+            conv.task_id = task_res["task_id"]
+            conv.task_url = task_res.get("task_url")
+            db.commit()
+            assistant_content = manus_service.wait_for_response(conv.task_id, max_wait_seconds=8)
+
+    if assistant_content:
+        bot_msg = ManusMessageRecord(
+            id=f"msg-{uuid.uuid4().hex[:12]}",
+            conversation_id=conversation_id,
+            role="assistant",
+            content=assistant_content
+        )
+        db.add(bot_msg)
+        conv.updated_at = datetime.datetime.utcnow()
+        db.commit()
+
+    return {
+        "ok": True,
+        "conversation_id": conversation_id,
+        "task_id": conv.task_id,
+        "role": "assistant",
+        "content": assistant_content or "Your query is being processed by Manus AI Agent. Please check status in a moment."
+    }
+
+@app.get("/api/ai/conversations")
+def list_manus_conversations(
+    user_id: Optional[str] = None,
+    limit: int = 20,
+    db: Session = Depends(get_db)
+):
+    """Lists recent AI Copilot conversations."""
+    query = db.query(ManusConversation)
+    if user_id:
+        query = query.filter(ManusConversation.user_id == user_id)
+    convs = query.order_by(ManusConversation.updated_at.desc()).limit(limit).all()
+    return [
+        {
+            "id": c.id,
+            "title": c.title,
+            "task_id": c.task_id,
+            "task_url": c.task_url,
+            "status": c.status,
+            "created_at": c.created_at.isoformat() if c.created_at else None,
+            "updated_at": c.updated_at.isoformat() if c.updated_at else None
+        }
+        for c in convs
+    ]
+
+@app.get("/api/ai/conversations/{conversation_id}")
+def get_manus_conversation(
+    conversation_id: str,
+    db: Session = Depends(get_db)
+):
+    """Retrieves full conversation details and message history."""
+    conv = db.query(ManusConversation).filter(ManusConversation.id == conversation_id).first()
+    if not conv:
+        raise HTTPException(status_code=404, detail="Conversation not found")
+    
+    msgs = db.query(ManusMessageRecord).filter(
+        ManusMessageRecord.conversation_id == conversation_id
+    ).order_by(ManusMessageRecord.created_at.asc()).all()
+
+    return {
+        "id": conv.id,
+        "title": conv.title,
+        "task_id": conv.task_id,
+        "task_url": conv.task_url,
+        "status": conv.status,
+        "created_at": conv.created_at.isoformat() if conv.created_at else None,
+        "messages": [
+            {
+                "id": m.id,
+                "role": m.role,
+                "content": m.content,
+                "created_at": m.created_at.isoformat() if m.created_at else None
+            }
+            for m in msgs
+        ]
+    }
+
+@app.get("/api/ai/conversations/{conversation_id}/status")
+def get_manus_conversation_status(
+    conversation_id: str,
+    db: Session = Depends(get_db)
+):
+    """Polls real-time Manus task status and latest messages."""
+    conv = db.query(ManusConversation).filter(ManusConversation.id == conversation_id).first()
+    if not conv:
+        raise HTTPException(status_code=404, detail="Conversation not found")
+    
+    if not conv.task_id:
+        return {"status": "no_task", "ok": False}
+    
+    detail = manus_service.get_task_detail(conv.task_id)
+    msg_data = manus_service.list_messages(conv.task_id)
+
+    latest_assistant_msg = ""
+    if msg_data.get("ok"):
+        for m in reversed(msg_data.get("messages", [])):
+            if "assistant_message" in m and m["assistant_message"].get("content"):
+                latest_assistant_msg = m["assistant_message"]["content"]
+                break
+
+    return {
+        "ok": True,
+        "task_id": conv.task_id,
+        "task_detail": detail.get("task", {}),
+        "latest_content": latest_assistant_msg
+    }
+
+@app.post("/api/ai/webhooks/manus")
+def handle_manus_webhook(payload: Dict[str, Any]):
+    """Receives asynchronous task lifecycle notifications from Manus."""
+    task_id = payload.get("task_id") or payload.get("data", {}).get("task_id")
+    event_type = payload.get("event") or payload.get("type", "task.updated")
+    return {"status": "received", "task_id": task_id, "event": event_type}
+
 
 # --- CIVICSYNC GENCITY: AI 3D URBAN DIGITAL TWIN ---
 

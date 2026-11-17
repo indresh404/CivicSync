@@ -189,11 +189,90 @@ export const MIRA_ROAD_3D_ASSETS = [
   }
 ];
 
+const GOOGLE_ROADMAP_STYLE = {
+  version: 8,
+  sources: {
+    "google-tiles": {
+      type: "raster",
+      tiles: [
+        "https://mt0.google.com/vt/lyrs=m&hl=en&x={x}&y={y}&z={z}",
+        "https://mt1.google.com/vt/lyrs=m&hl=en&x={x}&y={y}&z={z}",
+        "https://mt2.google.com/vt/lyrs=m&hl=en&x={x}&y={y}&z={z}",
+        "https://mt3.google.com/vt/lyrs=m&hl=en&x={x}&y={y}&z={z}",
+      ],
+      tileSize: 256,
+      attribution: "© Google Maps • MBMC Municipal GIS",
+    },
+  },
+  layers: [
+    {
+      id: "google-tiles-layer",
+      type: "raster",
+      source: "google-tiles",
+      minzoom: 0,
+      maxzoom: 22,
+    },
+  ],
+};
+
+const GOOGLE_SATELLITE_STYLE = {
+  version: 8,
+  sources: {
+    "google-satellite-tiles": {
+      type: "raster",
+      tiles: [
+        "https://mt0.google.com/vt/lyrs=y&hl=en&x={x}&y={y}&z={z}",
+        "https://mt1.google.com/vt/lyrs=y&hl=en&x={x}&y={y}&z={z}",
+        "https://mt2.google.com/vt/lyrs=y&hl=en&x={x}&y={y}&z={z}",
+        "https://mt3.google.com/vt/lyrs=y&hl=en&x={x}&y={y}&z={z}",
+      ],
+      tileSize: 256,
+      attribution: "© Google Maps Satellite • MBMC Municipal GIS",
+    },
+  },
+  layers: [
+    {
+      id: "google-satellite-layer",
+      type: "raster",
+      source: "google-satellite-tiles",
+      minzoom: 0,
+      maxzoom: 22,
+    },
+  ],
+};
+
+const GOOGLE_TERRAIN_STYLE = {
+  version: 8,
+  sources: {
+    "google-terrain-tiles": {
+      type: "raster",
+      tiles: [
+        "https://mt0.google.com/vt/lyrs=p&hl=en&x={x}&y={y}&z={z}",
+        "https://mt1.google.com/vt/lyrs=p&hl=en&x={x}&y={y}&z={z}",
+        "https://mt2.google.com/vt/lyrs=p&hl=en&x={x}&y={y}&z={z}",
+        "https://mt3.google.com/vt/lyrs=p&hl=en&x={x}&y={y}&z={z}",
+      ],
+      tileSize: 256,
+      attribution: "© Google Maps Terrain • MBMC Municipal GIS",
+    },
+  },
+  layers: [
+    {
+      id: "google-terrain-layer",
+      type: "raster",
+      source: "google-terrain-tiles",
+      minzoom: 0,
+      maxzoom: 22,
+    },
+  ],
+};
+
 const STYLE_OPTIONS = [
-  { id: "dark", label: "Dark Matter 3D (Command Center)", url: "https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json" },
-  { id: "liberty", label: "OpenFreeMap Liberty (3D Buildings)", url: "https://tiles.openfreemap.org/styles/liberty" },
-  { id: "positron", label: "Positron 3D (Civic Blueprint)", url: "https://tiles.openfreemap.org/styles/positron" },
-  { id: "bright", label: "OpenFreeMap Bright 3D", url: "https://tiles.openfreemap.org/styles/bright" },
+  { id: "google-streets", label: "🗺️ Google Maps (Streets)", spec: GOOGLE_ROADMAP_STYLE },
+  { id: "google-satellite", label: "🛰️ Google Satellite", spec: GOOGLE_SATELLITE_STYLE },
+  { id: "google-terrain", label: "🏔️ Google Terrain", spec: GOOGLE_TERRAIN_STYLE },
+  { id: "dark", label: "🌙 Dark Matter", url: "https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json" },
+  { id: "liberty", label: "🏛️ OpenFreeMap Liberty", url: "https://tiles.openfreemap.org/styles/liberty" },
 ];
 
 function getProject3DModelInfo(project: Project) {
@@ -284,10 +363,10 @@ export default function MapComponent({
   const [conflictOnly, setConflictOnly] = useState(false);
   const [filterDepartment, setFilterDepartment] = useState<string>("ALL");
   const [filterStatus, setFilterStatus] = useState<string>("ALL");
-  const [selectedStyleId, setSelectedStyleId] = useState<string>("dark");
+  const [selectedStyleId, setSelectedStyleId] = useState<string>("google-streets");
 
   // 3D Specific States
-  const [is3DMode, setIs3DMode] = useState(true);
+  const [is3DMode, setIs3DMode] = useState(false);
   const [isOrbiting, setIsOrbiting] = useState(false);
   const [showUtilities, setShowUtilities] = useState(true);
   const [showBuildings3D, setShowBuildings3D] = useState(true);
@@ -383,11 +462,13 @@ export default function MapComponent({
     return true;
   });
 
-  // 1. Initialize MapLibre with High-Precision 3D Pitch & Camera Controls
-  const currentStyleUrl =
-    STYLE_OPTIONS.find((s) => s.id === selectedStyleId)?.url ||
-    process.env.NEXT_PUBLIC_MAP_STYLE_URL ||
-    "https://tiles.openfreemap.org/styles/liberty";
+  // 1. Initialize MapLibre with High-Precision Map Controls
+  const selectedStyle =
+    STYLE_OPTIONS.find((s) => s.id === selectedStyleId) || STYLE_OPTIONS[0];
+  const currentStyle: any =
+    (selectedStyle as any).spec ||
+    (selectedStyle as any).url ||
+    GOOGLE_ROADMAP_STYLE;
 
   useEffect(() => {
     if (!mapContainerRef.current) return;
@@ -399,7 +480,7 @@ export default function MapComponent({
 
         map = new maplibregl.Map({
           container: mapContainerRef.current!,
-          style: currentStyleUrl,
+          style: currentStyle,
           center: [72.8595, 19.2825], // Centered on Mira Road Station / Kanakia Hub
           zoom: 15.6,
           pitch: is3DMode ? 55 : 0,
@@ -1706,6 +1787,20 @@ export default function MapComponent({
             <AlertTriangle className="w-3.5 h-3.5 text-red-400" />
             Conflicts ({conflictingProjectIds.size})
           </button>
+
+          {/* Map Layer Style: Google Maps / Satellite / Terrain */}
+          <select
+            value={selectedStyleId}
+            onChange={(e) => setSelectedStyleId(e.target.value)}
+            className="px-2.5 py-1.5 rounded-lg border border-slate-700 bg-slate-800 text-slate-200 font-semibold focus:outline-none focus:ring-1 focus:ring-cyan-500 text-xs"
+            title="Switch Base Map"
+          >
+            {STYLE_OPTIONS.map((style) => (
+              <option key={style.id} value={style.id}>
+                {style.label}
+              </option>
+            ))}
+          </select>
 
           {/* Department Filter */}
           <select
